@@ -5,4 +5,5 @@ public class aufgabe4eyup {
 	int z=98;
 	double aq=12.44;
 	int a=1;
+	int neu=22222;
 }
