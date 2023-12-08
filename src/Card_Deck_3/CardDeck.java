@@ -13,7 +13,7 @@ public class CardDeck extends Card {
 		}
 	}
 	
-	
+	//LEON ist ein lelek
 	
 	public static void main(String[] args) {
 		CardFill();
