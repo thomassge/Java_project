@@ -68,7 +68,7 @@ public class HelloRest {
                 System.out.println("\n");
                 System.out.println("Drone " + id + ": carriage type " + a + " (weight: " + b + "g)");
                 System.out.println("Serialnumer: " + serialnumber);
-                System.out.println("Crated: " + created);
+                System.out.println("Created: " + created);
             }
         }
 
