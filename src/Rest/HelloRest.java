@@ -14,20 +14,18 @@ import java.net.URL;
 public class HelloRest {
 
     private static final String USER_AGENT = "MOzilla FIrefox Awesome version";
-
-    private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/drones/?format=json";
-    //private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/dronetypes/?format=json";
-    //private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/dronedynamics/?format=json";
-
-
     private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
     public static void main(String[] args) {
+
+    }
+
+    public static void connector(String link, Drone drone) {
         System.out.println("Test started...");
 
         URL url;
         try {
-            url = new URL(ENDPOINT_URL);
+            url = new URL(link);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Authorization", TOKEN);
             connection.setRequestMethod("GET");
@@ -43,8 +41,17 @@ public class HelloRest {
             }
             in.close();
             System.out.println(response.toString()); // Process your response
-            //test(response.toString());
-            test(response.toString());
+
+            // Abfrage welche Datenbank
+            if (drone instanceof IndividualDrone) {
+                individualDroneOutput(response.toString());
+            }
+            else if (drone instanceof DroneTypes) {
+                droneTypesOutput(response.toString());
+            }
+            else if (drone instanceof DroneDynamics) {
+                droneDynamicsOutput(response.toString());
+            }
         } catch (MalformedURLException e) {
             System.err.println("Malformed URL: " + e.getLocalizedMessage());
             e.printStackTrace();
@@ -54,7 +61,7 @@ public class HelloRest {
         }
     }
 
-    public static void test(String input) {
+    public static void individualDroneOutput(String input) {
         JSONObject wholeFile = new JSONObject(input);
         JSONArray jsonFile = wholeFile.getJSONArray("results");
         for (int i = 0; i < jsonFile.length(); i++) {
@@ -74,7 +81,7 @@ public class HelloRest {
 
     }
 
-    /*public static void testDroneTypes(String input) {
+    public static void droneTypesOutput(String input) {
         JSONObject wholeFile = new JSONObject(input);
         JSONArray jsonFile = wholeFile.getJSONArray("results");
         for (int i = 0; i < jsonFile.length(); i++) {
@@ -101,9 +108,9 @@ public class HelloRest {
 
             }
         }
-    }*/
+    }
 
-    /*public static void testDroneDynamics(String input) {
+    public static void droneDynamicsOutput(String input) {
         JSONObject wholeFile = new JSONObject(input);
         JSONArray jsonFile = wholeFile.getJSONArray("results");
         for (int i = 0; i < jsonFile.length(); i++) {
@@ -115,24 +122,26 @@ public class HelloRest {
                 double align_pitch = o.getDouble("align_pitch");
                 double align_yaw = o.getDouble("align_yaw");
                 double longitude = o.getDouble("longitude");
-                double latitude = o.getDouble("latitude");
+                //double latitude = o.getDouble("latitude");
                 int battery_status = o.getInt("battery_status");
                 String last_seen = o.getString("last_seen");
                 String status = o.getString("status");
+
                 System.out.println("\n");
+                //System.out.println("o :" + o);
                 System.out.println("Timestamp: " + timestamp );
                 System.out.println("Speed: " + speed );
                 System.out.println("Align_roll" + align_roll);
                 System.out.println("Align_pitch" + align_pitch);
                 System.out.println("Longitude: " + longitude);
-                System.out.println("Latitude: " + latitude);
+                //System.out.println("Latitude: " + latitude);
                 System.out.println("Battery-Status: " + battery_status);
                 System.out.println("Last seen: " + last_seen);
                 System.out.println("Status: " + status);
 
             }
         }
-    }*/
+    }
     public static String formatJson(String input) {
         final int indentSpaces = 4;
         Object json = new JSONTokener(input).nextValue();
