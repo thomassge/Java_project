@@ -15,19 +15,25 @@ public class HelloRest {
 
     private static final String USER_AGENT = "MOzilla FIrefox Awesome version";
 
-    private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/drones/?format=json";
+    //private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/drones/?format=json";
     //private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/dronetypes/?format=json";
     //private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/dronedynamics/?format=json";
 
 
     private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
+
+
     public static void main(String[] args) {
+
+    }
+
+    public static void connector(String link, Drone drone) {
         System.out.println("Test started...");
 
         URL url;
         try {
-            url = new URL(ENDPOINT_URL);
+            url = new URL(link);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Authorization", TOKEN);
             connection.setRequestMethod("GET");
@@ -44,7 +50,16 @@ public class HelloRest {
             in.close();
             System.out.println(response.toString()); // Process your response
             //test(response.toString());
-            test(response.toString());
+            if (drone instanceof DroneDynamics) {
+                testDroneDynamics(link);
+            }
+            else if (drone instanceof Drone) {
+                test(link);
+            }
+            else if (drone instanceof DroneTypes) {
+                testDroneTypes(link);
+            }
+            //testDroneDynamics(response.toString());
         } catch (MalformedURLException e) {
             System.err.println("Malformed URL: " + e.getLocalizedMessage());
             e.printStackTrace();
@@ -74,7 +89,7 @@ public class HelloRest {
 
     }
 
-    /*public static void testDroneTypes(String input) {
+    public static void testDroneTypes(String input) {
         JSONObject wholeFile = new JSONObject(input);
         JSONArray jsonFile = wholeFile.getJSONArray("results");
         for (int i = 0; i < jsonFile.length(); i++) {
@@ -101,9 +116,9 @@ public class HelloRest {
 
             }
         }
-    }*/
+    }
 
-    /*public static void testDroneDynamics(String input) {
+    public static void testDroneDynamics(String input) {
         JSONObject wholeFile = new JSONObject(input);
         JSONArray jsonFile = wholeFile.getJSONArray("results");
         for (int i = 0; i < jsonFile.length(); i++) {
@@ -132,7 +147,7 @@ public class HelloRest {
 
             }
         }
-    }*/
+    }
     public static String formatJson(String input) {
         final int indentSpaces = 4;
         Object json = new JSONTokener(input).nextValue();
