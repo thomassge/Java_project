@@ -1,9 +1,5 @@
 package Rest;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,67 +7,42 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 public class HelloRest {
 
-    private static final String USER_AGENT = "MOzilla FIrefox Awesome version";
+    private static final String USER_AGENT = "Mozilla Firefox Awesome version";
 
-    private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/drones/?format=json";
-    //private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/dronetypes/?format=json";
-    //private static final String ENDPOINT_URL = "https://dronesim.facets-labs.com/api/dronedynamics/?format=json";
-
+    private static final String ENDPOINT_URL1 = "https://dronesim.facets-labs.com/api/drones/?format=json";
+    private static final String ENDPOINT_URL2 = "https://dronesim.facets-labs.com/api/dronetypes/?format=json";
+    private static final String ENDPOINT_URL3 = "https://dronesim.facets-labs.com/api/dronedynamics/?format=json";
 
     private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
-    public static void main(String[] args) {
-        System.out.println("Test started...");
-
-        URL url;
-        try {
-            url = new URL(ENDPOINT_URL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Authorization", TOKEN);
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("User-Agent", USER_AGENT);
-            int responseCode = connection.getResponseCode();
-
-            System.out.println("Response Code " + responseCode);
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            System.out.println(response.toString()); // Process your response
-            //test(response.toString());
-            test(response.toString());
-        } catch (MalformedURLException e) {
-            System.err.println("Malformed URL: " + e.getLocalizedMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("General IO Exception: " + e.getLocalizedMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public static void test(String input) {
+    public static void out_drones(String input) {
         JSONObject wholeFile = new JSONObject(input);
         JSONArray jsonFile = wholeFile.getJSONArray("results");
         for (int i = 0; i < jsonFile.length(); i++) {
-            JSONObject o = jsonFile.getJSONObject(i);
-            if(o.has("carriage_type") && o.has("carriage_weight")){
-                String a = o.getString("carriage_type");
-                int b = o.getInt("carriage_weight");
-                int id = o.getInt("id");
-                String serialnumber = o.getString("serialnumber");
-                String created = o.getString("created");
+            JSONObject obj = jsonFile.getJSONObject(i);
+            if(obj.has("carriage_type") && obj.has("carriage_weight")){
+                String carriageType = obj.getString("carriage_type");
+                int carriageWeight = obj.getInt("carriage_weight");
+                int id = obj.getInt("id");
+                String serialnum = obj.getString("serialnumber");
+                String created = obj.getString("created");
                 System.out.println("\n");
-                System.out.println("Drone " + id + ": carriage type " + a + " (weight: " + b + "g)");
-                System.out.println("Serialnumber: " + serialnumber);
+                System.out.println("Drone " + id );
+                System.out.println("Serial number: " + serialnum);
+                System.out.println("Carriage Type: " + carriageType);
+                System.out.println("Carriage Weight: " + carriageWeight);
                 System.out.println("Created: " + created);
             }
+            else{
+                System.out.println("Wrong dataset!");
+            }
         }
-
     }
 
     /*public static void testDroneTypes(String input) {
