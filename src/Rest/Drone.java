@@ -1,55 +1,34 @@
 package Rest;
-
-import org.json.JSONObject;
-
 public class Drone {
-
-    //INDIVIDUALDRONE VARIABLES
-    private static int idIndividualDrone;
-    private static String dronetype;
-    private static String created;
-    private static String serialnumber;
-    private static int carriageWeight;
-    private static String carriageType;
-
-    //DRONETYPES VARIABLES
-    private static int idDroneType;
-    private String manufacturer;
-    private String typename;
-    private int weight;
-    private int maxSpeed;
-    private int batteryCapacity;
-    private int controlRangeDroneType;
-    private int maxCarriage;
-
-    // DRONEDYNAMICS VARIABLES
-    private static int idDroneDynamics;
-    private String timestamp;
-    private String drone;
-    private int speed;
-    private double alignmentRoll;
-    private double controlRangeDroneDynamics;
-    private double alignmentYaw;
-    private double longitude;
-    private double latitude;
-    private int batteryStatus;
-    private String lastSeen;
-    private DroneStatus status;
-
-    enum DroneStatus {
-        ON,
-        OF,
-        IS;
-    }
+    String carriage_type;
+    String serialnumber;
+    String created;
+    int carriageWeight;
+    int id;
+    String droneTypePointer;
 
     //KONSTRUKTOR
-    public Drone(int idIndividualDrone, String DroneType) {
-        this.idIndividualDrone=idIndividualDrone;
-        this.dronetype=dronetype;
-    };
     public Drone() {};
 
-    // GETTER METHODEN
+    public Drone(String carriage_type, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
+        this.carriage_type = carriage_type;
+        this.serialnumber = serialnumber;
+        this.created = created;
+        this.carriageWeight = carriageWeight;
+        this.id = id;
+        this.droneTypePointer = DroneTypePointer;
+    }
+
+    public void printDrone() {
+        System.out.println("Drone id: " + this.id);
+        System.out.println("___________________________________________");
+        System.out.println("Serialnumber: " + this.serialnumber);
+        System.out.println("Created: " + this.created);
+        System.out.println("Carriage Type: " + this.carriage_type);
+        System.out.println("Carriage weight: " + this.carriageWeight);
+        System.out.println("DroneTypePointer: " + this.droneTypePointer);
+        System.out.println("\n");
+    }
 
     public static void main(String[] args) {
     }
