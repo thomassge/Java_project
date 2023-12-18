@@ -11,7 +11,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.lang.*;
 import java.util.LinkedList;
-
+//EYÜP STINKT NACH MAGGI
 public class JSONDerulo {
 
     protected static final String ENDPOINT_URL = "http://dronesim.facets-labs.com/api/drones/?limit=20";
