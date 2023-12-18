@@ -7,19 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Frankfurt UAS/Java OOP Project - General/json-20231013.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$USER_HOME$/Frankfurt UAS/Java OOP Project - General/json-20231013-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$USER_HOME$/Frankfurt UAS/Java OOP Project - General/json-20231013-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -31,6 +18,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="json-20231013-javadoc" level="project" />
+    <orderEntry type="library" name="json-20231013" level="project" />
   </component>
 </module>
