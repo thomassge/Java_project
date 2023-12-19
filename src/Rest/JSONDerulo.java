@@ -1,23 +1,22 @@
 package Rest;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.Scanner;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.lang.*;
 import java.util.LinkedList;
-//EYÜP STINKT NACH MAGGI
+
 public class JSONDerulo {
 
     protected static final String ENDPOINT_URL = "http://dronesim.facets-labs.com/api/drones/?limit=20";
     protected static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //Creating Drone Objects with Data from "Drones" Database
         Drone[] drones = new Drone[Drone.numberOfDrones];
         String forCreatingDrones = jsonCreator(ENDPOINT_URL);
@@ -27,11 +26,63 @@ public class JSONDerulo {
         addDroneTypeData(drones);
 
         //Adding DroneDynamics information to the Drone Objects
-        System.out.println("Saving DynamicData from Webserver in memory ...");
+        System.out.println("Saving DynamicData from Webserver in memory ...");/*
         addDroneDynamicsData(drones);
+        //addDroneDynamicsData2(drones);
 
         //Testing the Data of Drone Objects which include everything
+        drones[0].printAllDroneInformation(drones[0]);*/
+        test();
+        test2(drones);
         drones[0].printAllDroneInformation(drones[0]);
+    }
+
+    public static void test() throws FileNotFoundException {
+        String link = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=28820";
+
+        try (PrintWriter out = new PrintWriter("filename.json")) {
+            out.println(jsonCreator(link));
+        }
+    }
+
+    public static void test2(Drone[] object) throws IOException {
+
+        for (int z = 0; z < Drone.numberOfDrones; z++) {
+            object[z].droneDynamicsLinkedList = new LinkedList<DroneDynamics>();
+        }
+
+        String myJson = new Scanner(new File("filename.json")).useDelimiter("\\Z").next();
+        JSONObject myJsonobject = new JSONObject(myJson);
+        JSONArray jsonArray = myJsonobject.getJSONArray("results");
+
+        for (int j = 0; j < jsonArray.length(); j++) {
+            for (int i = 0; i < Drone.numberOfDrones; i++) {
+                JSONObject o = jsonArray.getJSONObject(j);
+                object[i].droneDynamicsLinkedList.add(new DroneDynamics(o.getString("drone"), o.getString("timestamp"), o.getInt("speed"), o.getFloat("align_roll"), o.getFloat("align_pitch"), o.getFloat("align_yaw"), o.getDouble("longitude"), o.getDouble("latitude"), o.getInt("battery_status"), o.getString("last_seen"), o.getString("status")));
+            }
+        }
+    }
+
+    public static void addDroneDynamicsData2(Drone[] drones) {
+        String droneDynamicsURL2 = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=29000";
+        String jsonDroneDynamicsData2 = jsonCreator(droneDynamicsURL2);
+        droneDynamicsJsonToObject2(drones, jsonDroneDynamicsData2);
+
+    }
+    public static void droneDynamicsJsonToObject2(Drone[] object, String toTransform) {
+        JSONObject wholeHtml = new JSONObject(toTransform);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int z = 0; z < Drone.numberOfDrones; z++) {
+            object[z].droneDynamicsLinkedList = new LinkedList<DroneDynamics>();
+        }
+
+        for (int j = 0; j < jsonArray.length(); j++) {
+                for (int i = 0; i < Drone.numberOfDrones; i++) {
+                    JSONObject o = jsonArray.getJSONObject(j);
+                    object[i].droneDynamicsLinkedList.add(new DroneDynamics(o.getString("drone"), o.getString("timestamp"), o.getInt("speed"), o.getFloat("align_roll"), o.getFloat("align_pitch"), o.getFloat("align_yaw"), o.getDouble("longitude"), o.getDouble("latitude"), o.getInt("battery_status"), o.getString("last_seen"), o.getString("status")));
+                }
+        }
     }
 
     public static void addDroneDynamicsData(Drone[] drones) {
