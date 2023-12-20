@@ -2,7 +2,7 @@ package Rest;
 
 import java.util.LinkedList;
 
-public class DroneDynamics extends Drone {
+public class DroneDynamics {
 
     String dronePointer;
     String timestamp;
@@ -14,7 +14,7 @@ public class DroneDynamics extends Drone {
     double latitude;
     int batteryStatus;
     String lastSeen;
-    enum Status{
+    enum Status{ // yet has to be implemented
         OF,
         ON,
         IS;

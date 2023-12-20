@@ -1,46 +1,63 @@
 package Rest;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.Scanner;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.lang.*;
 import java.util.LinkedList;
-//EYÜP STINKT NACH MAGGI
+
 public class JSONDerulo {
 
-    protected static final String ENDPOINT_URL = "http://dronesim.facets-labs.com/api/drones/?limit=20";
+    protected static final String DRONES_URL = "http://dronesim.facets-labs.com/api/drones/?limit=20";
     protected static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //Creating Drone Objects with Data from "Drones" Database
         Drone[] drones = new Drone[Drone.numberOfDrones];
-        String forCreatingDrones = jsonCreator(ENDPOINT_URL);
+        String forCreatingDrones = jsonCreator(DRONES_URL);
         individualDroneJsonToObject(drones, forCreatingDrones);
 
-        //Adding DroneType information to the Drone Objects via given pointer
+        //Adding DroneType information to the Drone Objects via given "pointer" or "DroneTypeURL"
         addDroneTypeData(drones);
 
         //Adding DroneDynamics information to the Drone Objects
-        System.out.println("Saving DynamicData from Webserver in memory ...");
+        System.out.println("Saving DroneDynamic Data from Webserver in memory ...");
+        //saveDroneDynamicsDataInFile();
         addDroneDynamicsData(drones);
 
-        //Testing the Data of Drone Objects which include everything
-        drones[0].printAllDroneInformation(drones[0]);
+        //Print Drone Object Information
+        //drones[0].printAllDroneInformation();
+        drones[0].printAllDroneInformation();
+        //System.out.println(drones[0].droneDynamicsLinkedList.get(1).dronePointer);
     }
 
-    public static void addDroneDynamicsData(Drone[] drones) {
-        int i = 0;
-        for (Drone droneObject : drones) {
-            String droneDynamicsURL = "https://dronesim.facets-labs.com/api/" + drones[i].id + "/dynamics/?limit=1500&offset=0";
-            String jsonDroneDynamicsData = jsonCreator(droneDynamicsURL);
-            droneDynamicsJsonToObject(drones[i], jsonDroneDynamicsData);
-            i++;
+    public static void saveDroneDynamicsDataInFile() throws FileNotFoundException {
+        String droneDynamicsURL = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=28820";
+
+        try (PrintWriter out = new PrintWriter("filename.json")) {
+            out.println(jsonCreator(droneDynamicsURL));
+        }
+    }
+
+    public static void addDroneDynamicsData(Drone[] object) throws IOException {
+        String myJson = new Scanner(new File("filename.json")).useDelimiter("\\Z").next();
+        JSONObject myJsonObject = new JSONObject(myJson);
+        JSONArray jsonArray = myJsonObject.getJSONArray("results");
+
+        for (int z = 0; z < Drone.numberOfDrones; z++) {
+            object[z].droneDynamicsLinkedList = new LinkedList<DroneDynamics>();
+            String test = "http://dronesim.facets-labs.com/api/drones/" + object[z].id + "/";
+            for (int j = 0; j < jsonArray.length(); j++) {
+                JSONObject o = jsonArray.getJSONObject(j);
+                if (o.getString("drone").equals(test)) {
+                    object[z].droneDynamicsLinkedList.add(new DroneDynamics(o.getString("drone"), o.getString("timestamp"), o.getInt("speed"), o.getFloat("align_roll"), o.getFloat("align_pitch"), o.getFloat("align_yaw"), o.getDouble("longitude"), o.getDouble("latitude"), o.getInt("battery_status"), o.getString("last_seen"), o.getString("status")));
+                }
+            }
         }
     }
 
@@ -52,6 +69,16 @@ public class JSONDerulo {
             i++;
         }
     }
+
+    /*public static void addDroneDynamicsData(Drone[] drones) {
+        int i = 0;
+        for (Drone droneObject : drones) {
+            String droneDynamicsURL = "https://dronesim.facets-labs.com/api/" + drones[i].id + "/dynamics/?limit=1500&offset=0";
+            String jsonDroneDynamicsData = jsonCreator(droneDynamicsURL);
+            droneDynamicsJsonToObject(drones[i], jsonDroneDynamicsData);
+            i++;
+        }
+    }*/
 
     public static String jsonCreator(String link) {
         try {
@@ -92,7 +119,7 @@ public class JSONDerulo {
         }
     } // returns json String
 
-    public static String jsonCreatorForDroneType(String pointer) {
+    public static String jsonCreatorForDroneType(String pointer) {  // might be irrelevant at this stage
         try {
             // Step 2: Create a URL object
             URL url = new URL(pointer);
@@ -132,8 +159,8 @@ public class JSONDerulo {
         }
     } // DroneType Data needs a different approach for creating a JSON String because of the usage of pointers
 
-    protected static void individualDroneJsonToObject(Drone[] objects, String toTransform) {
-        JSONObject wholeHtml = new JSONObject(toTransform);
+    protected static void individualDroneJsonToObject(Drone[] objects, String jsonString) {
+        JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
         int j = jsonArray.length();
@@ -156,8 +183,8 @@ public class JSONDerulo {
         object.maximumCarriage = wholeHtml.getInt("max_carriage");
     }
 
-    public static void droneDynamicsJsonToObject(Drone object, String toTransform) {
-        JSONObject wholeHtml = new JSONObject(toTransform);
+    public static void droneDynamicsJsonToObject(Drone object, String jsonString) {
+        JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
         int j = jsonArray.length();

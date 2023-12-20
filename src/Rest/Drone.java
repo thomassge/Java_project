@@ -40,14 +40,14 @@ public class Drone {
     }
 
     //PRINT-METHODEN ZUR KONTROLLE
-    public void printDrone(Drone object) {
-        System.out.println("Drone id: " + object.id);
-        System.out.println("Serialnumber: " + object.serialnumber);
+    public void printDrone() {
+        System.out.println("Drone id: " + this.id);
+        System.out.println("Serialnumber: " + this.serialnumber);
         System.out.println("___________________________________________");
-        System.out.println("Created: " + object.created);
-        System.out.println("Carriage Type: " + object.carriageType);
-        System.out.println("Carriage weight: " + object.carriageWeight);
-        System.out.println("DroneTypePointer: " + object.droneTypePointer);
+        System.out.println("Created: " + this.created);
+        System.out.println("Carriage Type: " + this.carriageType);
+        System.out.println("Carriage weight: " + this.carriageWeight);
+        System.out.println("DroneTypePointer: " + this.droneTypePointer);
         System.out.println("\n");
     }
 
@@ -79,17 +79,17 @@ public class Drone {
         //System.out.println("Status: " + DroneDynamics.Status.getStatus());
         System.out.println("\n");
     }
-    public void printAllDroneInformation(Drone drone) {
-        System.out.println("All the following Informations are linked to the Drone " + drone.typename + " with the Serialnumber: " + drone.serialnumber);
+    public void printAllDroneInformation() {
+        System.out.println("All the following Information is linked to the Drone " + this.typename + " with the Serialnumber: " + this.serialnumber);
 
         System.out.println("Individual Drone Information: ");
-        drone.printDrone(drone);
+        this.printDrone();
 
         System.out.println("DroneTypes Information: ");
-        drone.printDroneType();
+        this.printDroneType();
 
         System.out.println("DroneDynamics Information: ");
-        iterateThroughList(drone.droneDynamicsLinkedList);
+        iterateThroughList(this.droneDynamicsLinkedList);
     }
 
     public void iterateThroughList(LinkedList<DroneDynamics> myList) {
