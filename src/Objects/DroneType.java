@@ -2,7 +2,7 @@ package Objects;
 
 import java.util.LinkedList;
 
-public class DroneType extends Drone{
+public class DroneType {
 
     //DRONETYPE DATA
     private int droneTypeID;
@@ -13,6 +13,22 @@ public class DroneType extends Drone{
     private int batteryCapacity;
     private int controlRange;
     private int maximumCarriage;
+
+    //Constructor
+
+    public DroneType() {}
+
+    public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed, int batteryCapacity, int controlRange, int maximumCarriage) {
+        System.out.println("DroneType Object created");
+        this.droneTypeID = droneTypeID;
+        this.manufacturer = manufacturer;
+        this.typename = typename;
+        this.weight = weight;
+        this.maximumSpeed = maximumSpeed;
+        this.batteryCapacity = batteryCapacity;
+        this.controlRange = controlRange;
+        this.maximumCarriage = maximumCarriage;
+    }
 
     //GETTER-methods
     public int getDroneTypeID(){
@@ -40,7 +56,7 @@ public class DroneType extends Drone{
         return this.maximumCarriage;
     }
 
-    //PRINT-methods to test
+    //PRINT-methods to test without GETTER
     public void printDroneType() {
         System.out.println("DroneType id: " + this.droneTypeID);
         System.out.println("___________________________________________");
@@ -53,6 +69,4 @@ public class DroneType extends Drone{
         System.out.println("Maximum Carriage: " + this.maximumCarriage);
         System.out.println("\n");
     }
-
-    //Constructor
 }

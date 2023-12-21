@@ -1,5 +1,6 @@
 package API;
 import Objects.Drone;
+import Objects.DroneType;
 import Objects.DroneDynamics;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,28 +14,40 @@ import java.net.URL;
 import java.lang.*;
 import java.util.LinkedList;
 
-public class JSONDerulo extends Drone{
-
-    protected static final String DRONES_URL = "http://dronesim.facets-labs.com/api/drones/?limit=20";
+public class JSONDerulo {
+    // IF DRONES OR DRONETYPES IN DATABASE EXCEED THE COUNT OF 1000, THIS HAS TO BE ADJUSTED
+    protected static final String DRONES_URL = "https://dronesim.facets-labs.com/api/drones/?limit=1000";
+    protected static final String DRONETYPES_URL = "http://dronesim.facets-labs.com/api/dronetypes/?limit=1000";
     protected static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
+    private static int numberOfDrones; // STATIC?
+    private static int numberOfDroneTypes;
+    private static int numberOfDroneDynamics;
+
 
     public static void main(String[] args) throws IOException {
         //Creating Drone Objects with Data from "Drones" Database
-        Drone[] drones = new Drone[Drone.getNumberOfDrones()];
-        String forCreatingDrones = jsonCreator(DRONES_URL);
-        individualDroneJsonToObject(drones, forCreatingDrones);
-
+        String forCreatingDroneObjects = jsonCreator(DRONES_URL);
+        Drone[] drones = individualDroneJsonToObject(forCreatingDroneObjects);
+        System.out.println("numberOfDrones: " + JSONDerulo.numberOfDrones);
         //Adding DroneType information to the Drone Objects via given "pointer" or "DroneTypeURL"
-        addDroneTypeData(drones);
+        //addDroneTypeData(drones);
+        String forCreatingDroneTypeObjects = jsonCreator(DRONETYPES_URL);
+        DroneType[] droneTypes = droneTypeJsonToObject(forCreatingDroneTypeObjects);
+        System.out.println("numberOfDrones: " + numberOfDrones);
+
+        //Linking droneTypes to Drones
+        Objects.Drone.droneTypeToDroneLinker(droneTypes, drones);
+        System.out.println("numberOfDrones: " + numberOfDrones);
 
         //Adding DroneDynamics information to the Drone Objects
         System.out.println("Saving DroneDynamic Data from Webserver in memory ...");
+
         //saveDroneDynamicsDataInFile();
         addDroneDynamicsData(drones);
 
         //Print Drone Object Information
         //drones[0].printAllDroneInformation();
-        drones[0].printAllDroneInformation();
+        //drones[0].printAllDroneInformation();
         //System.out.println(drones[0].droneDynamicsLinkedList.get(1).dronePointer);
     }
 
@@ -51,26 +64,42 @@ public class JSONDerulo extends Drone{
         JSONObject myJsonObject = new JSONObject(myJson);
         JSONArray jsonArray = myJsonObject.getJSONArray("results");
 
-        for (int z = 0; z < Drone.getNumberOfDrones(); z++) {
+        numberOfDroneDynamics = jsonArray.length();
+        //if (refresh == true) && numberOfDroneDynamics != theSame {addMoreDroneDynamicsData}
+        for (int z = 0; z < numberOfDrones; z++) { // code insists that number of drones = number of drones that have dronedynamics
             object[z].droneDynamicsLinkedList = new LinkedList<DroneDynamics>();
-            String test = "http://dronesim.facets-labs.com/api/drones/" + object[z].getId() + "/";
+            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + object[z].getId() + "/";
+
             for (int j = 0; j < jsonArray.length(); j++) {
                 JSONObject o = jsonArray.getJSONObject(j);
-                if (o.getString("drone").equals(test)) {
-                    object[z].droneDynamicsLinkedList.add(new DroneDynamics(o.getString("drone"), o.getString("timestamp"), o.getInt("speed"), o.getFloat("align_roll"), o.getFloat("align_pitch"), o.getFloat("align_yaw"), o.getDouble("longitude"), o.getDouble("latitude"), o.getInt("battery_status"), o.getString("last_seen"), o.getString("status")));
+
+                if (o.getString("drone").equals(toCheck)) {
+                    object[z].droneDynamicsLinkedList.add(new DroneDynamics(
+                            o.getString("drone"),
+                            o.getString("timestamp"),
+                            o.getInt("speed"),
+                            o.getFloat("align_roll"),
+                            o.getFloat("align_pitch"),
+                            o.getFloat("align_yaw"),
+                            o.getDouble("longitude"),
+                            o.getDouble("latitude"),
+                            o.getInt("battery_status"),
+                            o.getString("last_seen"),
+                            o.getString("status"))
+                    );
                 }
             }
         }
     }
 
-    public static void addDroneTypeData(Drone[] drones) {
+    /*public static void addDroneTypeData(Drone[] drones) {
         int i = 0;
         for (Drone droneObject : drones) {
             String jsonDroneTypeData = jsonCreatorForDroneType(drones[i].getDroneTypePointer());
             droneTypeJsonToObject(drones[i], jsonDroneTypeData);
             i++;
         }
-    }
+    }*/
 
     /*public static void addDroneDynamicsData(Drone[] drones) {
         int i = 0;
@@ -159,41 +188,75 @@ public class JSONDerulo extends Drone{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    } // DroneType Data needs a different approach for creating a JSON String because of the usage of pointers
+    } // evtl. redundant, DroneType Data needs a different approach for creating a JSON String because of the usage of pointers
 
-    protected static void individualDroneJsonToObject(Drone[] objects, String jsonString) {
+    protected static Drone[] individualDroneJsonToObject(String jsonString) {
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
-        int j = jsonArray.length();
+        numberOfDrones = jsonArray.length();
+        Drone[] drones = new Drone[numberOfDrones];
+
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject o = jsonArray.getJSONObject(i);
-            objects[i] = new Drone(o.getString("carriage_type"), o.getString("serialnumber"), o.getString("created"), o.getInt("carriage_weight"), o.getInt("id"), o.getString("dronetype"));
-            //objects[i].printDrone(); // Zur Kontrolle
+            drones[i] = new Drone(
+                    o.getString("carriage_type"),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            );
+            //drones[i].printDrone(); // Zur Kontrolle
         }
+        return drones;
     }
 
-    public static void droneTypeJsonToObject(Drone object, String jsonString) {
+    public static DroneType[] droneTypeJsonToObject(String jsonString) {
         JSONObject wholeHtml = new JSONObject(jsonString);
-        object.getdroneTypeID = wholeHtml.getInt("id");
-        object.manufacturer = wholeHtml.getString("manufacturer");
-        object.typename = wholeHtml.getString("typename");
-        object.weight = wholeHtml.getInt("weight");
-        object.maximumSpeed = wholeHtml.getInt("max_speed");
-        object.batteryCapacity = wholeHtml.getInt("battery_capacity");
-        object.controlRange = wholeHtml.getInt("control_range");
-        object.maximumCarriage = wholeHtml.getInt("max_carriage");
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        numberOfDroneTypes = jsonArray.length();
+        DroneType[] droneTypes = new DroneType[numberOfDroneTypes];
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneTypes[i] = new DroneType(
+                    o.getInt("id"),
+                    o.getString("manufacturer"),
+                    o.getString("typename"),
+                    o.getInt("weight"),
+                    o.getInt("max_speed"),
+                    o.getInt("battery_capacity"),
+                    o.getInt("control_range"),
+                    o.getInt("max_carriage")
+            );
+            //objects[i].printDrone(); // Zur Kontrolle
+        }
+        return droneTypes;
     }
 
     public static void droneDynamicsJsonToObject(Drone object, String jsonString) {
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
-        int j = jsonArray.length();
+        //int j = jsonArray.length();
         object.droneDynamicsLinkedList = new LinkedList<DroneDynamics>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject o = jsonArray.getJSONObject(i);
-            object.droneDynamicsLinkedList.add(new DroneDynamics(o.getString("drone"), o.getString("timestamp"), o.getInt("speed"), o.getFloat("align_roll"), o.getFloat("align_pitch"), o.getFloat("align_yaw"), o.getDouble("longitude"), o.getDouble("latitude"), o.getInt("battery_status"), o.getString("last_seen"), o.getString("status")));
+            object.droneDynamicsLinkedList.add(new DroneDynamics(
+                    o.getString("drone"),
+                    o.getString("timestamp"),
+                    o.getInt("speed"),
+                    o.getFloat("align_roll"),
+                    o.getFloat("align_pitch"),
+                    o.getFloat("align_yaw"),
+                    o.getDouble("longitude"),
+                    o.getDouble("latitude"),
+                    o.getInt("battery_status"),
+                    o.getString("last_seen"),
+                    o.getString("status"))
+            );
         }
     }
 }
