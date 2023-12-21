@@ -71,6 +71,23 @@ public class DroneDynamics {
         this.batteryStatus = batteryStatus;
         this.lastSeen = lastSeen;
     }
+
+    //PRINT METHODS WITH GETTER
+    public void printDroneDynamics() {
+        System.out.println("DronePointer: " + this.getDronePointer());
+        System.out.println("___________________________________________");
+        System.out.println("Timestamp: " + this.getTimestamp());
+        System.out.println("Speed: " + this.getSpeed());
+        System.out.println("Alignment Roll: " + this.getAlignmentRoll());
+        System.out.println("DroneDynamics Control Range: " + this.getDroneDynamicsControlRange());
+        System.out.println("Alignment Yaw: " + this.getAlignmentRoll());
+        System.out.println("Longitude: " + this.getLongitude());
+        System.out.println("Latitude: " + this.getLatitude());
+        System.out.println("Battery Status: " + this.getBatteryStatus());
+        System.out.println("Last Seen: " + this.getLastSeen());
+        //System.out.println("Status: " + DroneDynamics.Status.getStatus());
+        System.out.println("\n");
+    }
 }
 
 
