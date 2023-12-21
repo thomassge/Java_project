@@ -16,7 +16,7 @@ public class DroneType {
 
     //Constructor
 
-    public DroneType() {}
+    public DroneType() {System.out.println("DroneType Object created by default constructor");}
 
     public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed, int batteryCapacity, int controlRange, int maximumCarriage) {
         System.out.println("DroneType Object created");

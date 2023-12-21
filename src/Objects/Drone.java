@@ -45,7 +45,7 @@ public class Drone {
 
     //KONSTRUKTOR
     public Drone() {
-        System.out.println("Drone Object Created from empty constructor.");
+        System.out.println("Drone Object created by default constructor.");
     };
 
     public Drone(String carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
@@ -57,7 +57,7 @@ public class Drone {
         this.id = id;
         this.droneTypePointer = DroneTypePointer;
 
-        // APPROACH TO CREATE DRONETyPE OBJECTS INSIDE THE DRONE CONSTRUCTOR
+        // APPROACH TO CREATE DRONETyPE OBJECTS INSIDE THE DRONE CONSTRUCTOR ------------------>>> und wie? :D -TL
         // CONNECT DATABASE AND GER DRONETYPEINFO
         //DroneType droneTypeObject = new DroneType();
         //printDrone(this);

@@ -65,7 +65,7 @@ public class JSONDerulo {
         JSONArray jsonArray = myJsonObject.getJSONArray("results");
 
         numberOfDroneDynamics = jsonArray.length();
-        //if (refresh == true) && numberOfDroneDynamics != theSame {addMoreDroneDynamicsData}
+        //if (refresh == true) && numberOfDroneDynamics != theSame {addMoreDroneDynamicsData} ------------sehr clever Bro! -TL
         for (int z = 0; z < numberOfDrones; z++) { // code insists that number of drones = number of drones that have dronedynamics
             object[z].droneDynamicsLinkedList = new LinkedList<DroneDynamics>();
             String toCheck = "http://dronesim.facets-labs.com/api/drones/" + object[z].getId() + "/";
@@ -234,29 +234,5 @@ public class JSONDerulo {
             //objects[i].printDrone(); // Zur Kontrolle
         }
         return droneTypes;
-    }
-
-    public static void droneDynamicsJsonToObject(Drone object, String jsonString) {
-        JSONObject wholeHtml = new JSONObject(jsonString);
-        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-
-        //int j = jsonArray.length();
-        object.droneDynamicsLinkedList = new LinkedList<DroneDynamics>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject o = jsonArray.getJSONObject(i);
-            object.droneDynamicsLinkedList.add(new DroneDynamics(
-                    o.getString("drone"),
-                    o.getString("timestamp"),
-                    o.getInt("speed"),
-                    o.getFloat("align_roll"),
-                    o.getFloat("align_pitch"),
-                    o.getFloat("align_yaw"),
-                    o.getDouble("longitude"),
-                    o.getDouble("latitude"),
-                    o.getInt("battery_status"),
-                    o.getString("last_seen"),
-                    o.getString("status"))
-            );
-        }
     }
 }
