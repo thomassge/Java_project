@@ -36,16 +36,15 @@ public class Drone {
     public String getCreated(){
         return this.created;
     }
-    public int getExtractedDroneTypeID() {
-        extractedDroneTypeID = 0;
-        //CODE TO EXTRACT THE NUMBERS IN http://dronesim.facets-labs.com/api/dronetypes/67/, MORE SPECIFICALLY EXTRACT THE CHARACTERS BETWEEN THE LAST TWO SLASHES
+    public int getExtractedDroneTypeID() { // code insists that there are max /99/ drones
+        //CODE TO EXTRACT THE NUMBERS IN "http://dronesim.facets-labs.com/api/dronetypes/67/", MORE SPECIFICALLY EXTRACT THE CHARACTERS BETWEEN THE LAST TWO SLASHES
         String extractedString = this.droneTypePointer.substring(47,49);
         return Integer.valueOf(extractedString);
     }
 
     //KONSTRUKTOR
     public Drone() {
-        System.out.println("Drone Object created by default constructor.");
+        System.out.println("Drone Object Created from empty constructor.");
     };
 
     public Drone(String carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
@@ -56,10 +55,6 @@ public class Drone {
         this.carriageWeight = carriageWeight;
         this.id = id;
         this.droneTypePointer = DroneTypePointer;
-
-        // APPROACH TO CREATE DRONETyPE OBJECTS INSIDE THE DRONE CONSTRUCTOR ------------------>>> und wie? :D -TL
-        // CONNECT DATABASE AND GER DRONETYPEINFO
-        //DroneType droneTypeObject = new DroneType();
         //printDrone(this);
     }
 
