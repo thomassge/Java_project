@@ -1,6 +1,7 @@
 package Objects;
 
-import java.util.LinkedList;
+import fetching.JSONDerulo;
+import org.json.JSONObject;
 
 public class DroneDynamics {
 
@@ -14,6 +15,22 @@ public class DroneDynamics {
     private double latitude;
     private int batteryStatus;
     private String lastSeen;
+
+    //KONSTRUKTOR
+    public DroneDynamics() {};
+    public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll, float droneDynamicsControlRange, float alignmentYaw, double longitude, double latitude, int batteryStatus, String lastSeen, String status) {
+        //System.out.println("DroneDynamics Object created.");
+        this.dronePointer = dronePointer;
+        this.timestamp = timestamp;
+        this.speed = speed;
+        this.alignmentRoll = alignmentRoll;
+        this.droneDynamicsControlRange = droneDynamicsControlRange;
+        this.alignmentYaw = alignmentYaw;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.batteryStatus = batteryStatus;
+        this.lastSeen = lastSeen;
+    }
 
     //GETTER-Methods
     public String getDronePointer(){
@@ -55,21 +72,13 @@ public class DroneDynamics {
             return this.name();
         }
     }
-    //KONSTRUKTOR
-    public DroneDynamics() {};
 
-    public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll, float droneDynamicsControlRange, float alignmentYaw, double longitude, double latitude, int batteryStatus, String lastSeen, String status) {
-        //System.out.println("DroneDynamics Object created.");
-        this.dronePointer = dronePointer;
-        this.timestamp = timestamp;
-        this.speed = speed;
-        this.alignmentRoll = alignmentRoll;
-        this.droneDynamicsControlRange = droneDynamicsControlRange;
-        this.alignmentYaw = alignmentYaw;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.batteryStatus = batteryStatus;
-        this.lastSeen = lastSeen;
+    //METHODEN
+    public static int getCount() {
+        String checkDroneDynamics = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=1";
+        String jsonDroneDynamics = JSONDerulo.jsonCreator(checkDroneDynamics);
+        JSONObject droneDynamicsJsonObject = new JSONObject(jsonDroneDynamics);
+        return droneDynamicsJsonObject.getInt("count");
     }
 
     //PRINT METHODS WITH GETTER

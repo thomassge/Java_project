@@ -1,6 +1,7 @@
 package Objects;
 
-import java.util.LinkedList;
+import fetching.JSONDerulo;
+import org.json.JSONObject;
 
 public class DroneType {
 
@@ -17,7 +18,6 @@ public class DroneType {
     //Constructor
 
     public DroneType() {}
-
     public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed, int batteryCapacity, int controlRange, int maximumCarriage) {
         System.out.println("DroneType Object created");
         this.droneTypeID = droneTypeID;
@@ -56,6 +56,13 @@ public class DroneType {
         return this.maximumCarriage;
     }
 
+    public static int getCount() {
+        String checkDroneTypes = "https://dronesim.facets-labs.com/api/dronetypes/?limit=1";
+        String jsonDroneTypes = JSONDerulo.jsonCreator(checkDroneTypes);
+        JSONObject droneTypeJsonObject = new JSONObject(jsonDroneTypes);
+        return droneTypeJsonObject.getInt("count");
+    }
+
     //PRINT-methods to test without GETTER
     public void printDroneType() {
         System.out.println("DroneType id: " + this.droneTypeID);
@@ -69,4 +76,6 @@ public class DroneType {
         System.out.println("Maximum Carriage: " + this.maximumCarriage);
         System.out.println("\n");
     }
+
+
 }
