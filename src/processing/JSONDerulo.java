@@ -27,28 +27,6 @@ public class JSONDerulo {
     private static int numberOfDroneDynamics;
     private static int fileCounter;
 
-
-    public static void main(String[] args) throws IOException {
-        //Creating Drone Objects with Data from "Drones" Database
-        LinkedList<Drone> drones = getDrones(); // irrelevant da in Main
-
-        //Creating DroneType Objects
-        LinkedList<DroneType> droneTypes = getDroneTypes();
-
-        //Linking droneTypes to Drones
-        data.Drone.droneTypeToDroneLinker(droneTypes, drones);
-
-        //Adding DroneDynamics information to the Drone Objects
-        //saveDroneDynamicsDataInFile(DRONEDYNAMICS_URL);
-        addDroneDynamicsData(drones);
-
-        //Refresh Database to re-fetch information
-        refresh(drones, droneTypes);
-
-        //Print Drone Object Information
-        //drones.get(19).printAllDroneInformation();
-    }
-
     private static LinkedList<DroneType> getDroneTypes() {
         LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
         String forCreatingDroneTypeObjects = jsonCreator(DRONETYPES_URL);
