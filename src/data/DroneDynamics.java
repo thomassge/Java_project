@@ -1,9 +1,11 @@
 package data;
 
-import processing.JSONDerulo;
 import org.json.JSONObject;
+import processing.JSONDeruloHelper;
 
-public class DroneDynamics {
+import java.io.*;
+
+public class DroneDynamics implements Printable, Expandable {
 
     private String dronePointer;
     private String timestamp;
@@ -69,19 +71,19 @@ public class DroneDynamics {
         return this.status;
     }
 
-    enum Status{ // yet has to be implemented
-        OF,
-        ON,
-        IS;
-        public String getStatus() {
-            return this.name();
-        }
-    }
+//    enum Status{ // yet has to be implemented
+//        OF,
+//        ON,
+//        IS;
+//        public String getStatus() {
+//            return this.name();
+//        }
+//    }
 
     //METHODEN
     public static int getCount() {
         String checkDroneDynamics = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=1";
-        String jsonDroneDynamics = JSONDerulo.jsonCreator(checkDroneDynamics);
+        String jsonDroneDynamics = JSONDeruloHelper.jsonCreator(checkDroneDynamics);
         JSONObject droneDynamicsJsonObject = new JSONObject(jsonDroneDynamics);
         return droneDynamicsJsonObject.getInt("count");
     }
@@ -101,6 +103,73 @@ public class DroneDynamics {
         System.out.println("Last Seen: " + this.getLastSeen());
         //System.out.println("Status: " + DroneDynamics.Status.getStatus());
         System.out.println("\n");
+    }
+
+    @Override
+    public void print() {
+        printDroneDynamics();
+    }
+
+    @Override
+    public boolean checkForNewData(int serverDroneDynamicsCount) throws FileNotFoundException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("dronedynamics.json"))) {
+
+            int fileDroneDynamicsCount = getCountOffLocalJson();
+
+            if (serverDroneDynamicsCount == fileDroneDynamicsCount) {
+                return false;
+            } else {
+                System.out.println("damn, refetching");
+                return true;
+            }
+        }
+        catch (FileNotFoundException fnfE) {
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+     public int getCountOffLocalJson() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("dronedynamics.json"));
+        StringBuilder jsonContent = new StringBuilder();
+        int limit = 20;
+        int readChars = 0;
+        int currentChar = 0;
+
+        while ((currentChar = reader.read()) != -1 && readChars < limit) {
+            jsonContent.append((char) currentChar);
+            readChars++;
+        }
+
+        int fileDroneDynamicsCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
+        return fileDroneDynamicsCount;
+    }
+
+    @Override
+    public void saveAsFile() {
+        int limit = DroneDynamics.getCount();
+
+        try {
+            if(!(checkForNewData(limit))) {
+                System.out.println("No New DroneDynamics Data to fetch from");
+                return;
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("DroneDynamics Count: " + limit);
+        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneDynamicsUrl() + "?limit=" + limit);
+
+        System.out.println("Saving DroneDynamic Data from Webserver in file ...");
+
+        try (PrintWriter out = new PrintWriter("dronedynamics.json")) {
+            out.println(forCreatingDroneObjects);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
