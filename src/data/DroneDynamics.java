@@ -9,12 +9,13 @@ public class DroneDynamics {
     private String timestamp;
     private int speed;
     private float alignmentRoll;
-    private float droneDynamicsControlRange;
+    private float alignmentPitch;
     private float alignmentYaw;
     private double longitude;
     private double latitude;
     private int batteryStatus;
     private String lastSeen;
+    private String status;
 
     //KONSTRUKTOR
     public DroneDynamics() {};
@@ -24,12 +25,13 @@ public class DroneDynamics {
         this.timestamp = timestamp;
         this.speed = speed;
         this.alignmentRoll = alignmentRoll;
-        this.droneDynamicsControlRange = droneDynamicsControlRange;
+        this.alignmentPitch = droneDynamicsControlRange;
         this.alignmentYaw = alignmentYaw;
         this.longitude = longitude;
         this.latitude = latitude;
         this.batteryStatus = batteryStatus;
         this.lastSeen = lastSeen;
+        this.status = status;
     }
 
     //GETTER-Methods
@@ -45,8 +47,8 @@ public class DroneDynamics {
     public float getAlignmentRoll(){
         return this.alignmentRoll;
     }
-    public float getDroneDynamicsControlRange(){
-        return this.droneDynamicsControlRange;
+    public float getAlignmentPitch(){
+        return this.alignmentPitch;
     }
     public float getAlignmentYaw(){
         return this.alignmentYaw;
@@ -62,6 +64,9 @@ public class DroneDynamics {
     }
     public String getLastSeen(){
         return this.lastSeen;
+    }
+    public String getStatus() {
+        return this.status;
     }
 
     enum Status{ // yet has to be implemented
@@ -88,7 +93,7 @@ public class DroneDynamics {
         System.out.println("Timestamp: " + this.getTimestamp());
         System.out.println("Speed: " + this.getSpeed());
         System.out.println("Alignment Roll: " + this.getAlignmentRoll());
-        System.out.println("DroneDynamics Control Range: " + this.getDroneDynamicsControlRange());
+        System.out.println("DroneDynamics Control Range: " + this.getAlignmentPitch());
         System.out.println("Alignment Yaw: " + this.getAlignmentRoll());
         System.out.println("Longitude: " + this.getLongitude());
         System.out.println("Latitude: " + this.getLatitude());

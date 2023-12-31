@@ -1,7 +1,8 @@
 package GUI;
 
 import data.Drone;
-import jdk.internal.org.jline.terminal.TerminalBuilder;
+import dronesim.Main;
+//import jdk.internal.org.jline.terminal.TerminalBuilder;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -101,12 +102,7 @@ public class GUI_TL {
 
         // Simple Table
         String[] columns = {"Serialnumber"};
-        Object [] data =
-                {
-                        {
-                                System.out.println(Drone.getSerialnumber());
-                        }
-                }
+        //Object [] data = { System.out.println(Drone.getSerialnumber());}
 
     }
 }

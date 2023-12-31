@@ -61,6 +61,12 @@ public class Drone {
         String extractedString = this.droneTypePointer.substring(47,49);
         return Integer.valueOf(extractedString);
     }
+    public DroneType getDroneTypeObject() {
+        return this.droneTypeObject;
+    }
+    public ArrayList<DroneDynamics> getDroneDynamicsArrayList() {
+        return this.droneDynamicsArrayList;
+    }
 
     // METHOD TO LINK FITTING DRONETYPE OBJECT TO RIGHT DRONE OBJECT
     /*public static void droneTypeToDroneLinker(LinkedList<DroneType> droneTypes, LinkedList<Drone> drones) {
