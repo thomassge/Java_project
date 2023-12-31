@@ -38,6 +38,8 @@ public class Drone {
     }
 
     //GETTER-Methods
+
+    public DroneType getDroneTypeObject() {return this.droneTypeObject;}
     public String getDroneTypePointer(){
         return this.droneTypePointer;
     }
