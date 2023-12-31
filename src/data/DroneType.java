@@ -1,9 +1,11 @@
 package data;
 
-import processing.JSONDerulo;
 import org.json.JSONObject;
+import processing.JSONDeruloHelper;
 
-public class DroneType {
+import java.io.*;
+
+public class DroneType implements Expandable {
 
     //DRONETYPE DATA
     private int droneTypeID;
@@ -57,7 +59,7 @@ public class DroneType {
 
     public static int getCount() {
         String checkDroneTypes = "https://dronesim.facets-labs.com/api/dronetypes/?limit=1";
-        String jsonDroneTypes = JSONDerulo.jsonCreator(checkDroneTypes);
+        String jsonDroneTypes = JSONDeruloHelper.jsonCreator(checkDroneTypes);
         JSONObject droneTypeJsonObject = new JSONObject(jsonDroneTypes);
         return droneTypeJsonObject.getInt("count");
     }
@@ -76,5 +78,72 @@ public class DroneType {
         System.out.println("\n");
     }
 
+    @Override
+    public int getCountOffLocalJson() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"));
+        StringBuilder jsonContent = new StringBuilder();
+        int limit = 20;
+        int readChars = 0;
+        int currentChar = 0;
+
+        while ((currentChar = reader.read()) != -1 && readChars < limit) {
+            jsonContent.append((char) currentChar);
+            readChars++;
+        }
+
+        int fileDroneTypeCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
+        return fileDroneTypeCount;
+    }
+
+    @Override
+    public boolean checkForNewData(int serverDroneTypeCount) throws FileNotFoundException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"))) {
+
+            int fileDroneTypeCount = getCountOffLocalJson();
+
+            if (serverDroneTypeCount == fileDroneTypeCount) {
+                return false;
+            } else {
+                System.out.println("damn, refetching");
+                return true;
+            }
+        }
+        catch (FileNotFoundException fnfE) {
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveAsFile() {
+        int limit = DroneType.getCount();
+
+        try {
+            if(!(checkForNewData(limit))) {
+                System.out.println("No New DroneType Data to fetch from");
+                return;
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("DroneTypes Count: " + limit);
+        String forCreatingDroneTypeObjects = processing.JSONDeruloHelper.jsonCreator(processing.JSONDeruloHelper.getDroneTypesUrl() + "?limit=" + limit);
+
+        System.out.println("Saving DroneType Data from Webserver in file ...");
+
+        try (PrintWriter out = new PrintWriter("dronetypes.json")) {
+            out.println(forCreatingDroneTypeObjects);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /*@Override
+    public void print() {
+        printDroneType();
+    }*/
 
 }

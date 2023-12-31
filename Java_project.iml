@@ -19,5 +19,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="json-20231013-javadoc" level="project" />
+    <orderEntry type="library" name="jackson-databind-2.16.1" level="project" />
   </component>
 </module>

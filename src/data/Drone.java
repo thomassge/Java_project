@@ -1,12 +1,12 @@
 package data;
 
-import processing.JSONDerulo;
 import org.json.JSONObject;
+import processing.JSONDeruloHelper;
 
+import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
-public class Drone {
+public class Drone implements Printable, Expandable {
 
     //INDIVIDUALDRONE DATA
     private String droneTypePointer;
@@ -61,6 +61,20 @@ public class Drone {
         String extractedString = this.droneTypePointer.substring(47,49);
         return Integer.valueOf(extractedString);
     }
+    public DroneType getDroneTypeObject() {
+        return this.droneTypeObject;
+    }
+    public ArrayList<DroneDynamics> getDroneDynamicsArrayList() {
+        return this.droneDynamicsArrayList;
+    }
+
+    public void setDroneTypeObject(DroneType droneTypeObject) {
+        this.droneTypeObject = droneTypeObject;
+    }
+
+    public void setDroneDynamicsArrayList(ArrayList<DroneDynamics> droneDynamicsArrayList) {
+        this.droneDynamicsArrayList = droneDynamicsArrayList;
+    }
 
     // METHOD TO LINK FITTING DRONETYPE OBJECT TO RIGHT DRONE OBJECT
     /*public static void droneTypeToDroneLinker(LinkedList<DroneType> droneTypes, LinkedList<Drone> drones) {
@@ -80,26 +94,12 @@ public class Drone {
             }
         }
     } */
-    public static void droneTypeToDroneLinker(LinkedList<DroneType> droneTypes, LinkedList<Drone> drones) {
-        for(Drone droneObjectThatNeedsDroneTypeInformation : drones) {
-            if(droneObjectThatNeedsDroneTypeInformation.droneTypeObject == null) {
-
-                for (DroneType droneType : droneTypes) {
-                    if (droneObjectThatNeedsDroneTypeInformation.getExtractedDroneTypeID() == (droneType.getDroneTypeID())) {
-
-                        droneObjectThatNeedsDroneTypeInformation.droneTypeObject = droneType;
-                        break; //break added
-                    }
-                }
-            }
-            else { continue; }
-        }
-    }
 
     // get id's or more data to check for duplicates, request wird eh gemacht
+
     public static int getCount() {
         String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
-        String jsonDrones = JSONDerulo.jsonCreator(checkDrones);
+        String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
         JSONObject droneJsonObject = new JSONObject(jsonDrones);
         return droneJsonObject.getInt("count");
     }
@@ -134,4 +134,78 @@ public class Drone {
             myList.get(i).printDroneDynamics();
         }
     }
+
+    @Override
+    public void print() {
+        printDrone();
+    }
+
+    @Override
+    public int getCountOffLocalJson() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("drones.json"));
+        StringBuilder jsonContent = new StringBuilder();
+        int limit = 20;
+        int readChars = 0;
+        int currentChar = 0;
+
+        while ((currentChar = reader.read()) != -1 && readChars < limit) {
+            jsonContent.append((char) currentChar);
+            readChars++;
+        }
+
+        int fileDroneCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
+        return fileDroneCount;
+    }
+
+    @Override
+    public boolean checkForNewData(int serverDroneCount) throws FileNotFoundException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("drones.json"))) {
+
+            int fileDroneCount = getCountOffLocalJson();
+
+            if (serverDroneCount == fileDroneCount) {
+                return false;
+            } else {
+                System.out.println("damn, refetching");
+                return true;
+            }
+        }
+        catch (FileNotFoundException fnfE) {
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveAsFile() {
+        int limit = Drone.getCount();
+
+        try {
+            if(!(checkForNewData(limit))) {
+                System.out.println("No New Drone Data to fetch from");
+                return;
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("Drone Count: " + limit);
+        String forCreatingDroneObjects = processing.JSONDeruloHelper.jsonCreator(processing.JSONDeruloHelper.getDronesUrl() + "?limit=" + limit);
+
+        System.out.println("Saving Drone Data from Webserver in file ...");
+
+        try (PrintWriter out = new PrintWriter("drones.json")) {
+            out.println(forCreatingDroneObjects);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+//    @Override
+//    public void printWholeList() {
+//        for(int i = 0; i < JSONDeruloHelper.numberOfDrones; i++) {
+//            JSONDeruloHelper.
+//        }
+//    }
 }
