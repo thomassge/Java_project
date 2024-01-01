@@ -127,9 +127,10 @@ public class Menu extends JPanel implements ActionListener {
 
         addtoPanel(panel, "Drone Type data", 0, 0);
 
-        droneFrame.setSize(300, 250);
+        droneFrame.setSize(550, 550);
         droneFrame.setVisible(true);
     }
+
     protected void opendronedWindow() {
         JFrame droneFrame = new JFrame("Drone Dynamics");
         JPanel panel = new JPanel();
@@ -140,10 +141,9 @@ public class Menu extends JPanel implements ActionListener {
 
         addtoPanel(panel, "Drone Dynamics", 0, 0);
 
-        droneFrame.setSize(300, 250);
+        droneFrame.setSize(550, 550);
         droneFrame.setVisible(true);
     }
-
 
     protected void openCreditsWindow() {
         JFrame droneFrame = new JFrame("Credits");
@@ -162,7 +162,7 @@ public class Menu extends JPanel implements ActionListener {
         addtoPanel(panel, "Robin Remines - matr.no. 1459883", 0, 6);
         addtoPanel(panel, "Thomas Levantis – matr.no. 1429473 ", 0, 7);
 
-        droneFrame.setSize(300, 250);
+        droneFrame.setSize(350, 350);
         droneFrame.setVisible(true);
     }
 
@@ -220,7 +220,7 @@ public class Menu extends JPanel implements ActionListener {
         demo.setOpaque(true);
         frame.setContentPane(demo);
 
-        frame.setSize(350, 350);
+        frame.setSize(550, 550);
         frame.setVisible(true);
     }
 
