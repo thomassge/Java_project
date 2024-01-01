@@ -122,14 +122,16 @@ public class Menu extends JPanel implements ActionListener {
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        addtoPanel(panel, "FRA UAS - Java Project: ", 0, 0);
-        addtoPanel(panel, "Thomas Levantis – matr.no. 1429473 ", 0, 1);
-        addtoPanel(panel, "Eyüp Korkmaz - matr.no. 1448519", 0, 2);
-        addtoPanel(panel, "Leon Oet - matr.no. 1267114", 0, 3);
-        addtoPanel(panel, "Robin Remines - matr.no. 1459883", 0, 4);
+        addtoPanel(panel, "FRA UAS - OOP Java", 0, 0);
+        addtoPanel(panel, "Professor: Prof. Dr. Müller-Bady", 0, 1);
+        addtoPanel(panel, "Drone Project  by: ", 0, 2);
+        addtoPanel(panel, "Eyüp Korkmaz - matr.no. 1448519", 0, 3);
+        addtoPanel(panel, "Leon Oet - matr.no. 1267114", 0, 4);
         addtoPanel(panel, "Marc O. Difflipp – matr.no. 1028010", 0, 5);
-
-        droneFrame.setSize(300, 200);
+        addtoPanel(panel, "Robin Remines - matr.no. 1459883", 0, 6);
+        addtoPanel(panel, "Thomas Levantis – matr.no. 1429473 ", 0, 7);
+        
+        droneFrame.setSize(300, 250);
         droneFrame.setVisible(true);
     }
 
@@ -143,7 +145,6 @@ public class Menu extends JPanel implements ActionListener {
         gbc.insets = new Insets(10, 0, 0, 0);
         panel.add(label, gbc);
     }
-
 
     protected void quit() {System.exit(0);}
 
@@ -188,7 +189,7 @@ public class Menu extends JPanel implements ActionListener {
         demo.setOpaque(true);
         frame.setContentPane(demo);
 
-        frame.setSize(350, 250);
+        frame.setSize(350, 350);
         frame.setVisible(true);
     }
 
