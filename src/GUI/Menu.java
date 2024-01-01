@@ -82,13 +82,14 @@ public class Menu extends JPanel implements ActionListener {
         menu = new JMenu("Menu");
         menuBar.add(menu);
 
-        menuItem = new JMenuItem("Drone");
-        menu.add(menuItem);
-
         menuItem = new JMenuItem("DroneType");
+        menuItem.setActionCommand("dronet"); // Set action command for the drone menu item
+        menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
 
         menuItem = new JMenuItem("DroneDynamic");
+        menuItem.setActionCommand("droned"); // Set action command for the drone menu item
+        menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
         menu.addSeparator();
 
@@ -96,26 +97,56 @@ public class Menu extends JPanel implements ActionListener {
         menuItem.setActionCommand("credits"); // Set action command for the drone menu item
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
-
-
-        menu = new JMenu("Menu2");
-        menuBar.add(menu);
-
-
+        //menu = new JMenu("Menu2");
+        //menuBar.add(menu);
         return menuBar;
     }
 
     public void actionPerformed(ActionEvent e) {
-        if ("credits".equals(e.getActionCommand())) {
-            openDroneWindow();
+        if ("droned".equals(e.getActionCommand())) {
+            opendronedWindow();
+        }
+        else if ("dronet".equals(e.getActionCommand())) {
+            opendronetWindow();
+        }
+        else if ("credits".equals(e.getActionCommand())) {
+            openCreditsWindow();
         }
          else {
             quit();
         }
     }
 
-    protected void openDroneWindow() {
-        JFrame droneFrame = new JFrame("New Window");
+    protected void opendronetWindow() {
+        JFrame droneFrame = new JFrame("Drone Type");
+        JPanel panel = new JPanel();
+        droneFrame.getContentPane().add(panel);
+
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        addtoPanel(panel, "Drone Type data", 0, 0);
+
+        droneFrame.setSize(300, 250);
+        droneFrame.setVisible(true);
+    }
+    protected void opendronedWindow() {
+        JFrame droneFrame = new JFrame("Drone Dynamics");
+        JPanel panel = new JPanel();
+        droneFrame.getContentPane().add(panel);
+
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        addtoPanel(panel, "Drone Dynamics", 0, 0);
+
+        droneFrame.setSize(300, 250);
+        droneFrame.setVisible(true);
+    }
+
+
+    protected void openCreditsWindow() {
+        JFrame droneFrame = new JFrame("Credits");
         JPanel panel = new JPanel();
         droneFrame.getContentPane().add(panel);
 
@@ -130,7 +161,7 @@ public class Menu extends JPanel implements ActionListener {
         addtoPanel(panel, "Marc O. Difflipp – matr.no. 1028010", 0, 5);
         addtoPanel(panel, "Robin Remines - matr.no. 1459883", 0, 6);
         addtoPanel(panel, "Thomas Levantis – matr.no. 1429473 ", 0, 7);
-        
+
         droneFrame.setSize(300, 250);
         droneFrame.setVisible(true);
     }
