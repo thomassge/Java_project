@@ -116,15 +116,35 @@ public class Menu extends JPanel implements ActionListener {
 
     protected void openDroneWindow() {
         JFrame droneFrame = new JFrame("New Window");
-        JLabel label = new JLabel("FRA UAS Java Project + Namen");
+        JPanel panel = new JPanel();
+        droneFrame.getContentPane().add(panel);
 
-        //label.setHorizontalAlignment(JLabel.CENTER);
-        //label.setVerticalAlignment(JLabel.LEFT);
-        droneFrame.add(label);
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        addtoPanel(panel, "FRA UAS - Java Project: ", 0, 0);
+        addtoPanel(panel, "Thomas Levantis – matr.no. 1429473 ", 0, 1);
+        addtoPanel(panel, "Eyüp Korkmaz - matr.no. 1448519", 0, 2);
+        addtoPanel(panel, "Leon Oet - matr.no. 1267114", 0, 3);
+        addtoPanel(panel, "Robin Remines - matr.no. 1459883", 0, 4);
+        addtoPanel(panel, "Marc O. Difflipp – matr.no. 1028010", 0, 5);
 
         droneFrame.setSize(300, 200);
         droneFrame.setVisible(true);
     }
+
+    public static void addtoPanel(JPanel panel, String labelText, int gridx, int gridy){
+        JLabel label = new JLabel(labelText);
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.gridx = gridx;
+        gbc.gridy =  gridy;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        gbc.insets = new Insets(10, 0, 0, 0);
+        panel.add(label, gbc);
+    }
+
+
     protected void quit() {System.exit(0);}
 
     public Container createContentPane() {
