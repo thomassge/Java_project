@@ -275,7 +275,7 @@ public class Menu extends JPanel implements ActionListener {
         //demo.setOpaque(true);?
         frame.setContentPane(demo);
 
-        frame.setSize(650, 550);
+        frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

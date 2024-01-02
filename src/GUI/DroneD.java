@@ -113,10 +113,10 @@ public class DroneD extends JPanel implements ActionListener {
     }
 
     protected void updateBottomLeftText() {
-        String batteryStatus = "Full";
-        String timeStamp = "12:00";
-        String speed = "60 km/h";
-        String lastSeen = "Yesterday";
+        String batteryStatus = "67%";
+        String timeStamp = "12:17:34";
+        String speed = "60 kp/h";
+        String lastSeen = "dd/mm/yyyy";
 
         StringBuilder text = new StringBuilder();
         text.append("Battery status: ").append(batteryStatus).append("\n");
@@ -140,9 +140,9 @@ public class DroneD extends JPanel implements ActionListener {
         JFrame frame = new JFrame("DroneD");
         DroneD droneD = new DroneD();
         frame.setContentPane(droneD);
-
-        frame.pack();
-        frame.setSize(600, 400); // Adjust the frame size as necessary
+        //frame.pack();?
+        frame.setSize(550, 550);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
