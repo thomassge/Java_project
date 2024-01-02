@@ -128,6 +128,7 @@ public class Menu extends JPanel implements ActionListener {
         addtoPanel(panel, "Drone Type data", 0, 0);
 
         droneFrame.setSize(550, 550);
+        droneFrame.setLocationRelativeTo(null);
         droneFrame.setVisible(true);
     }
 
@@ -142,6 +143,7 @@ public class Menu extends JPanel implements ActionListener {
         addtoPanel(panel, "Drone Dynamics", 0, 0);
 
         droneFrame.setSize(550, 550);
+        droneFrame.setLocationRelativeTo(null);
         droneFrame.setVisible(true);
     }
 
@@ -163,6 +165,7 @@ public class Menu extends JPanel implements ActionListener {
         addtoPanel(panel, "Thomas Levantis – matr.no. 1429473 ", 0, 7);
 
         droneFrame.setSize(300, 300);
+        droneFrame.setLocationRelativeTo(null);
         droneFrame.setVisible(true);
     }
 
@@ -221,6 +224,7 @@ public class Menu extends JPanel implements ActionListener {
         frame.setContentPane(demo);
 
         frame.setSize(550, 550);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
