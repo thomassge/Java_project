@@ -5,11 +5,22 @@ import dronesim.*;
 import processing.*;
 import services.*;
 
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 import java.util.*;
+import java.io.IOException;
+
+/* Wenn einer Lust hat
+import javax.swing.JInternalFrame;
+import javax.swing.JDesktopPane;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JMenuBar;
+import javax.swing.JFrame;
+import javax.swing.KeyStroke;
+ */
+
 
 public class Menu extends JPanel implements ActionListener {
     JTextArea output;
@@ -22,10 +33,10 @@ public class Menu extends JPanel implements ActionListener {
     public static JSONDeruloHelper helper = new JSONDeruloHelper();
 
 
-
-    //Tabelleninhalt
+    //Konstruktor Tabelleninhalt
     public Menu() {
         super(new GridLayout(1,0));
+        int i = 1;
 
         String[] columnNames = {
                 "Nr.",
@@ -37,17 +48,14 @@ public class Menu extends JPanel implements ActionListener {
 
         Object[][] data = {
 //VPN
-
                 {
-                        "1",
+                        i,
                         drones.getFirst().getDroneTypeObject().getTypename(),
                         drones.getFirst().getSerialnumber(),
                         drones.getFirst().getId(),
                         drones.getFirst().getCarriageWeight(),
                         drones.getFirst().getCarriageType(),
                 },
-
-
 
                 {
                         new Integer(2),
@@ -98,11 +106,11 @@ public class Menu extends JPanel implements ActionListener {
  */
 
 
-
     //Menuleiste
     public JMenuBar createMenuBar() {
         JMenuBar menuBar;
-        JMenu menu, submenu;
+        JMenu menu;
+        JMenu menu2;
         JMenuItem menuItem;
         JRadioButtonMenuItem rbMenuItem;
         JCheckBoxMenuItem cbMenuItem;
@@ -110,23 +118,32 @@ public class Menu extends JPanel implements ActionListener {
         menuBar = new JMenuBar();
 
         menu = new JMenu("Menu");
+        menu.setMnemonic(KeyEvent.VK_M);
         menuBar.add(menu);
 
-        menuItem = new JMenuItem("DroneType");
+
+        menuItem = new JMenuItem("DroneType",KeyEvent.VK_T);
         menuItem.setActionCommand("dronet"); // Set action command for the drone menu item
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
 
-        menuItem = new JMenuItem("DroneDynamic");
+        menuItem = new JMenuItem("DroneDynamic", KeyEvent.VK_D);
         menuItem.setActionCommand("droned"); // Set action command for the drone menu item
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
         menu.addSeparator();
 
-        menuItem = new JMenuItem("Credits");
+        menuItem = new JMenuItem("Credits", KeyEvent.VK_C);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
         menuItem.setActionCommand("credits"); // Set action command for the drone menu item
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
+
+
+        menu2 = new JMenu("Refresh");
+        menu2.setMnemonic(KeyEvent.VK_R);
+        menuBar.add(menu2);
+
 
         return menuBar;
     }
@@ -236,7 +253,6 @@ public class Menu extends JPanel implements ActionListener {
 
  */
 
-
     //GUI mit Menuleiste aus Menu()
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("Drone Simulator");
@@ -253,17 +269,14 @@ public class Menu extends JPanel implements ActionListener {
     }
 
 
-
-
     public static void main(String[] args) throws IOException {
 //VPN
-
         drones = helper.getDrones();
         droneTypes = helper.getDroneTypes();
         helper.droneTypeToDroneLinker(droneTypes, drones);
         helper.addDroneDynamicsData(drones);
 
-
         javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {createAndShowGUI();}});
     }
+
 }
