@@ -39,7 +39,6 @@ public class DroneT extends JPanel
     protected void updateLabel(String name) {
         ImageIcon icon = createImageIcon("images/" + name + ".jpg");
         picture.setIcon(icon);
-        picture.setToolTipText("A drawing of a " + name.toLowerCase());
         if (icon != null) {
             picture.setText(null);
         } else {
