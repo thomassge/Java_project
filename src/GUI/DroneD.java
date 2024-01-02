@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class DroneD extends JPanel implements ActionListener {
-    JComboBox<String> petList;
+    JComboBox<String> List;
     JLabel selectedImage;
     JLabel fixedImage;
     JTextArea topRightText;
@@ -15,17 +15,17 @@ public class DroneD extends JPanel implements ActionListener {
     public DroneD() {
         super(new BorderLayout());
 
-        String[] petStrings = { "Drone1", "Drone2", "Drone3" };
+        String[] Strings = { "Drone1", "Drone2", "Drone3" };
 
         // Set up the combo box and the selected image on top left
         JPanel topPanel = new JPanel(new BorderLayout());
         selectedImage = new JLabel();
-        petList = new JComboBox<>(petStrings);
-        petList.setMaximumSize(new Dimension(50, petList.getPreferredSize().height));
-        petList.setSelectedIndex(0);
-        petList.addActionListener(this);
+        List = new JComboBox<>(Strings);
+        List.setMaximumSize(new Dimension(50, List.getPreferredSize().height));
+        List.setSelectedIndex(0);
+        List.addActionListener(this);
         topPanel.add(selectedImage, BorderLayout.CENTER);
-        topPanel.add(petList, BorderLayout.NORTH);
+        topPanel.add(List, BorderLayout.NORTH);
 
         // Set up the fixed image "Drone1.jpg" on bottom right
         fixedImage = new JLabel();
@@ -38,13 +38,13 @@ public class DroneD extends JPanel implements ActionListener {
         topRightText = new JTextArea();
         topRightText.setEditable(false);
         topRightText.setFont(new Font("Arial", Font.PLAIN, 14));
-        topRightText.setPreferredSize(new Dimension(200, 100));
+        topRightText.setPreferredSize(new Dimension(120, 100));
         updateTopRightText("Drone1"); // Initial setup
 
         bottomLeftText = new JTextArea();
         bottomLeftText.setEditable(false);
         bottomLeftText.setFont(new Font("Arial", Font.PLAIN, 14));
-        bottomLeftText.setPreferredSize(new Dimension(200, 100));
+        bottomLeftText.setPreferredSize(new Dimension(120, 100));
 
         // Add components to the panel using GridBagLayout
         JPanel gridPanel = new JPanel(new GridBagLayout());
@@ -85,8 +85,8 @@ public class DroneD extends JPanel implements ActionListener {
     /** Listens to the combo box. */
     public void actionPerformed(ActionEvent e) {
         JComboBox<?> cb = (JComboBox<?>) e.getSource();
-        String petName = (String) cb.getSelectedItem();
-        updateLabel(petName);
+        String Name = (String) cb.getSelectedItem();
+        updateLabel(Name);
     }
 
     protected void updateLabel(String name) {
