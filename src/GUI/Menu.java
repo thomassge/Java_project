@@ -1,18 +1,26 @@
 package GUI;
+
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+import data.*;
+import dronesim.*;
+import processing.*;
+import services.*;
+
 public class Menu extends JPanel implements ActionListener {
     JTextArea output;
     JScrollPane scrollPane;
     private boolean DEBUG = false;
-    /*VPN
+    //VPN
+    /*
     public static LinkedList<Drone> drones = new LinkedList<>();
     public static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
     public static JSONDeruloHelper helper = new JSONDeruloHelper();
-    */
+     */
+
 
     //Tabelleninhalt
     public Menu() {
@@ -27,7 +35,8 @@ public class Menu extends JPanel implements ActionListener {
                 "CarrType"};
 
         Object[][] data = {
-/*VPN
+//VPN
+                /*
                 {
                         "1",
                         drones.getFirst().getDroneTypeObject().getTypename(),
@@ -36,7 +45,9 @@ public class Menu extends JPanel implements ActionListener {
                         drones.getFirst().getCarriageWeight(),
                         drones.getFirst().getCarriageType(),
                 },
-*/
+
+                 */
+
                 {
                         new Integer(2),
                         "S5C",
@@ -50,7 +61,7 @@ public class Menu extends JPanel implements ActionListener {
         table.setPreferredScrollableViewportSize(new Dimension(200, 200));
         table.setFillsViewportHeight(true);
         //?
-        /*
+
         if (DEBUG) {
             table.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
@@ -58,13 +69,13 @@ public class Menu extends JPanel implements ActionListener {
                 }
             });
         }
- */
+
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);
     }
 
     //?
-    /*
+
     private void printDebugData(JTable table) {
         int numRows = table.getRowCount();
         int numCols = table.getColumnCount();
@@ -81,7 +92,7 @@ public class Menu extends JPanel implements ActionListener {
         System.out.println("--------------------------");
     }
 
-     */
+
 
     //Menuleiste
     public JMenuBar createMenuBar() {
@@ -201,7 +212,7 @@ public class Menu extends JPanel implements ActionListener {
     protected void quit() {System.exit(0);}
 
     //?
-    /*
+
     public Container createContentPane() {
         //Create the content-pane-to-be.
         JPanel contentPane = new JPanel(new BorderLayout());
@@ -217,7 +228,7 @@ public class Menu extends JPanel implements ActionListener {
 
         return contentPane;
     }
- */
+
 
     //GUI mit Menuleiste aus Menu()
     private static void createAndShowGUI() {
@@ -238,12 +249,14 @@ public class Menu extends JPanel implements ActionListener {
 
 
     public static void main(String[] args) throws IOException {
-/*VPN
+//VPN
+        /*
         drones = helper.getDrones();
         droneTypes = helper.getDroneTypes();
         helper.droneTypeToDroneLinker(droneTypes, drones);
         helper.addDroneDynamicsData(drones);
-*/
+         */
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {createAndShowGUI();}});
     }
 }
