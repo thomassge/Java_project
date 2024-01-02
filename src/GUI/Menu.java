@@ -51,7 +51,7 @@ public class Menu extends JPanel implements ActionListener {
 
                 {
                         new Integer(2),
-                        "S5C",
+                        "Test:S5C",
                         "SnS5-etc..",
                         "#ID",
                         "73",
