@@ -36,8 +36,6 @@ public class Menu extends JPanel implements ActionListener {
     //Konstruktor Tabelleninhalt
     public Menu() {
         super(new GridLayout(1,0));
-        int i = 1;
-
         String[] columnNames = {
                 "Nr.",
                 "DroneType",
@@ -46,24 +44,19 @@ public class Menu extends JPanel implements ActionListener {
                 "CarrWeight",
                 "CarrType"};
 
-        Object[][] data = {
-//VPN
-                {
-                        i,
-                        drones.getFirst().getDroneTypeObject().getTypename(),
-                        drones.getFirst().getSerialnumber(),
-                        drones.getFirst().getId(),
-                        drones.getFirst().getCarriageWeight(),
-                        drones.getFirst().getCarriageType(),
-                },
+        // Create a data array with the size of the drones list
+        Object[][] data = new Object[drones.size()][columnNames.length];
 
-                {
-                        new Integer(2),
-                        "Test:S5C",
-                        "SnS5-etc..",
-                        "#ID",
-                        "73",
-                        "ACT"}
+        // Loop through the drones list to populate the data array
+        for (int i = 0; i < drones.size(); i++) {
+            data[i][0] = i + 1; // "Nr." column
+
+            // Fetch data for each drone and populate the respective columns
+            data[i][1] = drones.get(i).getDroneTypeObject().getTypename();
+            data[i][2] = drones.get(i).getSerialnumber();
+            data[i][3] = drones.get(i).getId();
+            data[i][4] = drones.get(i).getCarriageWeight();
+            data[i][5] = drones.get(i).getCarriageType();
         };
 
         final JTable table = new JTable(data, columnNames);
