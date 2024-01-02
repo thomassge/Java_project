@@ -163,8 +163,8 @@ public class Menu extends JPanel implements ActionListener {
             quit();
         }
     }
-
-    //Klick auf DroneType
+    //alt
+    /*
     protected void opendronetWindow() {
         JFrame droneFrame = new JFrame("Drone Type");
         JPanel panel = new JPanel();
@@ -173,11 +173,20 @@ public class Menu extends JPanel implements ActionListener {
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        addtoPanel(panel, "Drone Type data", 0, 0);
-
         droneFrame.setSize(550, 550);
         droneFrame.setLocationRelativeTo(null);
         droneFrame.setVisible(true);
+    }
+     */
+    //Klick auf DroneType öffnet neue klasse DroneT
+    protected void opendronetWindow() {
+
+        DroneT droneTWindow = new DroneT();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                droneTWindow.createAndShowGUI();
+            }
+        });
     }
 
     //Klick auf DroneDynamic
