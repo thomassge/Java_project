@@ -1,12 +1,12 @@
 package data;
 
-import org.json.JSONObject;
-import data.*;
 import dronesim.*;
 import processing.*;
 import services.*;
+import org.json.JSONObject;
 
 import java.io.*;
+
 
 public class DroneDynamics implements Printable, Expandable {
 

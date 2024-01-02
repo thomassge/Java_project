@@ -1,21 +1,14 @@
 package processing;
 
 import data.*;
-//import Objects.Drone;
-//import Objects.DroneType;
-//import Objects.DroneDynamics;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.net.*;
 import java.lang.*;
+
 
 public class JSONDeruloHelper {
 

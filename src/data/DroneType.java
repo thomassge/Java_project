@@ -1,9 +1,12 @@
 package data;
 
+import dronesim.*;
+import processing.*;
+import services.*;
 import org.json.JSONObject;
-import processing.JSONDeruloHelper;
 
 import java.io.*;
+
 
 public class DroneType implements Expandable {
 
@@ -129,7 +132,7 @@ public class DroneType implements Expandable {
         }
 
         System.out.println("DroneTypes Count: " + limit);
-        String forCreatingDroneTypeObjects = processing.JSONDeruloHelper.jsonCreator(processing.JSONDeruloHelper.getDroneTypesUrl() + "?limit=" + limit);
+        String forCreatingDroneTypeObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneTypesUrl() + "?limit=" + limit);
 
         System.out.println("Saving DroneType Data from Webserver in file ...");
 

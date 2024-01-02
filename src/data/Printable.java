@@ -1,6 +1,6 @@
 package data;
 
-import java.util.LinkedList;
+import java.util.*;
 
 public interface Printable {
     public void print();

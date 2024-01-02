@@ -1,9 +1,11 @@
 package dronesim;
+
 import data.*;
-import processing.JSONDeruloHelper;
+import processing.*;
 
 import java.io.IOException;
 import java.util.LinkedList;
+
 
 public class Main {
     private static JSONDeruloHelper jsonDerulo = new JSONDeruloHelper();

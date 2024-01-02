@@ -1,15 +1,15 @@
 package GUI;
 
-import java.awt.event.*;
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
-import java.util.LinkedList;
-
 import data.*;
 import dronesim.*;
 import processing.*;
 import services.*;
+
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.util.*;
 
 public class Menu extends JPanel implements ActionListener {
     JTextArea output;
