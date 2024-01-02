@@ -32,8 +32,8 @@ public class DroneT extends JPanel
 
     public void actionPerformed(ActionEvent e) {
         JComboBox cb = (JComboBox)e.getSource();
-        String petName = (String)cb.getSelectedItem();
-        updateLabel(petName);
+        String Name = (String)cb.getSelectedItem();
+        updateLabel(Name);
     }
 
     protected void updateLabel(String name) {
