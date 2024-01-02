@@ -178,31 +178,34 @@ public class Menu extends JPanel implements ActionListener {
         droneFrame.setVisible(true);
     }
      */
-    //Klick auf DroneType öffnet neue klasse DroneT
-    protected void opendronetWindow() {
 
-        DroneT droneTWindow = new DroneT();
+    //Klick auf DroneType öffnet neue klasse DroneD
+    protected void opendronedWindow() {
+        DroneD droneDWindow = new DroneD();
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                droneTWindow.createAndShowGUI();
+                droneDWindow.createAndShowGUI();
             }
         });
+
     }
 
-    //Klick auf DroneDynamic
-    protected void opendronedWindow() {
-        JFrame droneFrame = new JFrame("Drone Dynamics");
+    //Klick auf DroneType
+    protected void opendronetWindow() {
+
+        JFrame droneFrame = new JFrame("Drone Type");
         JPanel panel = new JPanel();
         droneFrame.getContentPane().add(panel);
 
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        addtoPanel(panel, "Drone Dynamics", 0, 0);
+        addtoPanel(panel, "Drone Type", 0, 0);
 
         droneFrame.setSize(550, 550);
         droneFrame.setLocationRelativeTo(null);
         droneFrame.setVisible(true);
+
     }
 
     //Klick auf Credits
@@ -272,7 +275,7 @@ public class Menu extends JPanel implements ActionListener {
         //demo.setOpaque(true);?
         frame.setContentPane(demo);
 
-        frame.setSize(550, 550);
+        frame.setSize(650, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
