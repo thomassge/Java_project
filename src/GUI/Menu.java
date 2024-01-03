@@ -38,9 +38,10 @@ public class Menu extends JPanel implements ActionListener {
         super(new GridLayout(1,0));
         String[] columnNames = {
                 "Nr.",
-                "DroneType",
-                "Serialnr",
                 "ID",
+                "DroneType",
+                "Created",
+                "Serialnr",
                 "CarrWeight",
                 "CarrType"};
 
@@ -52,11 +53,12 @@ public class Menu extends JPanel implements ActionListener {
             data[i][0] = i + 1; // "Nr." column
 
             // Fetch data for each drone and populate the respective columns
-            data[i][1] = drones.get(i).getDroneTypeObject().getTypename();
-            data[i][2] = drones.get(i).getSerialnumber();
-            data[i][3] = drones.get(i).getId();
-            data[i][4] = drones.get(i).getCarriageWeight();
-            data[i][5] = drones.get(i).getCarriageType();
+            data[i][1] = drones.get(i).getId();
+            data[i][2] = drones.get(i).getDroneTypeObject().getTypename();
+            data[i][3] = drones.get(i).getCreated();
+            data[i][4] = drones.get(i).getSerialnumber();
+            data[i][5] = drones.get(i).getCarriageWeight();
+            data[i][6] = drones.get(i).getCarriageType();
         };
 
         final JTable table = new JTable(data, columnNames) {
@@ -85,8 +87,18 @@ public class Menu extends JPanel implements ActionListener {
         table.setFillsViewportHeight(true);
 
         //edits specific column width
-        TableColumn column = table.getColumnModel().getColumn(2);
-        column.setPreferredWidth(column.getPreferredWidth() + 30);
+        TableColumn columnNr = table.getColumnModel().getColumn(0);
+        columnNr.setPreferredWidth(columnNr.getPreferredWidth() - 55);
+
+        TableColumn columnID = table.getColumnModel().getColumn(1);
+        columnID.setPreferredWidth(columnID.getPreferredWidth() - 55);
+
+        TableColumn columnCW = table.getColumnModel().getColumn(5);
+        columnCW.setPreferredWidth(columnCW.getPreferredWidth() - 35);
+
+        TableColumn columnCT = table.getColumnModel().getColumn(6);
+        columnCT.setPreferredWidth(columnCT.getPreferredWidth() - 35);
+
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);

@@ -3,7 +3,6 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
-
 public class DroneT extends JPanel {
 
     public DroneT() {
@@ -32,7 +31,6 @@ public class DroneT extends JPanel {
     public static void createAndShowGUI() {
         JFrame frame = new JFrame("Drone Type");
         DroneT droneT = new DroneT();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(droneT);
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
