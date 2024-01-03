@@ -59,7 +59,12 @@ public class Menu extends JPanel implements ActionListener {
             data[i][5] = drones.get(i).getCarriageType();
         };
 
-        final JTable table = new JTable(data, columnNames);
+        final JTable table = new JTable(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Set all cells as non-editable
+            }
+        };
         table.setPreferredScrollableViewportSize(new Dimension(200, 200));
         table.setFillsViewportHeight(true);
         //?
