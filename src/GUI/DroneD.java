@@ -1,40 +1,10 @@
 package GUI;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+
 
 public class DroneD extends JPanel implements ActionListener {
     JComboBox<String> List;
@@ -114,13 +84,6 @@ public class DroneD extends JPanel implements ActionListener {
     }
 
 
-
-
-
-
-
-
-    /** Listens to the combo box. */
     public void actionPerformed(ActionEvent e) {
         JComboBox<?> cb = (JComboBox<?>) e.getSource();
         String Name = (String) cb.getSelectedItem();
