@@ -181,6 +181,15 @@ public class Menu extends JPanel implements ActionListener {
         menu.add(rbMenuItem);
 
 
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JTextField searchField = new JTextField(20);
+        JButton searchButton = new JButton("Search");
+        searchPanel.add(new JLabel("Search: "));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        menuBar.add(searchPanel);
+
+
         return menuBar;
     }
 
