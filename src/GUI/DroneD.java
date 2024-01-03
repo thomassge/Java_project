@@ -113,6 +113,13 @@ public class DroneD extends JPanel implements ActionListener {
         updateLabel("Drone1");
     }
 
+
+
+
+
+
+
+
     /** Listens to the combo box. */
     public void actionPerformed(ActionEvent e) {
         JComboBox<?> cb = (JComboBox<?>) e.getSource();

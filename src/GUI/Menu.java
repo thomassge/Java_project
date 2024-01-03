@@ -82,6 +82,10 @@ public class Menu extends JPanel implements ActionListener {
         };
         table.setPreferredScrollableViewportSize(new Dimension(200, 200));
         table.setFillsViewportHeight(true);
+        //um serialnr komplett zu sehen
+        TableColumn column = table.getColumnModel().getColumn(2);
+        column.setPreferredWidth(column.getPreferredWidth() + 30);
+
         //?
 /*
         if (DEBUG) {
@@ -96,6 +100,8 @@ public class Menu extends JPanel implements ActionListener {
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);
+
+
     }
 
     //?
@@ -157,9 +163,9 @@ public class Menu extends JPanel implements ActionListener {
         menu2.setMnemonic(KeyEvent.VK_R);
         menuBar.add(menu2);
 
-        //Könnte man noch wenn einer Lust hat
-        //achtung bei klick dark/light schließt alles
-
+        //Könnte man noch adden, wenn einer Lust hat bittegerne
+        //achtung bei klick dark/light schließt alles (z 207 actionperformed() else quit)
+        //CHange to dark/lightmode
         menu = new JMenu("View");
         menu.setMnemonic(KeyEvent.VK_V);
         menuBar.add(menu);
@@ -180,7 +186,7 @@ public class Menu extends JPanel implements ActionListener {
         group.add(rbMenuItem);
         menu.add(rbMenuItem);
 
-
+        //Suchleiste
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JTextField searchField = new JTextField(20);
         JButton searchButton = new JButton("Search");
