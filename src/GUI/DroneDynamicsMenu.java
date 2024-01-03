@@ -6,14 +6,14 @@ import java.awt.event.*;
 
 
 
-public class DroneD extends JPanel implements ActionListener {
+public class DroneDynamicsMenu extends JPanel implements ActionListener {
     JComboBox<String> List;
     JLabel selectedImage;
     JLabel fixedImage;
     JTextArea topRightText;
     JTextArea bottomLeftText;
 
-    public DroneD() {
+    public DroneDynamicsMenu() {
         super(new BorderLayout());
 
         String[] Strings = { "Drone1", "Drone2", "Drone3" };
@@ -128,7 +128,7 @@ public class DroneD extends JPanel implements ActionListener {
     }
 
     protected static ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = DroneD.class.getResource(path);
+        java.net.URL imgURL = DroneDynamicsMenu.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
@@ -139,8 +139,8 @@ public class DroneD extends JPanel implements ActionListener {
 
     public static void createAndShowGUI() {
         JFrame frame = new JFrame("DroneD");
-        DroneD droneD = new DroneD();
-        frame.setContentPane(droneD);
+        DroneDynamicsMenu droneDynamicsMenu = new DroneDynamicsMenu();
+        frame.setContentPane(droneDynamicsMenu);
         //frame.pack();?
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
@@ -154,5 +154,18 @@ public class DroneD extends JPanel implements ActionListener {
             }
         });
     }
+
+    //Click DroneType opens new class
+    public static void opendronedWindow() {
+        DroneDynamicsMenu droneDynamicsMenuWindow = new DroneDynamicsMenu();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+
+                droneDynamicsMenuWindow.createAndShowGUI();
+            }
+        });
+
+    }
+
 }
 
