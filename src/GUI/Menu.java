@@ -8,6 +8,7 @@ import services.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.*;
 import java.util.*;
 import java.io.IOException;
 
@@ -64,6 +65,21 @@ public class Menu extends JPanel implements ActionListener {
             public boolean isCellEditable(int row, int column) {
                 return false; // Set all cells as non-editable
             }
+
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component comp = super.prepareRenderer(renderer, row, column);
+                if (comp instanceof JLabel) {
+                    if (column == 0 || column == 1 || column == 2) {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.LEFT); // Align DroneType and Serialnr to the left
+                    } else {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT); // Align other columns to the right
+                    }
+                }
+                return comp;
+            }
+
+
         };
         table.setPreferredScrollableViewportSize(new Dimension(200, 200));
         table.setFillsViewportHeight(true);
