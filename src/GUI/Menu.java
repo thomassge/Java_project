@@ -153,11 +153,34 @@ public class Menu extends JPanel implements ActionListener {
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
 
-
+        //hf gl
         menu2 = new JMenu("Refresh");
         menu2.setMnemonic(KeyEvent.VK_R);
         menuBar.add(menu2);
 
+        //Könnte man noch wenn einer Lust hat
+        /*
+        menu = new JMenu("View");
+        menu.setMnemonic(KeyEvent.VK_V);
+        menuBar.add(menu);
+
+        ButtonGroup group = new ButtonGroup();
+        rbMenuItem = new JRadioButtonMenuItem("Light Mode");
+        rbMenuItem.setSelected(true); // Set the default mode to Light Mode
+        rbMenuItem.setMnemonic(KeyEvent.VK_L);
+        rbMenuItem.setActionCommand("lightMode");
+        rbMenuItem.addActionListener(this);
+        group.add(rbMenuItem);
+        menu.add(rbMenuItem);
+
+        rbMenuItem = new JRadioButtonMenuItem("Dark Mode");
+        rbMenuItem.setMnemonic(KeyEvent.VK_D);
+        rbMenuItem.setActionCommand("darkMode");
+        rbMenuItem.addActionListener(this);
+        group.add(rbMenuItem);
+        menu.add(rbMenuItem);
+
+         */
 
         return menuBar;
     }
@@ -278,7 +301,6 @@ public class Menu extends JPanel implements ActionListener {
     }
 
  */
-
     //GUI mit Menuleiste aus Menu()
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("Drone Simulator");
@@ -293,6 +315,7 @@ public class Menu extends JPanel implements ActionListener {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
 
 
     public static void main(String[] args) throws IOException {
