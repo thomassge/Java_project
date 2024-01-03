@@ -27,7 +27,6 @@ public class Menu extends JPanel implements ActionListener {
     JTextArea output;
     JScrollPane scrollPane;
     private boolean DEBUG = false;
-    //VPN
 
     public static LinkedList<Drone> drones = new LinkedList<>();
     public static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
@@ -159,7 +158,8 @@ public class Menu extends JPanel implements ActionListener {
         menuBar.add(menu2);
 
         //Könnte man noch wenn einer Lust hat
-        /*
+        //achtung bei klick dark/light schließt alles
+
         menu = new JMenu("View");
         menu.setMnemonic(KeyEvent.VK_V);
         menuBar.add(menu);
@@ -180,7 +180,6 @@ public class Menu extends JPanel implements ActionListener {
         group.add(rbMenuItem);
         menu.add(rbMenuItem);
 
-         */
 
         return menuBar;
     }
