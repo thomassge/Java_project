@@ -1,14 +1,14 @@
 package data;
 
-import dronesim.*;
 import processing.*;
-import services.*;
 
 import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Drone implements Printable, Expandable {
 
@@ -60,10 +60,15 @@ public class Drone implements Printable, Expandable {
     public String getCreated(){
         return this.created;
     }
-    public int getExtractedDroneTypeID() { // code insists that there are max /99/ drones -> implement REGEX
-        //CODE TO EXTRACT THE NUMBERS IN "http://dronesim.facets-labs.com/api/dronetypes/67/", MORE SPECIFICALLY EXTRACT THE CHARACTERS BETWEEN THE LAST TWO SLASHES
-        String extractedString = this.droneTypePointer.substring(47,49);
-        return Integer.valueOf(extractedString);
+    public int getExtractedDroneTypeID() {
+        Pattern pattern = Pattern.compile("[0-9]+", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(this.droneTypePointer);
+        try {
+            validateExtractedDroneTypeID(matcher.find());
+        } catch (DroneTypeIdNotExtractableException e) {
+            this.extractedDroneTypeID = 0;
+        }
+        return Integer.parseInt(matcher.group(0));
     }
     public DroneType getDroneTypeObject() {
         return this.droneTypeObject;
@@ -72,10 +77,10 @@ public class Drone implements Printable, Expandable {
         return this.droneDynamicsArrayList;
     }
 
+    //SETTER-Methods
     public void setDroneTypeObject(DroneType droneTypeObject) {
         this.droneTypeObject = droneTypeObject;
     }
-
     public void setDroneDynamicsArrayList(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         this.droneDynamicsArrayList = droneDynamicsArrayList;
     }
@@ -136,6 +141,12 @@ public class Drone implements Printable, Expandable {
     public void iterateThroughList(ArrayList<DroneDynamics> myList) {
         for(int i = 0; i < myList.size(); i++) {
             myList.get(i).printDroneDynamics();
+        }
+    }
+
+    private static void validateExtractedDroneTypeID(boolean boo) throws DroneTypeIdNotExtractableException {
+        if (!boo) {
+            throw new DroneTypeIdNotExtractableException();
         }
     }
 

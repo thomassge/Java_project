@@ -4,8 +4,8 @@ import data.*;
 import processing.*;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
-
 
 public class Main {
     private static JSONDeruloHelper jsonDerulo = new JSONDeruloHelper();
@@ -15,21 +15,14 @@ public class Main {
     public static void main(String[] args) throws IOException {
         //option to call saveDroneDynamicsInFile
         drones = jsonDerulo.getDrones();
-        for(Drone droneObject : drones) {
-            droneObject.print();
-        }
-
-
         droneTypes = jsonDerulo.getDroneTypes();
-        for(DroneType droneTypeObject : droneTypes) {
-            droneTypeObject.printDroneType();
-        }
-
         jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
-
         jsonDerulo.addDroneDynamicsData(drones);
 
-        drones.getFirst().getDroneDynamicsArrayList().getFirst().printDroneDynamics();
+        for(DroneType object : droneTypes) {
+            System.out.println(object.getTypename());
+            System.out.println(object.getControlRange() + "\n");
+        }
 
 //        droneTypes = jsonDerulo.getDroneTypes();
 //        jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);

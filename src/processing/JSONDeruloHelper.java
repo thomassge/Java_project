@@ -1,3 +1,10 @@
+/**
+ *
+ * @author Leon.
+ * @version 1.0.
+ */
+
+
 package processing;
 
 import data.*;
@@ -178,17 +185,17 @@ public class JSONDeruloHelper {
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject o = jsonArray.getJSONObject(i);
-                drones.add(new Drone(
-                        o.getString("carriage_type"),
-                        o.getString("serialnumber"),
-                        o.getString("created"),
-                        o.getInt("carriage_weight"),
-                        o.getInt("id"),
-                        o.getString("dronetype")
-                ));
-            }
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            drones.add(new Drone(
+                    o.getString("carriage_type"),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
         helper.numberOfDrones = helper.numberOfDrones + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
     }
 
@@ -198,19 +205,19 @@ public class JSONDeruloHelper {
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject o = jsonArray.getJSONObject(i);
-                droneTypes.add(new DroneType(
-                        o.getInt("id"),
-                        o.getString("manufacturer"),
-                        o.getString("typename"),
-                        o.getInt("weight"),
-                        o.getInt("max_speed"),
-                        o.getInt("battery_capacity"),
-                        o.getInt("control_range"),
-                        o.getInt("max_carriage")
-                ));
-            }
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneTypes.add(new DroneType(
+                    o.getInt("id"),
+                    o.getString("manufacturer"),
+                    o.getString("typename"),
+                    o.getInt("weight"),
+                    o.getInt("max_speed"),
+                    o.getInt("battery_capacity"),
+                    o.getInt("control_range"),
+                    o.getInt("max_carriage")
+            ));
+        }
         helper.numberOfDroneTypes = helper.numberOfDroneTypes + jsonArray.length(); // update numberOfDroneTypes if refresh() created new Drone objects
     }
 
@@ -237,7 +244,6 @@ public class JSONDeruloHelper {
             String modifiedDroneURL = DRONES_URL + "&offset=" + helper.numberOfDrones;
             String forCreatingDroneObjects = jsonCreator(modifiedDroneURL);
             individualDroneJsonToObject(forCreatingDroneObjects, drones);
-
         } else {
             System.out.println("No new Drone Information in the database");
         }
@@ -259,9 +265,6 @@ public class JSONDeruloHelper {
             String modifiedDroneDynamicsURL = DRONEDYNAMICS_URL + "&offset=" + helper.numberOfDroneDynamics;
             String forCreatingDroneDynamics = jsonCreator(modifiedDroneDynamicsURL);
             refreshDroneDynamics(drones, modifiedDroneDynamicsURL);
-//            ---ersetzt---
-//            saveDroneDynamicsDataInFile(modifiedDroneDynamicsURL); //??
-//            addDroneDynamicsData(drones); //??
             System.out.println("DroneD updated");
 
         } else {
@@ -325,7 +328,7 @@ public class JSONDeruloHelper {
 //    }
 
     //Create a file off our Objects to "save current database state" and reload it the next time the application launches
-     /*public static String fileCreatorOffObjects(LinkedList<Drone> drones) throws JsonProcessingException {
+    /*public static String fileCreatorOffObjects(LinkedList<Drone> drones) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String json1 = mapper.writeValueAsString(drones.get(0).droneDynamicsArrayList);
 

@@ -135,7 +135,7 @@ public class DroneDynamics implements Printable, Expandable {
     }
 
     @Override
-     public int getCountOffLocalJson() throws IOException {
+    public int getCountOffLocalJson() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("dronedynamics.json"));
         StringBuilder jsonContent = new StringBuilder();
         int limit = 20;
