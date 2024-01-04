@@ -1,3 +1,7 @@
+/**
+ * This class represents our DroneDynamics data.
+ * It is saved in an ArrayList since every Drone has a lot of DroneDynamics data.
+ */
 package data;
 
 import dronesim.*;

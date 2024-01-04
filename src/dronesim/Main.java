@@ -1,3 +1,6 @@
+/**
+ * This is our main class. The starting point of our program.
+ */
 package dronesim;
 
 import data.*;
@@ -19,15 +22,15 @@ public class Main {
         jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
         jsonDerulo.addDroneDynamicsData(drones);
 
-        for(DroneType object : droneTypes) {
-            System.out.println(object.getTypename());
-            System.out.println(object.getControlRange() + "\n");
-        }
+//        for(DroneType object : droneTypes) {
+//            System.out.println(object.getTypename());
+//            System.out.println(object.getControlRange() + "\n");
+//        }
 
 //        droneTypes = jsonDerulo.getDroneTypes();
 //        jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
 //        jsonDerulo.addDroneDynamicsData(drones);
-//        jsonDerulo.refresh(drones, droneTypes);           ->  case noNewData: do nothing;     case NewData: append new data to local json file;
+//        jsonDerulo.refresh(drones, droneTypes); ->  case noNewData: do nothing;     case NewData: append new data to local json file;
 
     }
 

@@ -1,3 +1,7 @@
+/**
+ * This is a class where we implement the Google Maps Static API, to nicely display location
+ * of the drones.
+ */
 package services;
 
 import data.*;

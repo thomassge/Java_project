@@ -1,3 +1,7 @@
+/**
+ * This class represents all the DroneType Information that is available on the webserver.
+ * It will be saved in a List and a method will link a DroneType object to every drone.
+ */
 package data;
 
 import dronesim.*;

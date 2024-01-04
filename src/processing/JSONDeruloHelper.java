@@ -1,10 +1,7 @@
 /**
- *
- * @author Leon.
- * @version 1.0.
+ * This is a helper class that contains methods to retrieve, save and re-fetch data from
+ * the webserver if needed.
  */
-
-
 package processing;
 
 import data.*;
@@ -102,7 +99,9 @@ public class JSONDeruloHelper {
         return droneTypes;
     }
 
-    //Creates DroneDynamic Objects off the File and stores them in the appropriate Drone via LinkedList
+    /**
+     *     Creates DroneDynamic Objects off the File and stores them in the appropriate Drone via LinkedList
+     */
     public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException {
         helper.droneDynamicsObject.saveAsFile();
         String myJson;
