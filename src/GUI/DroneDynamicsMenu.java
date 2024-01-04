@@ -1,23 +1,31 @@
 package GUI;
 
+import data.Drone;
+import processing.JSONDeruloHelper;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.LinkedList;
 
+import static processing.JSONDeruloHelper.helper;
 
-
-public class DroneD extends JPanel implements ActionListener {
+public class DroneDynamicsMenu extends JPanel implements ActionListener {
     JComboBox<String> List;
     JLabel selectedImage;
     JLabel fixedImage;
     JTextArea topRightText;
     JTextArea bottomLeftText;
 
-    public DroneD() {
+    public DroneDynamicsMenu(LinkedList<Drone> drones) {
         super(new BorderLayout());
 
-        String[] Strings = { "Drone1", "Drone2", "Drone3" };
-
+        //for (int i = 0; i < drones.size(); i++) {
+        String[] Strings = {"Drone 1", "Drone 2", "Drone 3", "Drone 4",
+                    "Drone 5", "Drone 6", "Drone 7", "Drone 8",
+                    "Drone 9", "Drone 10", "Drone 11", "Drone 12",
+                    "Drone 13", "Drone 14", "Drone 15", "Drone 16"};
+        //}
         // Set up the combo box and the selected image on top left
         JPanel topPanel = new JPanel(new BorderLayout());
         selectedImage = new JLabel();
@@ -128,7 +136,7 @@ public class DroneD extends JPanel implements ActionListener {
     }
 
     protected static ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = DroneD.class.getResource(path);
+        java.net.URL imgURL = DroneDynamicsMenu.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
@@ -137,20 +145,24 @@ public class DroneD extends JPanel implements ActionListener {
         }
     }
 
-    public static void createAndShowGUI() {
-        JFrame frame = new JFrame("DroneD");
-        DroneD droneD = new DroneD();
-        frame.setContentPane(droneD);
-        //frame.pack();?
+    public static void createDroneDynamicsOverview() {
+        JFrame frame = new JFrame("Drone Dynamics");
+
+        DroneDynamicsMenu droneDM = new DroneDynamicsMenu(helper.getDrones());
+        frame.setContentPane(droneDM);
+
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
     public static void main(String[] args) {
+        JSONDeruloHelper helper = new JSONDeruloHelper();
+        LinkedList<Drone> drones = helper.getDrones();
+
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI();
+                createDroneDynamicsOverview();
             }
         });
     }

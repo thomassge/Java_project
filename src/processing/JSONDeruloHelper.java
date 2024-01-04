@@ -325,7 +325,7 @@ public class JSONDeruloHelper {
 //    }
 
     //Create a file off our Objects to "save current database state" and reload it the next time the application launches
-    /*public static String fileCreatorOffObjects(LinkedList<Drone> drones) throws JsonProcessingException {
+     /*public static String fileCreatorOffObjects(LinkedList<Drone> drones) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String json1 = mapper.writeValueAsString(drones.get(0).droneDynamicsArrayList);
 
