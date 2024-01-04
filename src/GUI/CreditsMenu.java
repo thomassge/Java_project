@@ -3,10 +3,10 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class CredtisMenu {
+public class CreditsMenu {
 
     //Click Credits
-    public static void openCreditsWindow() {
+    public static void createCreditList() {
         JFrame droneFrame = new JFrame("Credits");
         JPanel panel = new JPanel();
         droneFrame.getContentPane().add(panel);

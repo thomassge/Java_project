@@ -8,9 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
+import static processing.JSONDeruloHelper.helper;
+
 public class DroneTypeMenu extends JPanel {
-    public static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
-    public static JSONDeruloHelper helper = new JSONDeruloHelper();
 
     // Arbeitet direkt mit übergebener Linked List weiter
     public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
@@ -54,31 +54,21 @@ public class DroneTypeMenu extends JPanel {
         add(scrollPane);
     }
 
-    public static void createAndShowGUI() {
+    public static void createDroneTypeTableGUI() {
         JFrame frame = new JFrame("Drone Type");
-        DroneTypeMenu droneT = new DroneTypeMenu(droneTypes);
+
+        DroneTypeMenu droneT = new DroneTypeMenu(helper.getDroneTypes());
         frame.setContentPane(droneT);
+
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
     public static void main(String[] args) {
-       droneTypes = helper.getDroneTypes();
+        JSONDeruloHelper helper = new JSONDeruloHelper();
+        LinkedList<DroneType> droneTypes = helper.getDroneTypes();
 
-        SwingUtilities.invokeLater(() -> createAndShowGUI());
-        //javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {createAndShowGUI();}});
-    }
-
-    //Click DroneType opens new class
-    public static void opendronetWindow() {
-        // übergibt LinkedList von DroneType
-        DroneTypeMenu droneTWindow = new DroneTypeMenu(droneTypes);
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                droneTWindow.createAndShowGUI();
-            }
-        });
-
+        SwingUtilities.invokeLater(() -> createDroneTypeTableGUI());
     }
 }
