@@ -55,10 +55,10 @@ public class DroneTypeMenu extends JPanel {
     }
 
     public static void createDroneTypeTableGUI() {
-        JFrame frame = new JFrame("Drone Type");
+        JFrame frame = new JFrame("Drone Types");
 
-        DroneTypeMenu droneT = new DroneTypeMenu(helper.getDroneTypes());
-        frame.setContentPane(droneT);
+        DroneTypeMenu droneTM = new DroneTypeMenu(helper.getDroneTypes());
+        frame.setContentPane(droneTM);
 
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);

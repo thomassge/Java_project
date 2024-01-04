@@ -143,7 +143,7 @@ public class DroneMenu extends JPanel implements ActionListener {
     //Click action
     public void actionPerformed(ActionEvent e) {
         if ("droned".equals(e.getActionCommand())) {
-            DroneDynamicsMenu.opendronedWindow();
+            DroneDynamicsMenu.createDroneDynamicsOverview();
         }
         else if ("dronet".equals(e.getActionCommand())) {
             DroneTypeMenu.createDroneTypeTableGUI();
@@ -162,6 +162,7 @@ public class DroneMenu extends JPanel implements ActionListener {
     public static void main(String[] args) {
         JSONDeruloHelper helper = new JSONDeruloHelper();
         LinkedList<Drone> drones = helper.getDrones();
+
 
     }
 }
