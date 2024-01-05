@@ -12,9 +12,28 @@ import java.io.IOException;
 
 public class ProgramStart {
 
+    public static JSONDeruloHelper helper = new JSONDeruloHelper();
+    public static LinkedList<Drone> drones = new LinkedList<>();
+    public static LinkedList<DroneType> droneTypes = new LinkedList<>();
+
+    public static LinkedList<Drone> getData() throws IOException {
+        drones = helper.getDrones();
+        droneTypes = helper.getDroneTypes();
+        helper.droneTypeToDroneLinker(droneTypes, drones);
+        helper.addDroneDynamicsData(drones);
+
+
+        System.out.println(drones.get(0).getDroneDynamicsArrayList().getFirst().getLastSeen());
+        System.out.println("here");
+
+        return drones;
+    }
+
     public static void main(String[] args) throws IOException {
 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI();}});
+        drones = getData();
+
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(drones);}});
 
     }
 

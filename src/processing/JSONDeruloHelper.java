@@ -1,3 +1,7 @@
+/**
+ * This is a helper class that contains methods to retrieve, save and re-fetch data from
+ * the webserver if needed.
+ */
 package processing;
 
 import data.*;
@@ -95,7 +99,9 @@ public class JSONDeruloHelper {
         return droneTypes;
     }
 
-    //Creates DroneDynamic Objects off the File and stores them in the appropriate Drone via LinkedList
+    /**
+     *     Creates DroneDynamic Objects off the File and stores them in the appropriate Drone via LinkedList
+     */
     public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException {
         helper.droneDynamicsObject.saveAsFile();
         String myJson;
@@ -141,15 +147,15 @@ public class JSONDeruloHelper {
 
             // Step 3: Open a connection
             HttpURLConnection connection; // Erstellen einer leeren Variable vom Typen HttpUrlConnection;
-            connection = (HttpURLConnection) url.openConnection(); // Der Rückgabewert von openConnection ist eig. 'URLConnection', deshalb das Typecasting, da wir speziell mit HTTP arbeiten und der Rückgabewert von openConnection dementsprechend zu HttpUrlConnection wird.
+            connection = (HttpURLConnection) url.openConnection(); // Der RÃ¼ckgabewert von openConnection ist eig. 'URLConnection', deshalb das Typecasting, da wir speziell mit HTTP arbeiten und der RÃ¼ckgabewert von openConnection dementsprechend zu HttpUrlConnection wird.
             //InputStream inputStream = connection.inputStream()?
 
-            // Step 4: Set the request method to GET and setRequestProperty -> Übergabeparameter müssen exakt diese sein für Zugriff auf den WebServer
+            // Step 4: Set the request method to GET and setRequestProperty -> Ãœbergabeparameter mÃ¼ssen exakt diese sein fÃ¼r Zugriff auf den WebServer
             connection.setRequestProperty("Authorization", TOKEN);
-            connection.setRequestMethod("GET"); //Der Übergabeparameter "GET" ist ein Konstruktor für die HttpURLConnection
+            connection.setRequestMethod("GET"); //Der Ãœbergabeparameter "GET" ist ein Konstruktor fÃ¼r die HttpURLConnection
 
             // Step 5: Get the HTTP response code
-            int responseCode = connection.getResponseCode(); // Gibt 200 bei eienr successful request zurück, 401 sonst
+            int responseCode = connection.getResponseCode(); // Gibt 200 bei eienr successful request zurÃ¼ck, 401 sonst
             System.out.println("responseCode for jsonCreator: " + responseCode);
 
             // Step 6: Read and display response content
@@ -178,17 +184,17 @@ public class JSONDeruloHelper {
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject o = jsonArray.getJSONObject(i);
-                drones.add(new Drone(
-                        o.getString("carriage_type"),
-                        o.getString("serialnumber"),
-                        o.getString("created"),
-                        o.getInt("carriage_weight"),
-                        o.getInt("id"),
-                        o.getString("dronetype")
-                ));
-            }
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            drones.add(new Drone(
+                    o.getString("carriage_type"),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
         helper.numberOfDrones = helper.numberOfDrones + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
     }
 
@@ -198,19 +204,19 @@ public class JSONDeruloHelper {
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject o = jsonArray.getJSONObject(i);
-                droneTypes.add(new DroneType(
-                        o.getInt("id"),
-                        o.getString("manufacturer"),
-                        o.getString("typename"),
-                        o.getInt("weight"),
-                        o.getInt("max_speed"),
-                        o.getInt("battery_capacity"),
-                        o.getInt("control_range"),
-                        o.getInt("max_carriage")
-                ));
-            }
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneTypes.add(new DroneType(
+                    o.getInt("id"),
+                    o.getString("manufacturer"),
+                    o.getString("typename"),
+                    o.getInt("weight"),
+                    o.getInt("max_speed"),
+                    o.getInt("battery_capacity"),
+                    o.getInt("control_range"),
+                    o.getInt("max_carriage")
+            ));
+        }
         helper.numberOfDroneTypes = helper.numberOfDroneTypes + jsonArray.length(); // update numberOfDroneTypes if refresh() created new Drone objects
     }
 
@@ -237,7 +243,6 @@ public class JSONDeruloHelper {
             String modifiedDroneURL = DRONES_URL + "&offset=" + helper.numberOfDrones;
             String forCreatingDroneObjects = jsonCreator(modifiedDroneURL);
             individualDroneJsonToObject(forCreatingDroneObjects, drones);
-
         } else {
             System.out.println("No new Drone Information in the database");
         }
@@ -259,9 +264,6 @@ public class JSONDeruloHelper {
             String modifiedDroneDynamicsURL = DRONEDYNAMICS_URL + "&offset=" + helper.numberOfDroneDynamics;
             String forCreatingDroneDynamics = jsonCreator(modifiedDroneDynamicsURL);
             refreshDroneDynamics(drones, modifiedDroneDynamicsURL);
-//            ---ersetzt---
-//            saveDroneDynamicsDataInFile(modifiedDroneDynamicsURL); //??
-//            addDroneDynamicsData(drones); //??
             System.out.println("DroneD updated");
 
         } else {
@@ -325,7 +327,7 @@ public class JSONDeruloHelper {
 //    }
 
     //Create a file off our Objects to "save current database state" and reload it the next time the application launches
-     /*public static String fileCreatorOffObjects(LinkedList<Drone> drones) throws JsonProcessingException {
+    /*public static String fileCreatorOffObjects(LinkedList<Drone> drones) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String json1 = mapper.writeValueAsString(drones.get(0).droneDynamicsArrayList);
 
