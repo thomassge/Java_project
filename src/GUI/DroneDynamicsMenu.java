@@ -1,40 +1,50 @@
 package GUI;
 
 import data.Drone;
+import data.DroneDynamics;
+import data.DroneType;
+import dronesim.Main;
 import processing.JSONDeruloHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import static processing.JSONDeruloHelper.helper;
 
 public class DroneDynamicsMenu extends JPanel implements ActionListener {
-    JComboBox<String> List;
+    //JComboBox<String> List;
     JLabel selectedImage;
     JLabel fixedImage;
     JTextArea topRightText;
     JTextArea bottomLeftText;
+    private JComboBox<Integer> droneIdDropdown;
+    private LinkedList<Drone> drones;
 
-    public DroneDynamicsMenu(LinkedList<Drone> drones) {
+    public DroneDynamicsMenu(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         super(new BorderLayout());
 
-        //for (int i = 0; i < drones.size(); i++) {
-        String[] Strings = {"Drone 1", "Drone 2", "Drone 3", "Drone 4",
-                    "Drone 5", "Drone 6", "Drone 7", "Drone 8",
-                    "Drone 9", "Drone 10", "Drone 11", "Drone 12",
-                    "Drone 13", "Drone 14", "Drone 15", "Drone 16"};
-        //}
+        //this.drones = drones;
+
+        droneIdDropdown = new JComboBox<>();
+
+        for (int i=0;i<ProgramStart.drones.size();i++) {
+            droneIdDropdown.addItem(ProgramStart.drones.get(i).getId());
+        }
+        droneIdDropdown.addActionListener(this);
+        add(droneIdDropdown);
+
         // Set up the combo box and the selected image on top left
         JPanel topPanel = new JPanel(new BorderLayout());
         selectedImage = new JLabel();
-        List = new JComboBox<>(Strings);
-        List.setMaximumSize(new Dimension(50, List.getPreferredSize().height));
-        List.setSelectedIndex(0);
-        List.addActionListener(this);
+        droneIdDropdown.setMaximumSize(new Dimension(50, droneIdDropdown.getPreferredSize().height));
+        droneIdDropdown.setSelectedIndex(0);
+
         topPanel.add(selectedImage, BorderLayout.CENTER);
-        topPanel.add(List, BorderLayout.NORTH);
+        topPanel.add(droneIdDropdown, BorderLayout.NORTH);
 
         // Set up the fixed image "Drone1.jpg" on bottom right
         fixedImage = new JLabel();
@@ -46,13 +56,10 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         // Set up the text areas
         topRightText = new JTextArea();
         topRightText.setEditable(false);
-        topRightText.setFont(new Font("Arial", Font.PLAIN, 14));
         topRightText.setPreferredSize(new Dimension(120, 100));
-        updateTopRightText("Drone1"); // Initial setup
 
         bottomLeftText = new JTextArea();
         bottomLeftText.setEditable(false);
-        bottomLeftText.setFont(new Font("Arial", Font.PLAIN, 14));
         bottomLeftText.setPreferredSize(new Dimension(120, 100));
 
         // Add components to the panel using GridBagLayout
@@ -88,16 +95,39 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
         gridPanel.add(fixedImage, gbc);
         add(gridPanel, BorderLayout.CENTER);
-        updateLabel("Drone1");
+        //updateLabel("Drone1");
+
+        //updateTopRightText((Integer) droneIdDropdown.getSelectedItem());
+
     }
 
+    /*
+    private JComboBox<Integer> droneIdDropdown;
+
+    public DroneDynamicsMenu(LinkedList<Drone> drones){
+
+        droneIdDropdown = new JComboBox<>();
+
+        for (int i=0;i<drones.size();i++) {
+            droneIdDropdown.addItem(drones.get(i).getId());
+        }
+        droneIdDropdown.addActionListener(this);
+        add(droneIdDropdown);
+    }
+     */
 
     public void actionPerformed(ActionEvent e) {
-        JComboBox<?> cb = (JComboBox<?>) e.getSource();
-        String Name = (String) cb.getSelectedItem();
-        updateLabel(Name);
-    }
+        if (e.getSource() == droneIdDropdown) {
 
+            // Wenn ein neues Drone-ID ausgewählt wurde
+            int selectedDroneId = (Integer) droneIdDropdown.getSelectedItem();
+
+            // Hier kannst du die Logik für die Aktualisierung der GUI basierend auf der ausgewählten Drone-ID implementieren
+            System.out.println("Ausgewählte Drone-ID: " + selectedDroneId);
+            updateTopRightText(selectedDroneId);
+        }
+    }
+/*
     protected void updateLabel(String name) {
         ImageIcon icon = createImageIcon("images/" + name + ".jpg");
 
@@ -109,29 +139,78 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         updateBottomLeftText(); // Update dynamic text
     }
 
-    protected void updateTopRightText(String name) {
-        String[] attributes = {"Name", "Serialnr", "DroneType", "Weight", "CarriageType"};
-        String[] values = {"SomeName", "123456", "TypeA", "50kg", "TypeX"};
+*/
+
+    protected void updateTopRightText(int selectedDroneId) {
+
+        Drone selectedDrone = null;
+        for (Drone drone : ProgramStart.drones) {
+            if (drone.getId() == selectedDroneId) {
+                selectedDrone = drone;
+                break;
+            }
+        }
+
+        // Initialize topRightText if not initialized
+
+        if (topRightText == null) {
+            topRightText = new JTextArea();
+            topRightText.setEditable(false);
+            topRightText.setPreferredSize(new Dimension(120, 100));
+        }
+        String[] droneAttributes = {"ID",
+                                    "Serialnr",
+                                    //"DroneType",
+                                    "Weight",
+                                    "CarriageType"};
+
+        String[] droneValues = { Integer.toString(selectedDroneId),
+                                selectedDrone.getSerialnumber(),
+                                //selectedDrone.getDroneTypeObject().getTypename(),
+                                Double.toString(selectedDrone.getCarriageWeight()),
+                                selectedDrone.getCarriageType()
+                                };
 
         StringBuilder text = new StringBuilder();
         text.append("Details:\n");
-        for (int i = 0; i < attributes.length; i++) {
-            text.append(String.format("%s: %s\n", attributes[i], values[i]));
+        for (int i = 0; i < droneAttributes.length; i++) {
+            text.append(String.format("%s: %s\n", droneAttributes[i], droneValues[i]));
         }
         topRightText.setText(text.toString());
+
+
+        DroneDynamics selectedDroneDynamic = ProgramStart.drones.get(0).getDroneDynamicsArrayList().getFirst();
+        updateBottomLeftText(selectedDroneId, selectedDroneDynamic);
     }
 
-    protected void updateBottomLeftText() {
-        String batteryStatus = "67%";
-        String timeStamp = "12:17:34";
-        String speed = "60 kp/h";
-        String lastSeen = "dd/mm/yyyy";
+    protected void updateBottomLeftText(int selectedDroneId, DroneDynamics selectedDroneDynamic) {
+
+        // Initialize bottomLeftText if not initialized
+        if (bottomLeftText == null) {
+            bottomLeftText = new JTextArea();
+            bottomLeftText.setEditable(false);
+            bottomLeftText.setPreferredSize(new Dimension(120, 100));
+        }
+
+        String[] droneAttributes =  {
+                                    "Battery Status",
+                                    "Time Stamp",
+                                    "Speed",
+                                    "Last seen",
+                                    };
+
+        String[] droneValues = {
+                String.valueOf(selectedDroneDynamic.getBatteryStatus()),
+                selectedDroneDynamic.getTimestamp(),
+                String.valueOf(selectedDroneDynamic.getSpeed()),
+                selectedDroneDynamic.getLastSeen()
+        };
 
         StringBuilder text = new StringBuilder();
-        text.append("Battery status: ").append(batteryStatus).append("\n");
-        text.append("Timestamp: ").append(timeStamp).append("\n");
-        text.append("Speed: ").append(speed).append("\n");
-        text.append("Last seen: ").append(lastSeen);
+        text.append("Details:\n");
+        for (int i = 0; i < droneAttributes.length; i++) {
+            text.append(String.format("%s: %s\n", droneAttributes[i], droneValues[i]));
+        }
         bottomLeftText.setText(text.toString());
     }
 
@@ -145,26 +224,24 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         }
     }
 
-    public static void createDroneDynamicsOverview() {
+
+    public static void createDroneDynamicsOverview(ArrayList<DroneDynamics> droneDynamicsArrayList) {
+
+
+
         JFrame frame = new JFrame("Drone Dynamics");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        DroneDynamicsMenu droneDM = new DroneDynamicsMenu(helper.getDrones());
-        frame.setContentPane(droneDM);
+        DroneDynamicsMenu droneDM = new DroneDynamicsMenu(droneDynamicsArrayList);
 
+        frame.getContentPane().add(droneDM);
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        droneDM.updateTopRightText((Integer) droneDM.droneIdDropdown.getSelectedItem());
+
     }
 
-    public static void main(String[] args) {
-        JSONDeruloHelper helper = new JSONDeruloHelper();
-        LinkedList<Drone> drones = helper.getDrones();
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createDroneDynamicsOverview();
-            }
-        });
-    }
 }
 

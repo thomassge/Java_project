@@ -1,14 +1,18 @@
+/**
+ * This is the class where all Drone Data will be saved and called from.
+ * It contains all the information that is available on the webserver.
+ */
 package data;
 
-import dronesim.*;
 import processing.*;
-import services.*;
 
 import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Drone implements Printable, Expandable {
 
@@ -25,10 +29,30 @@ public class Drone implements Printable, Expandable {
 
     public ArrayList<DroneDynamics> droneDynamicsArrayList;
 
+    private static int localDroneCount;
+    private static int serverDroneCount;
+
     //KONSTRUKTOR
+
+    /**
+     * The default constructor prints that it has been called.
+     */
     public Drone() {
         System.out.println("Drone Object Created from empty constructor.");
     };
+
+    /**
+     * This constructor takes in all the attributes
+     * an individual drone can have, according to the webserver
+     *
+     * @param carriageType Enum representing the type of carriage.
+     *                     It consists of: SEN(sor), ACT(uator), NOT(hing)
+     * @param serialnumber A string representing the serialnumber of the drone
+     * @param created A string representing the date and time the entry was created
+     * @param carriageWeight How much additional weight the drone currently carries
+     * @param id The id is the index of the Drone on the webserver, currently going from 71-95
+     * @param DroneTypePointer A string that contains a link to the DroneType information of this drone.
+     */
     public Drone(String carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
         System.out.println("Drone Object created.");
 
@@ -60,26 +84,59 @@ public class Drone implements Printable, Expandable {
     public String getCarriageType(){
         return this.carriageType;
     }
+<<<<<<< HEAD
     public int getExtractedDroneTypeID() { // code insists that there are max /99/ drones -> implement REGEX
         //CODE TO EXTRACT THE NUMBERS IN "http://dronesim.facets-labs.com/api/dronetypes/67/", MORE SPECIFICALLY EXTRACT THE CHARACTERS BETWEEN THE LAST TWO SLASHES
         String extractedString = this.droneTypePointer.substring(47,49);
         return Integer.valueOf(extractedString);
+=======
+    public String getCreated(){
+        return this.created;
     }
+
+    /**
+     * This method uses regular expressions to find a sequence of numbers in the
+     * String droneTypePointer, to be able to link the fitting DroneType object
+     * to the Drone object
+     * @return The ID of the DroneType of the drone that calls the method
+     */
+    public int getExtractedDroneTypeID() {
+        Pattern pattern = Pattern.compile("[0-9]+", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(this.droneTypePointer);
+        try {
+            validateExtractedDroneTypeID(matcher.find());
+        } catch (DroneTypeIdNotExtractableException e) {
+            this.extractedDroneTypeID = 0;
+        }
+        return Integer.parseInt(matcher.group(0));
+>>>>>>> 756f53af4682c7c10a55b28fa708bc6a34ec970c
+    }
+
+    /**
+     *
+     * @return The DroneType object of calling drone
+     */
     public DroneType getDroneTypeObject() {
         return this.droneTypeObject;
     }
+
+    /**
+     *
+     * @return The DroneDynamics arrayList of calling drone
+     */
     public ArrayList<DroneDynamics> getDroneDynamicsArrayList() {
         return this.droneDynamicsArrayList;
     }
 
+    //SETTER-Methods
     public void setDroneTypeObject(DroneType droneTypeObject) {
         this.droneTypeObject = droneTypeObject;
     }
-
     public void setDroneDynamicsArrayList(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         this.droneDynamicsArrayList = droneDynamicsArrayList;
     }
 
+<<<<<<< HEAD
 
 
     // METHOD TO LINK FITTING DRONETYPE OBJECT TO RIGHT DRONE OBJECT
@@ -103,6 +160,13 @@ public class Drone implements Printable, Expandable {
 
     // get id's or more data to check for duplicates, request wird eh gemacht
 
+=======
+    /**
+     * This method connects to the webserver to get the current count of the Drones.
+     * It limits the requests to a single entry to prevent a big download.
+     * @return The current count of Drones on the webserver.
+     */
+>>>>>>> 756f53af4682c7c10a55b28fa708bc6a34ec970c
     public static int getCount() {
         String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
         String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
@@ -111,6 +175,10 @@ public class Drone implements Printable, Expandable {
     }
 
     //PRINT-METHODEN ZUR KONTROLLE
+
+    /**
+     * Method that prints all individual Drone information.
+     */
     public void printDrone() {
         System.out.println("Drone id: " + this.id);
         System.out.println("Serialnumber: " + this.serialnumber);
@@ -122,6 +190,9 @@ public class Drone implements Printable, Expandable {
         System.out.println("\n");
     }
 
+    /**
+     * Method that prints <b>all</b> drone information
+     */
     public void printAllDroneInformation() {
         System.out.println("All the following Information is linked to the Drone " + this.droneTypeObject.getTypename() + " with the Serialnumber: " + this.serialnumber);
 
@@ -135,9 +206,26 @@ public class Drone implements Printable, Expandable {
         iterateThroughList(this.droneDynamicsArrayList);
     }
 
+    /**
+     * This method is used in the printAllDroneInformation.
+     * It iterates through the DroneDynamics arraylist.
+     * @param myList Arraylist of DroneDynamics
+     */
     public void iterateThroughList(ArrayList<DroneDynamics> myList) {
         for(int i = 0; i < myList.size(); i++) {
             myList.get(i).printDroneDynamics();
+        }
+    }
+
+    /**
+     * This method validates whether getExtractedDroneTypeID found a number,
+     * using the given regex. Throws an Exception otherwise.
+     * @param boo True if it did and false otherwise.
+     * @throws DroneTypeIdNotExtractableException The Exception that is thrown if there was no number found.
+     */
+    private static void validateExtractedDroneTypeID(boolean boo) throws DroneTypeIdNotExtractableException {
+        if (!boo) {
+            throw new DroneTypeIdNotExtractableException();
         }
     }
 
@@ -146,6 +234,12 @@ public class Drone implements Printable, Expandable {
         printDrone();
     }
 
+    /**
+     * This method gets the count of drones that is saved in the local json file.
+     * If the local drones count does not match the server drones count, all data is re-fetched.
+     * @return The number of Drone entries on the webserver.
+     * @throws IOException If an I/O error occurs
+     */
     @Override
     public int getCountOffLocalJson() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("drones.json"));
@@ -159,17 +253,25 @@ public class Drone implements Printable, Expandable {
             readChars++;
         }
 
-        int fileDroneCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
-        return fileDroneCount;
+        localDroneCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
+        return localDroneCount;
     }
 
+    /**
+     * This method compares the locally saved count of drones in the json file,
+     * with the count of drones that is on the webserver.
+     * @param serverDroneCount The number of drones on the webserver
+     * @return True if the data differs, and false if the count is the same.
+     * @throws FileNotFoundException - If file is not found
+     */
     @Override
-    public boolean checkForNewData(int serverDroneCount) throws FileNotFoundException {
+    public boolean checkForNewData(int serverCount) throws FileNotFoundException {
         try (BufferedReader reader = new BufferedReader(new FileReader("drones.json"))) {
 
-            int fileDroneCount = getCountOffLocalJson();
+            // darf nicht fehlen, sonst dauer refetching
+            localDroneCount = getCountOffLocalJson();
 
-            if (serverDroneCount == fileDroneCount) {
+            if (serverCount == localDroneCount) {
                 return false;
             } else {
                 System.out.println("damn, refetching");
@@ -183,12 +285,24 @@ public class Drone implements Printable, Expandable {
         }
     }
 
+    /**
+     * This method starts by saving the current server count of drones in a variable.
+     * Then it passes this variable to checkForNewData to decide whether new data has to be
+     * fetched or not. If new data has to be fetched, it uses the localDroneCount as a limit,
+     * appended to the String URL, to reduce the entries requested.
+     *
+     * THE PROBLEM WITH THIS METHTOD IS THAT IT CAN NOT DIFFERENTIATE WHETHER FOR EXAMPLE
+     * AN ENTRY WAS DELETED AND A NEW ONE WAS ADDED. THE OFFSET METHOD ALSO FAILS IF DATA
+     * IS NOT APPENDED, BUT RANDOMLY INSERTED, TO THE DATABASE.
+     *
+     * if anyone knows a way to catch these cases help a mf out
+     */
     @Override
     public void saveAsFile() {
-        int limit = Drone.getCount();
+        serverDroneCount = Drone.getCount();
 
         try {
-            if(!(checkForNewData(limit))) {
+            if(!(checkForNewData(serverDroneCount))) {
                 System.out.println("No New Drone Data to fetch from");
                 return;
             }
@@ -196,8 +310,9 @@ public class Drone implements Printable, Expandable {
             throw new RuntimeException(e);
         }
 
-        System.out.println("Drone Count: " + limit);
-        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDronesUrl() + "?limit=" + limit);
+        System.out.println("Drone Count: " + serverDroneCount);
+        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator
+                (JSONDeruloHelper.getDronesUrl() + "?limit=" + serverDroneCount);
 
         System.out.println("Saving Drone Data from Webserver in file ...");
 

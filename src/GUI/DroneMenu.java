@@ -1,6 +1,7 @@
 package GUI;
 
 import data.Drone;
+import data.DroneType;
 import processing.JSONDeruloHelper;
 //import jdk.javadoc.internal.doclets.toolkit.taglets.snippet.Style;
 
@@ -16,7 +17,9 @@ import static processing.JSONDeruloHelper.helper;
 public class DroneMenu extends JPanel implements ActionListener {
 
     public DroneMenu(LinkedList<Drone> drones) {
+
         super(new GridLayout(1, 0));
+
         String[] columnNames = {
                 "Nr.",
                 "ID",
@@ -35,7 +38,11 @@ public class DroneMenu extends JPanel implements ActionListener {
 
             // Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
+<<<<<<< HEAD
             data[i][2] = drones.get(i).getDroneTypeObject();
+=======
+            //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
+>>>>>>> 756f53af4682c7c10a55b28fa708bc6a34ec970c
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
@@ -51,15 +58,14 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         // Das JScrollPane zum Panel hinzufügen
         add(scrollPane);
-
-
     }
 
-    public static void createDroneTableGUI() {
+    public static void createDroneTableGUI(LinkedList<Drone> drones) {
         JFrame frame = new JFrame("Drone Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        DroneMenu droneM = new DroneMenu(helper.getDrones());
+        //DroneTypeMenu.createDroneTypeTableGUI();
+        DroneMenu droneM = new DroneMenu(drones);
 
         frame.setJMenuBar(droneM.createMenuBar());
         frame.setContentPane(droneM);
@@ -144,10 +150,10 @@ public class DroneMenu extends JPanel implements ActionListener {
     //Click action
     public void actionPerformed(ActionEvent e) {
         if ("droned".equals(e.getActionCommand())) {
-            DroneDynamicsMenu.createDroneDynamicsOverview();
+            DroneDynamicsMenu.createDroneDynamicsOverview((ProgramStart.drones.getFirst().getDroneDynamicsArrayList()));
         }
         else if ("dronet".equals(e.getActionCommand())) {
-            DroneTypeMenu.createDroneTypeTableGUI();
+            DroneTypeMenu.createDroneTypeTableGUI(ProgramStart.droneTypes);
         }
         else if ("credits".equals(e.getActionCommand())) {
             CreditsMenu.createCreditList();
@@ -163,10 +169,4 @@ public class DroneMenu extends JPanel implements ActionListener {
      System.exit(0);
     }
 
-    public static void main(String[] args) {
-        JSONDeruloHelper helper = new JSONDeruloHelper();
-        LinkedList<Drone> drones = helper.getDrones();
-
-
-    }
 }

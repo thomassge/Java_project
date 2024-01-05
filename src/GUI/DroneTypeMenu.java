@@ -54,16 +54,17 @@ public class DroneTypeMenu extends JPanel {
         add(scrollPane);
     }
 
-    public static void createDroneTypeTableGUI() {
+    public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {
         JFrame frame = new JFrame("Drone Types");
 
-        DroneTypeMenu droneTM = new DroneTypeMenu(helper.getDroneTypes());
+        DroneTypeMenu droneTM = new DroneTypeMenu(droneTypes);
         frame.setContentPane(droneTM);
 
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+<<<<<<< HEAD
 
 
 
@@ -73,4 +74,6 @@ public class DroneTypeMenu extends JPanel {
 
         SwingUtilities.invokeLater(() -> createDroneTypeTableGUI());
     }
+=======
+>>>>>>> 756f53af4682c7c10a55b28fa708bc6a34ec970c
 }
