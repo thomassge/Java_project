@@ -42,23 +42,23 @@ public class Drone implements Printable, Expandable {
     }
 
     //GETTER-Methods
+    public int getId(){
+        return this.id;
+    }
     public String getDroneTypePointer(){
         return this.droneTypePointer;
     }
+    public String getCreated(){
+        return this.created;
+    }
     public String getSerialnumber(){
         return this.serialnumber;
-    }
-    public int getId(){
-        return this.id;
     }
     public int getCarriageWeight(){
         return this.carriageWeight;
     }
     public String getCarriageType(){
         return this.carriageType;
-    }
-    public String getCreated(){
-        return this.created;
     }
     public int getExtractedDroneTypeID() { // code insists that there are max /99/ drones -> implement REGEX
         //CODE TO EXTRACT THE NUMBERS IN "http://dronesim.facets-labs.com/api/dronetypes/67/", MORE SPECIFICALLY EXTRACT THE CHARACTERS BETWEEN THE LAST TWO SLASHES
@@ -79,6 +79,8 @@ public class Drone implements Printable, Expandable {
     public void setDroneDynamicsArrayList(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         this.droneDynamicsArrayList = droneDynamicsArrayList;
     }
+
+
 
     // METHOD TO LINK FITTING DRONETYPE OBJECT TO RIGHT DRONE OBJECT
     /*public static void droneTypeToDroneLinker(LinkedList<DroneType> droneTypes, LinkedList<Drone> drones) {

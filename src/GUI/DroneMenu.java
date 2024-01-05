@@ -35,11 +35,12 @@ public class DroneMenu extends JPanel implements ActionListener {
 
             // Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
-           // data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
+            data[i][2] = drones.get(i).getDroneTypeObject();
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
             data[i][6] = drones.get(i).getCarriageType();
+
         }
 
         // Erstellen der JTable mit den Daten und Spaltennamen
@@ -155,6 +156,9 @@ public class DroneMenu extends JPanel implements ActionListener {
             quit();
         }
     }
+
+
+
     public static void quit(){
      System.exit(0);
     }

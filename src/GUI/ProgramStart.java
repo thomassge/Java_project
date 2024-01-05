@@ -19,8 +19,6 @@ public class ProgramStart {
     }
 
     /*
-
-
     private void printDebugData(JTable table) {
         int numRows = table.getRowCount();
         int numCols = table.getColumnCount();
@@ -65,8 +63,6 @@ public class ProgramStart {
 
         return contentPane;
     }
-
-
     */
 
 }
