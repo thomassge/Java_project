@@ -57,16 +57,4 @@ public class DroneTypeMenu extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-<<<<<<< HEAD
-
-
-
-    public static void main(String[] args) {
-        JSONDeruloHelper helper = new JSONDeruloHelper();
-        LinkedList<DroneType> droneTypes = helper.getDroneTypes();
-
-        SwingUtilities.invokeLater(() -> createDroneTypeTableGUI());
-    }
-=======
->>>>>>> 756f53af4682c7c10a55b28fa708bc6a34ec970c
 }

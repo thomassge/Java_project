@@ -66,17 +66,14 @@ public class Drone implements Printable, Expandable {
     }
 
     //GETTER-Methods
-    public int getId(){
-        return this.id;
-    }
     public String getDroneTypePointer(){
         return this.droneTypePointer;
     }
-    public String getCreated(){
-        return this.created;
-    }
     public String getSerialnumber(){
         return this.serialnumber;
+    }
+    public int getId(){
+        return this.id;
     }
     public int getCarriageWeight(){
         return this.carriageWeight;
@@ -84,12 +81,6 @@ public class Drone implements Printable, Expandable {
     public String getCarriageType(){
         return this.carriageType;
     }
-<<<<<<< HEAD
-    public int getExtractedDroneTypeID() { // code insists that there are max /99/ drones -> implement REGEX
-        //CODE TO EXTRACT THE NUMBERS IN "http://dronesim.facets-labs.com/api/dronetypes/67/", MORE SPECIFICALLY EXTRACT THE CHARACTERS BETWEEN THE LAST TWO SLASHES
-        String extractedString = this.droneTypePointer.substring(47,49);
-        return Integer.valueOf(extractedString);
-=======
     public String getCreated(){
         return this.created;
     }
@@ -109,7 +100,6 @@ public class Drone implements Printable, Expandable {
             this.extractedDroneTypeID = 0;
         }
         return Integer.parseInt(matcher.group(0));
->>>>>>> 756f53af4682c7c10a55b28fa708bc6a34ec970c
     }
 
     /**
@@ -136,37 +126,11 @@ public class Drone implements Printable, Expandable {
         this.droneDynamicsArrayList = droneDynamicsArrayList;
     }
 
-<<<<<<< HEAD
-
-
-    // METHOD TO LINK FITTING DRONETYPE OBJECT TO RIGHT DRONE OBJECT
-    /*public static void droneTypeToDroneLinker(LinkedList<DroneType> droneTypes, LinkedList<Drone> drones) {
-        int i = 0;
-        for(Drone droneObjectThatNeedsDroneTypeInformation : drones) {
-            System.out.println("Erste SChleife: " + i);
-            int j = 0;
-            for (Drone droneObject : drones) {
-                System.out.println("Zweite Schleife: " + j);
-                if (drones.get(i).getExtractedDroneTypeID() == (droneTypes.get(j).getDroneTypeID())) {
-                    System.out.println("Hallo" + drones.get(i).droneTypePointer);
-                    drones.get(i).droneTypeObject = droneTypes.get(j);
-                    i++;
-                    break; //break added
-                }
-                j++;
-            }
-        }
-    } */
-
-    // get id's or more data to check for duplicates, request wird eh gemacht
-
-=======
     /**
      * This method connects to the webserver to get the current count of the Drones.
      * It limits the requests to a single entry to prevent a big download.
      * @return The current count of Drones on the webserver.
      */
->>>>>>> 756f53af4682c7c10a55b28fa708bc6a34ec970c
     public static int getCount() {
         String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
         String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
