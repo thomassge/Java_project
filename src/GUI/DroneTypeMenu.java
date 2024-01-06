@@ -111,6 +111,7 @@ public class DroneTypeMenu extends JPanel {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Menu");
         JMenuItem exitItem = new JMenuItem("Back");
+        //actionlistener for closing window
         exitItem.addActionListener(e -> {
             JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             currentFrame.dispose();
@@ -137,7 +138,7 @@ public class DroneTypeMenu extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-
+        //this closes only the windows, not the whole programm
         exitItem.addActionListener(e -> {
             if (frame != null) {
                 frame.dispose();
