@@ -5,6 +5,8 @@ import data.DroneType;
 import processing.JSONDeruloHelper;
 
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,23 +35,59 @@ public class DroneMenu extends JPanel implements ActionListener {
         for (int i = 0; i < drones.size(); i++) {
             data[i][0] = i + 1; // "Nr." column
 
-            // Fetch data for each drone and fill the respective columns
+            // Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
-            data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
+            //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
             data[i][6] = drones.get(i).getCarriageType();
         }
 
-        // Create JTable with data and columnNames
-        JTable table = new JTable(data, columnNames);
+        final JTable table = new JTable(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Set all cells as non-editable
+            }
 
-        // Hinzufügen der Tabelle zur JScrollPane
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component comp = super.prepareRenderer(renderer, row, column);
+                if (comp instanceof JLabel) {
+                    if (column == 0 || column == 1 || column == 2) {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.LEFT); // Align DroneType and Serialnr to the left
+                    } else {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT); // Align other columns to the right
+                    }
+                }
+                return comp;
+            }
+
+        };
+
+
+        table.setPreferredScrollableViewportSize(new Dimension(200, 200));
+        table.setFillsViewportHeight(true);
+
+        //edits specific column width
+        TableColumn columnNr = table.getColumnModel().getColumn(0);
+        columnNr.setPreferredWidth(columnNr.getPreferredWidth() - 55);
+
+        TableColumn columnID = table.getColumnModel().getColumn(1);
+        columnID.setPreferredWidth(columnID.getPreferredWidth() - 55);
+
+        TableColumn columnsr = table.getColumnModel().getColumn(4);
+        columnsr.setPreferredWidth(columnsr.getPreferredWidth() + 15);
+
+        TableColumn columnCW = table.getColumnModel().getColumn(5);
+        columnCW.setPreferredWidth(columnCW.getPreferredWidth() - 35);
+
+        TableColumn columnCT = table.getColumnModel().getColumn(6);
+        columnCT.setPreferredWidth(columnCT.getPreferredWidth() - 35);
+
         JScrollPane scrollPane = new JScrollPane(table);
-
-        // Das JScrollPane zum Panel hinzufügen
-        add(scrollPane);
+        this.setLayout(new BorderLayout()); // Setting a layout manager to the container
+        this.add(scrollPane, BorderLayout.CENTER);
     }
 
     public static void createDroneTableGUI(LinkedList<Drone> drones) {
