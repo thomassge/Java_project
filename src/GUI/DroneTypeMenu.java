@@ -4,6 +4,8 @@ import data.DroneType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import javax.swing.RowFilter;
@@ -16,6 +18,7 @@ import javax.swing.table.TableRowSorter;
 
 public class DroneTypeMenu extends JPanel {
     private JFrame frame;
+    //private Timer refreshTimer;
 
     public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
         super(new BorderLayout());
@@ -78,6 +81,26 @@ public class DroneTypeMenu extends JPanel {
         TableColumn columnID = table.getColumnModel().getColumn(1);
         columnID.setPreferredWidth(columnID.getPreferredWidth() + 5);
 
+        /*
+        // Initialize and start the timer for refresh every x millisec set
+        refreshTimer = new Timer(6000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // refresh action
+                // fetch updated drone type data - update table
+                LinkedList<DroneType> updatedDroneTypes = fetchUpdatedData(); // Replace this with your data-fetching logic
+                // Update table with new data
+                updateTable(updatedDroneTypes); // Implement this method to update  table
+                // Repaint the GUI
+                repaint();
+            }
+        });
+        refreshTimer.start();
+
+         */
+
+
+
         JScrollPane scrollPane = new JScrollPane(table);
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
@@ -133,8 +156,8 @@ public class DroneTypeMenu extends JPanel {
         });
 
         //hf gl
-        JMenu menu2 = new JMenu("Refresh");
-        menuBar.add(menu2);
+        //JMenu menu2 = new JMenu("Refresh");
+        //menuBar.add(menu2);
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.add(new JLabel("Search: "));
@@ -142,14 +165,68 @@ public class DroneTypeMenu extends JPanel {
         //searchPanel.add(searchButton);
         menuBar.add(searchPanel);
 
-        frame = new JFrame("Drone Types");
+        frame = new JFrame("Drone Type");
         frame.setJMenuBar(menuBar);
         frame.setContentPane(this);
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        //this.frame = frame; // Assign the frame reference to the class variable ???
+        //this.frame = frame; // Assign the frame reference to the class variable wofür???
     }
+
+    /*
+    // Method placeholders, replace these with your actual data retrieval and table update logic
+    private LinkedList<DroneType> fetchUpdatedData() {
+        // Simulate fetching updated drone type data
+        LinkedList<DroneType> updatedDroneTypes = new LinkedList<>();
+
+        // Generate sample updated data for demonstration purposes
+        for (int i = 0; i < 10; i++) {
+            // Create random DroneType objects
+            DroneType droneType = new DroneType(
+                    i,                        // Replace with ID logic
+                    "Manufacturer " + i,      // Replace with Manufacturer logic
+                    "Type " + i,                        // Replace with Typename logic
+                    random.nextDouble() * 100,          // Replace with Weight logic
+                    random.nextDouble() * 200,          // Replace with Maximum Speed logic
+                    random.nextDouble() * 1000,         // Replace with Battery Capacity logic
+                    random.nextDouble() * 500,          // Replace with Control Range logic
+                    random.nextDouble() * 1000          // Replace with Maximum Carriage logic
+            );
+
+            updatedDroneTypes.add(droneType);
+        }
+        return updatedDroneTypes;
+    }
+
+    private void updateTable(LinkedList<DroneType> updatedDroneTypes) {
+        // Convert updated data to a format suitable for JTable
+        Object[][] newData = new Object[updatedDroneTypes.size()][8]; // Assuming 8 columns
+
+        // Populate newData with the updated DroneType information
+        for (int i = 0; i < updatedDroneTypes.size(); i++) {
+            newData[i][0] = updatedDroneTypes.get(i).getDroneTypeID();
+            newData[i][1] = updatedDroneTypes.get(i).getManufacturer();
+            newData[i][2] = updatedDroneTypes.get(i).getTypename();
+            newData[i][3] = updatedDroneTypes.get(i).getWeight();
+            newData[i][4] = updatedDroneTypes.get(i).getMaximumSpeed();
+            newData[i][5] = updatedDroneTypes.get(i).getBatteryCapacity();
+            newData[i][6] = updatedDroneTypes.get(i).getControlRange();
+            newData[i][7] = updatedDroneTypes.get(i).getMaximumCarriage();
+        }
+
+        // Get the table model and update it with the new data
+        TableModel model = new javax.swing.table.DefaultTableModel(
+                newData,
+                new String[]{"ID", "Manufacturer", "Typename", "Weight", "Maximum Speed", "Battery Capacity", "Control Range", "Maximum Carriage"}
+        );
+
+        // Set the new model to the table
+        JTable table = (JTable) ((JScrollPane) this.getComponent(0)).getViewport().getView(); // Assuming table is the first component
+        table.setModel(model);
+    }
+
+     */
 
     public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {
         new DroneTypeMenu(droneTypes);
