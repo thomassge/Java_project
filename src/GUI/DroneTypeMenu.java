@@ -119,6 +119,13 @@ public class DroneTypeMenu extends JPanel {
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
+        //this closes only the windows, not the whole programm
+        exitItem.addActionListener(e -> {
+            if (frame != null) {
+                frame.dispose();
+            }
+        });
+
         //hf gl
         JMenu menu2 = new JMenu("Refresh");
         menuBar.add(menu2);
@@ -138,15 +145,7 @@ public class DroneTypeMenu extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        //this closes only the windows, not the whole programm
-        exitItem.addActionListener(e -> {
-            if (frame != null) {
-                frame.dispose();
-            }
-        });
-
         this.frame = frame; // Assign the frame reference to the class variable
-
 
     }
 

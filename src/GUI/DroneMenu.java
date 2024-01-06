@@ -181,7 +181,8 @@ public class DroneMenu extends JPanel implements ActionListener {
         menu2 = new JMenu("Refresh");
         menu2.setMnemonic(KeyEvent.VK_R);
         menuBar.add(menu2);
-/*
+
+        /*
         //Könnte man noch adden, wenn einer Lust hat bittegerne
         //achtung bei klick dark/light schließt alles (z 207 actionperformed() else quit)
         //CHange to dark/lightmode
@@ -204,7 +205,6 @@ public class DroneMenu extends JPanel implements ActionListener {
         rbMenuItem.addActionListener(this);
         group.add(rbMenuItem);
         menu.add(rbMenuItem);
-
  */
 
         //search fenster
