@@ -1,19 +1,20 @@
 package GUI;
 
 import data.DroneType;
-import processing.JSONDeruloHelper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
+import javax.swing.RowFilter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class DroneTypeMenu extends JPanel {
 
-    // Arbeitet direkt mit übergebener Linked List weiter
     public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
-        super(new GridLayout(1, 0));
+        super(new BorderLayout());
 
-        // Die Spaltennamen für die Tabelle
         String[] columnNames = {
                 "ID",
                 "Manufacturer",
@@ -22,7 +23,8 @@ public class DroneTypeMenu extends JPanel {
                 "Maximum Speed",
                 "Battery Capacity",
                 "Control Range",
-                "Maximum Carriage"};
+                "Maximum Carriage"
+        };
 
         Object[][] data = new Object[droneTypes.size()][columnNames.length];
 
@@ -37,24 +39,49 @@ public class DroneTypeMenu extends JPanel {
             data[i][7] = droneTypes.get(i).getMaximumCarriage();
         }
 
-        // Erstellen der JTable mit den Daten und Spaltennamen
         JTable table = new JTable(data, columnNames);
-
-        // Hinzufügen der Tabelle zur JScrollPane
         JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.CENTER);
 
-        // Das JScrollPane zum Panel hinzufügen
-        add(scrollPane);
-    }
+        // Search func
+        JTextField searchField = new JTextField(20);
+        JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(e -> {
+            String searchText = searchField.getText();
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+            table.setRowSorter(sorter);
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+        });
 
-    public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {
+        // menu bar
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.addActionListener(e -> System.exit(0));
+        fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+
+        //hf gl
+        JMenu menu2 = new JMenu("Refresh");
+        menuBar.add(menu2);
+
+        
+        JMenu searchMenu = new JMenu("Search");
+        searchMenu.add(searchField);
+        searchMenu.add(searchButton);
+        menuBar.add(searchMenu);
+
         JFrame frame = new JFrame("Drone Types");
+        frame.setJMenuBar(menuBar);
 
-        DroneTypeMenu droneTM = new DroneTypeMenu(droneTypes);
-        frame.setContentPane(droneTM);
+        frame.setContentPane(this);
 
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {
+        new DroneTypeMenu(droneTypes);
     }
 }
