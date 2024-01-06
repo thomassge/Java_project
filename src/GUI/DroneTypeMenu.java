@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import javax.swing.RowFilter;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -39,9 +41,43 @@ public class DroneTypeMenu extends JPanel {
             data[i][7] = droneTypes.get(i).getMaximumCarriage();
         }
 
-        JTable table = new JTable(data, columnNames);
+        //unveränderbarkeit
+        final JTable table = new JTable(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Set all cells as non-editable
+            }
+
+            //columnbreite
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component comp = super.prepareRenderer(renderer, row, column);
+                if (comp instanceof JLabel) {
+                    if (column == 0 || column == 1 || column == 2) {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.LEFT); // Align DroneType and Serialnr to the left
+                    } else {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT); // Align other columns to the right
+                    }
+                }
+                return comp;
+            }
+
+        };
+
+
+        table.setPreferredScrollableViewportSize(new Dimension(200, 200));
+        table.setFillsViewportHeight(true);
+
+        //edits specific column width
+        TableColumn columnNr = table.getColumnModel().getColumn(0);
+        columnNr.setPreferredWidth(columnNr.getPreferredWidth() - 45);
+
+        TableColumn columnID = table.getColumnModel().getColumn(1);
+        columnID.setPreferredWidth(columnID.getPreferredWidth() + 5);
+
         JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        this.setLayout(new BorderLayout()); // Setting a layout manager to the container
+        this.add(scrollPane, BorderLayout.CENTER);
 
         // Search func
         JTextField searchField = new JTextField(20);
@@ -65,11 +101,11 @@ public class DroneTypeMenu extends JPanel {
         JMenu menu2 = new JMenu("Refresh");
         menuBar.add(menu2);
 
-        
-        JMenu searchMenu = new JMenu("Search");
-        searchMenu.add(searchField);
-        searchMenu.add(searchButton);
-        menuBar.add(searchMenu);
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.add(new JLabel("Search: "));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        menuBar.add(searchPanel);
 
         JFrame frame = new JFrame("Drone Types");
         frame.setJMenuBar(menuBar);
@@ -85,3 +121,27 @@ public class DroneTypeMenu extends JPanel {
         new DroneTypeMenu(droneTypes);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

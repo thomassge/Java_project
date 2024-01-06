@@ -5,6 +5,10 @@ import data.DroneType;
 import processing.JSONDeruloHelper;
 
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +16,9 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
 public class DroneMenu extends JPanel implements ActionListener {
+    private JTextField searchField;
+    private JButton searchButton;
+    private JTable table;
 
     public DroneMenu(LinkedList<Drone> drones) {
 
@@ -42,14 +49,66 @@ public class DroneMenu extends JPanel implements ActionListener {
             data[i][6] = drones.get(i).getCarriageType();
         }
 
-        // Create JTable with data and columnNames
-        JTable table = new JTable(data, columnNames);
+        final JTable table = new JTable(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Set all cells as non-editable
+            }
 
-        // Hinzufügen der Tabelle zur JScrollPane
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component comp = super.prepareRenderer(renderer, row, column);
+                if (comp instanceof JLabel) {
+                    if (column == 0 || column == 1 || column == 2) {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.LEFT); // Align DroneType and Serialnr to the left
+                    } else {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT); // Align other columns to the right
+                    }
+                }
+                return comp;
+            }
+
+        };
+
+        
+
+
+
+
+        table.setPreferredScrollableViewportSize(new Dimension(200, 200));
+        table.setFillsViewportHeight(true);
+
+        //edits specific column width
+        TableColumn columnNr = table.getColumnModel().getColumn(0);
+        columnNr.setPreferredWidth(columnNr.getPreferredWidth() - 55);
+
+        TableColumn columnID = table.getColumnModel().getColumn(1);
+        columnID.setPreferredWidth(columnID.getPreferredWidth() - 55);
+
+        TableColumn columnsr = table.getColumnModel().getColumn(4);
+        columnsr.setPreferredWidth(columnsr.getPreferredWidth() + 15);
+
+        TableColumn columnCW = table.getColumnModel().getColumn(5);
+        columnCW.setPreferredWidth(columnCW.getPreferredWidth() - 35);
+
+        TableColumn columnCT = table.getColumnModel().getColumn(6);
+        columnCT.setPreferredWidth(columnCT.getPreferredWidth() - 35);
+
         JScrollPane scrollPane = new JScrollPane(table);
+        this.setLayout(new BorderLayout()); // Setting a layout manager to the container
+        this.add(scrollPane, BorderLayout.CENTER);
 
-        // Das JScrollPane zum Panel hinzufügen
-        add(scrollPane);
+        // Search func
+        searchField = new JTextField(20);
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(e -> {
+            String searchText = searchField.getText();
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+            table.setRowSorter(sorter);
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+        });
+
+
     }
 
     public static void createDroneTableGUI(LinkedList<Drone> drones) {
@@ -126,10 +185,10 @@ public class DroneMenu extends JPanel implements ActionListener {
         group.add(rbMenuItem);
         menu.add(rbMenuItem);
 
-        //Suchleiste
+
+
+
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JTextField searchField = new JTextField(20);
-        JButton searchButton = new JButton("Search");
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
@@ -158,3 +217,16 @@ public class DroneMenu extends JPanel implements ActionListener {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
