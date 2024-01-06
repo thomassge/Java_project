@@ -22,20 +22,16 @@ public class ProgramStart {
         helper.droneTypeToDroneLinker(droneTypes, drones);
         helper.addDroneDynamicsData(drones);
 
-
-        System.out.println(drones.get(0).getDroneDynamicsArrayList().getFirst().getLastSeen());
-        System.out.println("here");
-
         return drones;
     }
 
     public static void main(String[] args) throws IOException {
 
         drones = getData();
-
         javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(drones);}});
 
     }
+<<<<<<< HEAD
 
     /*
     private void printDebugData(JTable table) {
@@ -84,4 +80,6 @@ public class ProgramStart {
     }
     */
 
+=======
+>>>>>>> c7efd28a86d36716953fb9e2db88d597b36281ac
 }

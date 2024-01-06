@@ -1,14 +1,11 @@
 package GUI;
 
 import data.DroneType;
-//import jdk.javadoc.internal.doclets.toolkit.taglets.snippet.Style;
 import processing.JSONDeruloHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
-
-import static processing.JSONDeruloHelper.helper;
 
 public class DroneTypeMenu extends JPanel {
 
@@ -27,13 +24,9 @@ public class DroneTypeMenu extends JPanel {
                 "Control Range",
                 "Maximum Carriage"};
 
-        // Die Daten für die Tabelle
         Object[][] data = new Object[droneTypes.size()][columnNames.length];
-                // Weitere Datenzeilen hier einfügen...
-        for (int i = 0; i < droneTypes.size(); i++) {
-           // data[i][0] = i + 1; // "Nr." column
 
-            // Fetch data for each droneType and populate the respective columns
+        for (int i = 0; i < droneTypes.size(); i++) {
             data[i][0] = droneTypes.get(i).getDroneTypeID();
             data[i][1] = droneTypes.get(i).getManufacturer();
             data[i][2] = droneTypes.get(i).getTypename();
@@ -42,7 +35,7 @@ public class DroneTypeMenu extends JPanel {
             data[i][5] = droneTypes.get(i).getBatteryCapacity();
             data[i][6] = droneTypes.get(i).getControlRange();
             data[i][7] = droneTypes.get(i).getMaximumCarriage();
-        };
+        }
 
         // Erstellen der JTable mit den Daten und Spaltennamen
         JTable table = new JTable(data, columnNames);
