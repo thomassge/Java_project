@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -80,14 +82,29 @@ public class DroneTypeMenu extends JPanel {
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
 
-        // Search func
         JTextField searchField = new JTextField(20);
-        JButton searchButton = new JButton("Search");
-        searchButton.addActionListener(e -> {
-            String searchText = searchField.getText();
-            TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
-            table.setRowSorter(sorter);
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                search();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                search();
+            }
+
+            private void search() {
+                String searchText = searchField.getText();
+                TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+                table.setRowSorter(sorter);
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+            }
         });
 
         // menu bar
@@ -108,7 +125,7 @@ public class DroneTypeMenu extends JPanel {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
-        searchPanel.add(searchButton);
+        //searchPanel.add(searchButton);
         menuBar.add(searchPanel);
 
         frame = new JFrame("Drone Types");

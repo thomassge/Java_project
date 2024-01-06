@@ -5,6 +5,8 @@ import data.DroneType;
 import processing.JSONDeruloHelper;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -95,14 +97,29 @@ public class DroneMenu extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
 
-        // Search func
         searchField = new JTextField(20);
-        searchButton = new JButton("Search");
-        searchButton.addActionListener(e -> {
-            String searchText = searchField.getText();
-            TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
-            table.setRowSorter(sorter);
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                search();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                search();
+            }
+
+            private void search() {
+                String searchText = searchField.getText();
+                TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+                table.setRowSorter(sorter);
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+            }
         });
 
 
@@ -186,7 +203,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
-        searchPanel.add(searchButton);
+        //searchPanel.add(searchButton);
         menuBar.add(searchPanel);
 
         return menuBar;
