@@ -3,7 +3,6 @@ package GUI;
 import data.Drone;
 import data.DroneType;
 import processing.JSONDeruloHelper;
-//import jdk.javadoc.internal.doclets.toolkit.taglets.snippet.Style;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
-
-import static processing.JSONDeruloHelper.helper;
 
 public class DroneMenu extends JPanel implements ActionListener {
 
@@ -32,20 +29,20 @@ public class DroneMenu extends JPanel implements ActionListener {
         // Create a data array with the size of the drones list
         Object[][] data = new Object[drones.size()][columnNames.length];
 
-        // Loop through the drones list to populate the data array
+        // Loop through the drones list to fill the data array
         for (int i = 0; i < drones.size(); i++) {
             data[i][0] = i + 1; // "Nr." column
 
-            // Fetch data for each drone and populate the respective columns
+            // Fetch data for each drone and fill the respective columns
             data[i][1] = drones.get(i).getId();
-            //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
+            data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
             data[i][6] = drones.get(i).getCarriageType();
         }
 
-        // Erstellen der JTable mit den Daten und Spaltennamen
+        // Create JTable with data and columnNames
         JTable table = new JTable(data, columnNames);
 
         // Hinzufügen der Tabelle zur JScrollPane
@@ -59,7 +56,6 @@ public class DroneMenu extends JPanel implements ActionListener {
         JFrame frame = new JFrame("Drone Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //DroneTypeMenu.createDroneTypeTableGUI();
         DroneMenu droneM = new DroneMenu(drones);
 
         frame.setJMenuBar(droneM.createMenuBar());

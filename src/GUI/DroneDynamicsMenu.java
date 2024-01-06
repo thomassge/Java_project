@@ -2,21 +2,15 @@ package GUI;
 
 import data.Drone;
 import data.DroneDynamics;
-import data.DroneType;
-import dronesim.Main;
-import processing.JSONDeruloHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import static processing.JSONDeruloHelper.helper;
-
 public class DroneDynamicsMenu extends JPanel implements ActionListener {
-    //JComboBox<String> List;
+
     JLabel selectedImage;
     JLabel fixedImage;
     JTextArea topRightText;
@@ -26,8 +20,6 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
     public DroneDynamicsMenu(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         super(new BorderLayout());
-
-        //this.drones = drones;
 
         droneIdDropdown = new JComboBox<>();
 
@@ -96,25 +88,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         gridPanel.add(fixedImage, gbc);
         add(gridPanel, BorderLayout.CENTER);
         //updateLabel("Drone1");
-
-        //updateTopRightText((Integer) droneIdDropdown.getSelectedItem());
-
     }
-
-    /*
-    private JComboBox<Integer> droneIdDropdown;
-
-    public DroneDynamicsMenu(LinkedList<Drone> drones){
-
-        droneIdDropdown = new JComboBox<>();
-
-        for (int i=0;i<drones.size();i++) {
-            droneIdDropdown.addItem(drones.get(i).getId());
-        }
-        droneIdDropdown.addActionListener(this);
-        add(droneIdDropdown);
-    }
-     */
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == droneIdDropdown) {
@@ -124,7 +98,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
             // Hier kannst du die Logik für die Aktualisierung der GUI basierend auf der ausgewählten Drone-ID implementieren
             System.out.println("Ausgewählte Drone-ID: " + selectedDroneId);
-            updateTopRightText(selectedDroneId);
+            createTextTopRight(selectedDroneId);
         }
     }
 /*
@@ -138,10 +112,9 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
         updateBottomLeftText(); // Update dynamic text
     }
-
 */
 
-    protected void updateTopRightText(int selectedDroneId) {
+    protected void createTextTopRight(int selectedDroneId) {
 
         Drone selectedDrone = null;
         for (Drone drone : ProgramStart.drones) {
@@ -152,7 +125,6 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         }
 
         // Initialize topRightText if not initialized
-
         if (topRightText == null) {
             topRightText = new JTextArea();
             topRightText.setEditable(false);
@@ -160,13 +132,13 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         }
         String[] droneAttributes = {"ID",
                                     "Serialnr",
-                                    //"DroneType",
+                                    "DroneType",
                                     "Weight",
                                     "CarriageType"};
 
         String[] droneValues = { Integer.toString(selectedDroneId),
                                 selectedDrone.getSerialnumber(),
-                                //selectedDrone.getDroneTypeObject().getTypename(),
+                                selectedDrone.getDroneTypeObject().getTypename(),
                                 Double.toString(selectedDrone.getCarriageWeight()),
                                 selectedDrone.getCarriageType()
                                 };
@@ -178,12 +150,12 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         }
         topRightText.setText(text.toString());
 
-
-        DroneDynamics selectedDroneDynamic = ProgramStart.drones.get(0).getDroneDynamicsArrayList().getFirst();
-        updateBottomLeftText(selectedDroneId, selectedDroneDynamic);
+        // Bei selectedDroneId -70 -1 (weil Drohnen in ArrayList bei [0] anfangen
+        DroneDynamics selectedDroneDynamic = ProgramStart.drones.get(selectedDroneId-70-1).getDroneDynamicsArrayList().getFirst();
+        createTextBottomLeft(selectedDroneId, selectedDroneDynamic);
     }
 
-    protected void updateBottomLeftText(int selectedDroneId, DroneDynamics selectedDroneDynamic) {
+    protected void createTextBottomLeft(int selectedDroneId, DroneDynamics selectedDroneDynamic) {
 
         // Initialize bottomLeftText if not initialized
         if (bottomLeftText == null) {
@@ -224,13 +196,9 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         }
     }
 
-
     public static void createDroneDynamicsOverview(ArrayList<DroneDynamics> droneDynamicsArrayList) {
 
-
-
         JFrame frame = new JFrame("Drone Dynamics");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         DroneDynamicsMenu droneDM = new DroneDynamicsMenu(droneDynamicsArrayList);
 
@@ -239,9 +207,6 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        droneDM.updateTopRightText((Integer) droneDM.droneIdDropdown.getSelectedItem());
-
+        droneDM.createTextTopRight((Integer) droneDM.droneIdDropdown.getSelectedItem());
     }
-
 }
-
