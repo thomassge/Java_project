@@ -48,13 +48,13 @@ public class DroneMenu extends JPanel implements ActionListener {
             data[i][5] = drones.get(i).getCarriageWeight();
             data[i][6] = drones.get(i).getCarriageType();
         }
-
+        //unveränderbarkeit
         final JTable table = new JTable(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Set all cells as non-editable
             }
-
+            //columnbreite
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component comp = super.prepareRenderer(renderer, row, column);
@@ -69,9 +69,6 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
 
         };
-
-        
-
 
 
 
@@ -185,9 +182,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         group.add(rbMenuItem);
         menu.add(rbMenuItem);
 
-
-
-
+        //search fenster
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
@@ -212,9 +207,7 @@ public class DroneMenu extends JPanel implements ActionListener {
             quit();
         }
     }
-    public static void quit(){
-        System.exit(0);
-    }
+    public static void quit(){System.exit(0);}
 
 }
 

@@ -13,6 +13,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 public class DroneTypeMenu extends JPanel {
+    private JFrame frame;
 
     public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
         super(new BorderLayout());
@@ -92,8 +93,11 @@ public class DroneTypeMenu extends JPanel {
         // menu bar
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
-        JMenuItem exitItem = new JMenuItem("Exit");
-        exitItem.addActionListener(e -> System.exit(0));
+        JMenuItem exitItem = new JMenuItem("Back");
+        exitItem.addActionListener(e -> {
+            JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            currentFrame.dispose();
+        });
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
@@ -107,7 +111,7 @@ public class DroneTypeMenu extends JPanel {
         searchPanel.add(searchButton);
         menuBar.add(searchPanel);
 
-        JFrame frame = new JFrame("Drone Types");
+        frame = new JFrame("Drone Types");
         frame.setJMenuBar(menuBar);
 
         frame.setContentPane(this);
@@ -115,6 +119,17 @@ public class DroneTypeMenu extends JPanel {
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+
+        exitItem.addActionListener(e -> {
+            if (frame != null) {
+                frame.dispose();
+            }
+        });
+
+        this.frame = frame; // Assign the frame reference to the class variable
+
+
     }
 
     public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {
