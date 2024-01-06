@@ -82,6 +82,12 @@ public class DroneTypeMenu extends JPanel {
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
 
+        /**
+         * Um die search funktion zu dynamisch zu triggern ist DocumentListener zum textfeld hinzugefügt
+         * This code attaches a DocumentListener to the text field.
+         * Whenever the text changes (insertion, deletion, or modification), the search() method is triggered,
+         * which filters the table based on the text entered.
+         */
         JTextField searchField = new JTextField(20);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -138,15 +144,11 @@ public class DroneTypeMenu extends JPanel {
 
         frame = new JFrame("Drone Types");
         frame.setJMenuBar(menuBar);
-
         frame.setContentPane(this);
-
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
-        this.frame = frame; // Assign the frame reference to the class variable
-
+        //this.frame = frame; // Assign the frame reference to the class variable ???
     }
 
     public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {

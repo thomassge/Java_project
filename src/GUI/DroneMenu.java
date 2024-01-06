@@ -155,10 +155,10 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         menuBar = new JMenuBar();
 
+
         menu = new JMenu("Menu");
         menu.setMnemonic(KeyEvent.VK_M);
         menuBar.add(menu);
-
 
         menuItem = new JMenuItem("DroneType",KeyEvent.VK_T);
         menuItem.setActionCommand("dronet"); // Set action command for the drone menu item
