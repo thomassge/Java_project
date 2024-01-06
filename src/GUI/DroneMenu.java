@@ -97,6 +97,12 @@ public class DroneMenu extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
 
+        /**
+         * Um die search funktion zu dynamisch zu triggern ist DocumentListener zum textfeld hinzugefügt
+         * This code attaches a DocumentListener to the text field.
+         * Whenever the text changes (insertion, deletion, or modification), the search() method is triggered,
+         * which filters the table based on the text entered.
+         */
         searchField = new JTextField(20);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
