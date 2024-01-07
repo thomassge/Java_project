@@ -50,8 +50,8 @@ public class DroneMenu extends JPanel implements ActionListener {
             // Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
 <<<<<<< HEAD
-            //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
-=======
+                    //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
+                    =======
             data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht oder DOCH?
 >>>>>>> search
             data[i][3] = drones.get(i).getCreated();
@@ -80,26 +80,26 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
 
 <<<<<<< HEAD
-        final JTable table = new JTable(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Set all cells as non-editable
-            }
-
-            @Override
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-                Component comp = super.prepareRenderer(renderer, row, column);
-                if (comp instanceof JLabel) {
-                    if (column == 0 || column == 1 || column == 2) {
-                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.LEFT); // Align DroneType and Serialnr to the left
-                    } else {
-                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT); // Align other columns to the right
-                    }
+            final JTable table = new JTable(data, columnNames) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false; // Set all cells as non-editable
                 }
-                return comp;
-            }
 
-        };
+                @Override
+                public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                    Component comp = super.prepareRenderer(renderer, row, column);
+                    if (comp instanceof JLabel) {
+                        if (column == 0 || column == 1 || column == 2) {
+                            ((JLabel) comp).setHorizontalAlignment(SwingConstants.LEFT); // Align DroneType and Serialnr to the left
+                        } else {
+                            ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT); // Align other columns to the right
+                        }
+                    }
+                    return comp;
+                }
+
+            };
 =======
         };
 
@@ -147,7 +147,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
 <<<<<<< HEAD
-=======
+                =======
 
         /**
          * Um die search funktion zu dynamisch zu triggern ist DocumentListener zum textfeld hinzugefügt
@@ -310,7 +310,6 @@ public class DroneMenu extends JPanel implements ActionListener {
     public static void quit(){System.exit(0);}
 
 }
-
 
 
 
