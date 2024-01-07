@@ -1,8 +1,10 @@
+/**
+ * This class represents our DroneDynamics data.
+ * It is saved in an ArrayList since every Drone has a lot of DroneDynamics data.
+ */
 package data;
 
-import dronesim.*;
 import processing.*;
-import services.*;
 
 import org.json.JSONObject;
 
@@ -22,6 +24,14 @@ public class DroneDynamics implements Printable, Expandable {
     private int batteryStatus;
     private String lastSeen;
     private String status;
+    /**
+     * The number of entries of drones in the last downloaded local json file
+     */
+    private static int localDroneDynamicsCount;
+    /**
+     * The number of entries of drones on the webserver
+     */
+    private static int serverDroneDynamicsCount;
 
     //KONSTRUKTOR
     public DroneDynamics() {};
@@ -84,14 +94,6 @@ public class DroneDynamics implements Printable, Expandable {
 //        }
 //    }
 
-    //METHODEN
-    public static int getCount() {
-        String checkDroneDynamics = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=1";
-        String jsonDroneDynamics = JSONDeruloHelper.jsonCreator(checkDroneDynamics);
-        JSONObject droneDynamicsJsonObject = new JSONObject(jsonDroneDynamics);
-        return droneDynamicsJsonObject.getInt("count");
-    }
-
     //PRINT METHODS WITH GETTER
     public void printDroneDynamics() {
         System.out.println("DronePointer: " + this.getDronePointer());
@@ -115,12 +117,12 @@ public class DroneDynamics implements Printable, Expandable {
     }
 
     @Override
-    public boolean checkForNewData(int serverDroneDynamicsCount) throws FileNotFoundException {
+    public boolean checkForNewData() throws FileNotFoundException {
         try (BufferedReader reader = new BufferedReader(new FileReader("dronedynamics.json"))) {
+            localDroneDynamicsCount = getLocalCount();
+            serverDroneDynamicsCount = getServerCount();
 
-            int fileDroneDynamicsCount = getCountOffLocalJson();
-
-            if (serverDroneDynamicsCount == fileDroneDynamicsCount) {
+            if (serverDroneDynamicsCount == localDroneDynamicsCount) {
                 return false;
             } else {
                 System.out.println("damn, refetching");
@@ -135,7 +137,7 @@ public class DroneDynamics implements Printable, Expandable {
     }
 
     @Override
-     public int getCountOffLocalJson() throws IOException {
+    public int getLocalCount() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("dronedynamics.json"));
         StringBuilder jsonContent = new StringBuilder();
         int limit = 20;
@@ -153,10 +155,8 @@ public class DroneDynamics implements Printable, Expandable {
 
     @Override
     public void saveAsFile() {
-        int limit = DroneDynamics.getCount();
-
         try {
-            if(!(checkForNewData(limit))) {
+            if(!(checkForNewData())) {
                 System.out.println("No New DroneDynamics Data to fetch from");
                 return;
             }
@@ -164,8 +164,8 @@ public class DroneDynamics implements Printable, Expandable {
             throw new RuntimeException(e);
         }
 
-        System.out.println("DroneDynamics Count: " + limit);
-        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneDynamicsUrl() + "?limit=" + limit);
+        System.out.println("DroneDynamics Count: " + serverDroneDynamicsCount);
+        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneDynamicsUrl() + "?limit=" + serverDroneDynamicsCount);
 
         System.out.println("Saving DroneDynamic Data from Webserver in file ...");
 
@@ -174,5 +174,13 @@ public class DroneDynamics implements Printable, Expandable {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public int getServerCount() {
+        String checkDroneDynamics = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=1";
+        String jsonDroneDynamics = JSONDeruloHelper.jsonCreator(checkDroneDynamics);
+        JSONObject droneDynamicsJsonObject = new JSONObject(jsonDroneDynamics);
+        return droneDynamicsJsonObject.getInt("count");
     }
 }

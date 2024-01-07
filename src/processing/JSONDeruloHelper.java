@@ -2,6 +2,7 @@
  * This is a helper class that contains methods to retrieve, save and re-fetch data from
  * the webserver if needed.
  */
+
 package processing;
 
 import data.*;
@@ -22,16 +23,17 @@ import java.lang.*;
 
 public class JSONDeruloHelper {
 
-    public static JSONDeruloHelper helper = new JSONDeruloHelper();
+    //public static JSONDeruloHelper helper = new JSONDeruloHelper();
     private Drone droneObject = new Drone();
     private DroneType droneTypesObject = new DroneType();
     private DroneDynamics droneDynamicsObject = new DroneDynamics();
 
-    // IF DRONES OR DRONETYPES IN DATABASE EXCEED THE COUNT OF 1000, THIS HAS TO BE ADJUSTED
-    protected static final String DRONES_URL = "https://dronesim.facets-labs.com/api/drones/";
-    protected static final String DRONETYPES_URL = "https://dronesim.facets-labs.com/api/dronetypes/";
-    protected static final String DRONEDYNAMICS_URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
-    protected static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
+    private static final String DRONES_URL = "https://dronesim.facets-labs.com/api/drones/";
+    private static final String DRONETYPES_URL = "https://dronesim.facets-labs.com/api/dronetypes/";
+    private static final String DRONEDYNAMICS_URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
+    private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
+
+    //might be unnecessary since the invention of local- and serverDronecount
     private int numberOfDrones;
     private int numberOfDroneTypes;
     private int numberOfDroneDynamics;
@@ -56,15 +58,23 @@ public class JSONDeruloHelper {
         return DRONEDYNAMICS_URL;
     }
 
+    public LinkedList<Drone> getData() throws IOException {
+        //Creating Drone objects and filling them with data
+        LinkedList<Drone> drones = getDrones();
+
+        //Creating DroneType objects and link them our Drone objects
+        LinkedList <DroneType> droneTypes = getDroneTypes();
+        droneTypeToDroneLinker(droneTypes, drones);
+
+        //Add drone dynamics objects to our Drone objects
+        addDroneDynamicsData(drones);
+
+        return drones;
+    }
+
     //Creating Drone Objects with Data from "Drones" Database
     public LinkedList<Drone> getDrones() {
-        LinkedList<Drone> drones = new LinkedList<Drone>();
-        helper.droneObject.saveAsFile();
-
-        //int limit = Drone.getCount();
-        //System.out.println("Drone Count: " + limit);
-        //String forCreatingDroneObjects = jsonCreator(DRONES_URL + "?limit=" + limit);
-        //individualDroneJsonToObject(forCreatingDroneObjects, drones);
+        droneObject.saveAsFile(); //checks for refresh when initializing dronedata for the first time
 
         String myJson;
         try {
@@ -73,19 +83,14 @@ public class JSONDeruloHelper {
             throw new RuntimeException(e);
         }
 
+        LinkedList<Drone> drones = new LinkedList<Drone>();
         individualDroneJsonToObject(myJson, drones);
 
         return drones;
     }
 
     public LinkedList<DroneType> getDroneTypes() {
-        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
-        helper.droneTypesObject.saveAsFile();
-
-//        int limit = DroneType.getCount();
-//        System.out.println("DroneType Count: " + limit);
-//        String forCreatingDroneTypeObjects = jsonCreator(DRONETYPES_URL + "?limit=" + limit);
-//        droneTypeJsonToObject(forCreatingDroneTypeObjects, droneTypes);
+        droneTypesObject.saveAsFile();
 
         String myJson;
         try {
@@ -94,6 +99,7 @@ public class JSONDeruloHelper {
             throw new RuntimeException(e);
         }
 
+        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
         droneTypeJsonToObject(myJson, droneTypes);
 
         return droneTypes;
@@ -103,14 +109,16 @@ public class JSONDeruloHelper {
      *     Creates DroneDynamic Objects off the File and stores them in the appropriate Drone via LinkedList
      */
     public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException {
-        helper.droneDynamicsObject.saveAsFile();
+        droneDynamicsObject.saveAsFile();
+
         String myJson;
         myJson = new Scanner(new File("dronedynamics.json")).useDelimiter("\\Z").next();
 
         JSONObject myJsonObject = new JSONObject(myJson);
         JSONArray jsonArray = myJsonObject.getJSONArray("results");
 
-        for (int z = 0; z < helper.numberOfDrones; z++) { // code insists that number of drones >= number of drones that have dronedynamics
+        // code insists that number of drones >= number of drones that have dronedynamics data (probably fine since every droneD entry has a drone url)
+        for (int z = 0; z < numberOfDrones; z++) {
             if (drones.get(z).droneDynamicsArrayList == null) {
                 drones.get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
             }
@@ -147,15 +155,15 @@ public class JSONDeruloHelper {
 
             // Step 3: Open a connection
             HttpURLConnection connection; // Erstellen einer leeren Variable vom Typen HttpUrlConnection;
-            connection = (HttpURLConnection) url.openConnection(); // Der RÃ¼ckgabewert von openConnection ist eig. 'URLConnection', deshalb das Typecasting, da wir speziell mit HTTP arbeiten und der RÃ¼ckgabewert von openConnection dementsprechend zu HttpUrlConnection wird.
+            connection = (HttpURLConnection) url.openConnection(); // Der Rückgabewert von openConnection ist eig. 'URLConnection', deshalb das Typecasting, da wir speziell mit HTTP arbeiten und der Rückgabewert von openConnection dementsprechend zu HttpUrlConnection wird.
             //InputStream inputStream = connection.inputStream()?
 
-            // Step 4: Set the request method to GET and setRequestProperty -> Ãœbergabeparameter mÃ¼ssen exakt diese sein fÃ¼r Zugriff auf den WebServer
+            // Step 4: Set the request method to GET and setRequestProperty -> Übergabeparameter müssen exakt diese sein für Zugriff auf den WebServer
             connection.setRequestProperty("Authorization", TOKEN);
-            connection.setRequestMethod("GET"); //Der Ãœbergabeparameter "GET" ist ein Konstruktor fÃ¼r die HttpURLConnection
+            connection.setRequestMethod("GET"); //Der Übergabeparameter "GET" ist ein Konstruktor für die HttpURLConnection
 
             // Step 5: Get the HTTP response code
-            int responseCode = connection.getResponseCode(); // Gibt 200 bei eienr successful request zurÃ¼ck, 401 sonst
+            int responseCode = connection.getResponseCode(); // Gibt 200 bei eienr successful request zurück, 401 sonst
             System.out.println("responseCode for jsonCreator: " + responseCode);
 
             // Step 6: Read and display response content
@@ -180,7 +188,7 @@ public class JSONDeruloHelper {
     }
 
     //Creates Drone Objects off the JSON, which is provided as parameter
-    public static void individualDroneJsonToObject(String jsonString, LinkedList<Drone> drones) {
+    public void individualDroneJsonToObject(String jsonString, LinkedList<Drone> drones) {
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
@@ -195,11 +203,11 @@ public class JSONDeruloHelper {
                     o.getString("dronetype")
             ));
         }
-        helper.numberOfDrones = helper.numberOfDrones + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+        numberOfDrones = numberOfDrones + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
     }
 
     //Creates DroneType Objects off the JSON, which is provided in the Parameter
-    public static void droneTypeJsonToObject(String jsonString, LinkedList<DroneType> droneTypes) {
+    public void droneTypeJsonToObject(String jsonString, LinkedList<DroneType> droneTypes) {
 
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
@@ -217,7 +225,7 @@ public class JSONDeruloHelper {
                     o.getInt("max_carriage")
             ));
         }
-        helper.numberOfDroneTypes = helper.numberOfDroneTypes + jsonArray.length(); // update numberOfDroneTypes if refresh() created new Drone objects
+        numberOfDroneTypes = numberOfDroneTypes + jsonArray.length(); // update numberOfDroneTypes if refresh() created new Drone objects
     }
 
     public void droneTypeToDroneLinker(LinkedList<DroneType> droneTypes, LinkedList<Drone> drones) {
@@ -239,20 +247,21 @@ public class JSONDeruloHelper {
     //Refresh database to re-fetch data
     public void refresh(LinkedList<Drone> drones, LinkedList<DroneType> droneTypes) throws IOException {
 
-        if(Drone.getCount() > helper.numberOfDrones) {
-            String modifiedDroneURL = DRONES_URL + "&offset=" + helper.numberOfDrones;
+        if(drones.get(0).getServerCount() > getNumberOfDrones()) {
+            String modifiedDroneURL = DRONES_URL + "?offset=" + getNumberOfDrones();
             String forCreatingDroneObjects = jsonCreator(modifiedDroneURL);
             individualDroneJsonToObject(forCreatingDroneObjects, drones);
+            System.out.println("New Drones added");
         } else {
             System.out.println("No new Drone Information in the database");
         }
 
-        if(DroneType.getCount() > helper.numberOfDroneTypes) {
-            String modifiedDroneTypeURL = DRONETYPES_URL + "&offset=" + helper.numberOfDroneTypes;
+        if(droneTypes.get(0).getServerCount() > getNumberOfDroneTypes()) {
+            String modifiedDroneTypeURL = DRONETYPES_URL + "?offset=" + getNumberOfDroneTypes();
             String forCreatingDroneTypeObjects = jsonCreator(modifiedDroneTypeURL);
             droneTypeJsonToObject(forCreatingDroneTypeObjects, droneTypes);
-
-            helper.droneTypeToDroneLinker(droneTypes, drones);
+            droneTypeToDroneLinker(droneTypes, drones);
+            System.out.println("New DroneTypes added");
         } else {
             System.out.println("No new DroneType Information in the database");
         }
@@ -260,11 +269,11 @@ public class JSONDeruloHelper {
         // this (offset)method works for new data that was appended to the tail of the database (json string),
         // but not if new data was inserted somewhere in the middle
         //problem with this method is, that if the data is being replaced like on 27.12.23 it might produce unsinn since the offset is not a valid abgrenzer yo
-        if(DroneDynamics.getCount() > helper.numberOfDroneDynamics) {
-            String modifiedDroneDynamicsURL = DRONEDYNAMICS_URL + "&offset=" + helper.numberOfDroneDynamics;
+        if(droneDynamicsObject.getServerCount() > getNumberOfDroneDynamics()) {
+            String modifiedDroneDynamicsURL = DRONEDYNAMICS_URL + "?offset=" + getNumberOfDroneDynamics();
             String forCreatingDroneDynamics = jsonCreator(modifiedDroneDynamicsURL);
             refreshDroneDynamics(drones, modifiedDroneDynamicsURL);
-            System.out.println("DroneD updated");
+            System.out.println("New DroneDynamics added");
 
         } else {
             System.out.println("No new DroneDynamic Information in the database");
@@ -277,7 +286,7 @@ public class JSONDeruloHelper {
         JSONObject myJsonObject = new JSONObject(myJson);
         JSONArray jsonArray = myJsonObject.getJSONArray("results");
 
-        for (int z = 0; z < helper.numberOfDrones; z++) { // code insists that number of drones >= number of drones that have dronedynamics
+        for (int z = 0; z < numberOfDrones; z++) { // code insists that number of drones >= number of drones that have dronedynamics
             if (drones.get(z).droneDynamicsArrayList == null) {
                 drones.get(z).droneDynamicsArrayList = new ArrayList<DroneDynamics>();
             }
@@ -303,28 +312,8 @@ public class JSONDeruloHelper {
                 }
             }
         }
-        helper.numberOfDroneDynamics = helper.numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
+        numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
     }
-
-    //getData() function
-    //    public static LinkedList<Drone> getData() throws IOException {
-//        //Creating Drone Objects with Data from "Drones" Database
-//        LinkedList<Drone> drones = new LinkedList<Drone>();
-//        drones = getDrones();
-//
-//        //Creating DroneType Objects
-//        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
-//        droneTypes = getDroneTypes();
-//
-//        //Linking droneTypes to Drones
-//        droneTypeToDroneLinker(droneTypes, drones);
-//
-//        //Adding DroneDynamics information to the Drone Objects
-//        //saveDroneDynamicsDataInFile(DRONEDYNAMICS_URL);
-//        addDroneDynamicsData(drones);
-//
-//        return drones;
-//    }
 
     //Create a file off our Objects to "save current database state" and reload it the next time the application launches
     /*public static String fileCreatorOffObjects(LinkedList<Drone> drones) throws JsonProcessingException {
