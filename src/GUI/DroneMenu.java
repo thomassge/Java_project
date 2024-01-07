@@ -5,19 +5,31 @@ import data.DroneType;
 import processing.JSONDeruloHelper;
 
 import javax.swing.*;
+<<<<<<< HEAD
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+=======
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+>>>>>>> search
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.LinkedList;
 
 public class DroneMenu extends JPanel implements ActionListener {
+    private JTextField searchField;
+    private JButton searchButton;
+    private JTable table;
+    private LinkedList<Drone> drones;
 
     public DroneMenu(LinkedList<Drone> drones) {
 
         super(new GridLayout(1, 0));
+        this.drones = drones;
 
         String[] columnNames = {
                 "Nr.",
@@ -37,13 +49,37 @@ public class DroneMenu extends JPanel implements ActionListener {
 
             // Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
+<<<<<<< HEAD
             //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
+=======
+            data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht oder DOCH?
+>>>>>>> search
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
             data[i][6] = drones.get(i).getCarriageType();
         }
+        //unveränderbarkeit
+        final JTable table = new JTable(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Set all cells as non-editable
+            }
+            //columnbreite
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component comp = super.prepareRenderer(renderer, row, column);
+                if (comp instanceof JLabel) {
+                    if (column == 0 || column == 1 || column == 2) {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.LEFT); // Align DroneType and Serialnr to the left
+                    } else {
+                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT); // Align other columns to the right
+                    }
+                }
+                return comp;
+            }
 
+<<<<<<< HEAD
         final JTable table = new JTable(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -64,6 +100,28 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
 
         };
+=======
+        };
+
+        //click auf drone/column
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // Detect click abgewandelt
+                    int row = table.rowAtPoint(e.getPoint());
+                    int column = table.columnAtPoint(e.getPoint());
+                    if (row >= 0 && column >= 0) {
+                        // Extract Drone from selected row
+                        Drone selectedDrone = drones.get(row);
+
+                        // Opens new frame to display drone details
+                        openDroneDetailsFrame(selectedDrone.getDroneTypeObject());//dronetypeobject
+                    }
+                }
+            }
+        });
+
+>>>>>>> search
 
 
         table.setPreferredScrollableViewportSize(new Dimension(200, 200));
@@ -88,7 +146,65 @@ public class DroneMenu extends JPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(table);
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
+<<<<<<< HEAD
+=======
+
+        /**
+         * Um die search funktion zu dynamisch zu triggern ist DocumentListener zum textfeld hinzugefügt
+         * This code attaches a DocumentListener to the text field.
+         * Whenever the text changes (insertion, deletion, or modification), the search() method is triggered,
+         * which filters the table based on the text entered.
+         */
+        searchField = new JTextField(20);
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                search();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                search();
+            }
+
+            private void search() {
+                String searchText = searchField.getText();
+                TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+                table.setRowSorter(sorter);
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+            }
+        });
+
+
+>>>>>>> search
     }
+
+    //Methode für neuen frame mit details
+    private void openDroneDetailsFrame(DroneType drone) {
+        JFrame detailsFrame = new JFrame("Drone Details");
+        JPanel detailsPanel = new JPanel(new GridLayout(0, 1));
+
+        // Add labels to display drone details
+        detailsPanel.add(new JLabel("ID: " + drone.getDroneTypeID()));
+        detailsPanel.add(new JLabel("Manufacturer: " + drone.getManufacturer()));
+        detailsPanel.add(new JLabel("Typename: " + drone.getTypename()));
+        detailsPanel.add(new JLabel("Weight: " + drone.getWeight()));
+        detailsPanel.add(new JLabel("Maximum Speed: " + drone.getMaximumSpeed()));
+        detailsPanel.add(new JLabel("Battery Capacity: " + drone.getBatteryCapacity()));
+        detailsPanel.add(new JLabel("Control Range: " + drone.getControlRange()));
+        detailsPanel.add(new JLabel("Maximum Carriage: " + drone.getMaximumCarriage()));
+
+        detailsFrame.add(detailsPanel);
+        detailsFrame.pack();
+        detailsFrame.setLocationRelativeTo(null);
+        detailsFrame.setVisible(true);
+    }
+
 
     public static void createDroneTableGUI(LinkedList<Drone> drones) {
         JFrame frame = new JFrame("Drone Simulator");
@@ -114,10 +230,10 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         menuBar = new JMenuBar();
 
+
         menu = new JMenu("Menu");
         menu.setMnemonic(KeyEvent.VK_M);
         menuBar.add(menu);
-
 
         menuItem = new JMenuItem("DroneType",KeyEvent.VK_T);
         menuItem.setActionCommand("dronet"); // Set action command for the drone menu item
@@ -141,6 +257,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         menu2.setMnemonic(KeyEvent.VK_R);
         menuBar.add(menu2);
 
+        /*
         //Könnte man noch adden, wenn einer Lust hat bittegerne
         //achtung bei klick dark/light schließt alles (z 207 actionperformed() else quit)
         //CHange to dark/lightmode
@@ -163,14 +280,13 @@ public class DroneMenu extends JPanel implements ActionListener {
         rbMenuItem.addActionListener(this);
         group.add(rbMenuItem);
         menu.add(rbMenuItem);
+ */
 
-        //Suchleiste
+        //search fenster
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JTextField searchField = new JTextField(20);
-        JButton searchButton = new JButton("Search");
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
-        searchPanel.add(searchButton);
+        //searchPanel.add(searchButton);
         menuBar.add(searchPanel);
 
         return menuBar;
@@ -191,8 +307,19 @@ public class DroneMenu extends JPanel implements ActionListener {
             quit();
         }
     }
-    public static void quit(){
-        System.exit(0);
-    }
+    public static void quit(){System.exit(0);}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
