@@ -1,8 +1,10 @@
+/**
+ * This class represents all the DroneType Information that is available on the webserver.
+ * It will be saved in a List and a method will link a DroneType object to every drone.
+ */
 package data;
 
-import dronesim.*;
 import processing.*;
-import services.*;
 
 import org.json.JSONObject;
 
@@ -20,6 +22,14 @@ public class DroneType implements Expandable {
     private int batteryCapacity;
     private int controlRange;
     private int maximumCarriage;
+    /**
+     * The number of entries of drones in the last downloaded local json file
+     */
+    private static int localDroneTypeCount;
+    /**
+     * The number of entries of drones on the webserver
+     */
+    private static int serverDroneTypeCount;
 
     //Constructor
     public DroneType() {}
@@ -61,13 +71,6 @@ public class DroneType implements Expandable {
         return this.maximumCarriage;
     }
 
-    public static int getCount() {
-        String checkDroneTypes = "https://dronesim.facets-labs.com/api/dronetypes/?limit=1";
-        String jsonDroneTypes = JSONDeruloHelper.jsonCreator(checkDroneTypes);
-        JSONObject droneTypeJsonObject = new JSONObject(jsonDroneTypes);
-        return droneTypeJsonObject.getInt("count");
-    }
-
     //PRINT-methods to test without GETTER
     public void printDroneType() {
         System.out.println("DroneType id: " + this.droneTypeID);
@@ -83,7 +86,7 @@ public class DroneType implements Expandable {
     }
 
     @Override
-    public int getCountOffLocalJson() throws IOException {
+    public int getLocalCount() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"));
         StringBuilder jsonContent = new StringBuilder();
         int limit = 20;
@@ -100,12 +103,13 @@ public class DroneType implements Expandable {
     }
 
     @Override
-    public boolean checkForNewData(int serverDroneTypeCount) throws FileNotFoundException {
+    public boolean checkForNewData() throws FileNotFoundException {
         try (BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"))) {
 
-            int fileDroneTypeCount = getCountOffLocalJson();
+            localDroneTypeCount = getLocalCount();
+            serverDroneTypeCount = getServerCount();
 
-            if (serverDroneTypeCount == fileDroneTypeCount) {
+            if (serverDroneTypeCount == localDroneTypeCount) {
                 return false;
             } else {
                 System.out.println("damn, refetching");
@@ -121,10 +125,8 @@ public class DroneType implements Expandable {
 
     @Override
     public void saveAsFile() {
-        int limit = DroneType.getCount();
-
         try {
-            if(!(checkForNewData(limit))) {
+            if(!(checkForNewData())) {
                 System.out.println("No New DroneType Data to fetch from");
                 return;
             }
@@ -132,8 +134,8 @@ public class DroneType implements Expandable {
             throw new RuntimeException(e);
         }
 
-        System.out.println("DroneTypes Count: " + limit);
-        String forCreatingDroneTypeObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneTypesUrl() + "?limit=" + limit);
+        System.out.println("DroneTypes Count: " + serverDroneTypeCount);
+        String forCreatingDroneTypeObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneTypesUrl() + "?limit=" + serverDroneTypeCount);
 
         System.out.println("Saving DroneType Data from Webserver in file ...");
 
@@ -143,6 +145,15 @@ public class DroneType implements Expandable {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public int getServerCount() {
+        String checkDroneTypes = "https://dronesim.facets-labs.com/api/dronetypes/?limit=1";
+        String jsonDroneTypes = JSONDeruloHelper.jsonCreator(checkDroneTypes);
+        JSONObject droneTypeJsonObject = new JSONObject(jsonDroneTypes);
+        return droneTypeJsonObject.getInt("count");
+    }
+
 
 
     /*@Override

@@ -1,22 +1,27 @@
 /**
- * This is the class where all Drone Data will be saved and called from.
- * It contains all the information that is available on the webserver.
+ * This package cointains classes related to drone data management
  */
 package data;
 
-import processing.*;
-
 import org.json.JSONObject;
+import processing.JSONDeruloHelper;
+
+//import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is the class where all Drone Data will be saved and called from.
+ * It contains all the information that is available on the webserver.
+ */
 public class Drone implements Printable, Expandable {
 
-    //INDIVIDUALDRONE DATA
+    /**
+     * INDIVIDUALDRONE DATA
+     */
     private String droneTypePointer;
     private String serialnumber;
     private int id;
@@ -24,33 +29,44 @@ public class Drone implements Printable, Expandable {
     private int carriageWeight;
     private String carriageType;
     private String created;
-
+    /**
+     * Saves the dronetype information of the drone that this object holds
+     */
     private DroneType droneTypeObject;
-
+    /**
+     * Saves an arraylist of DroneDynamics objects that are linked to this drone
+     */
     public ArrayList<DroneDynamics> droneDynamicsArrayList;
-
+    /**
+     * The number of entries of drones in the last downloaded local json file
+     */
     private static int localDroneCount;
+    /**
+     * The number of entries of drones on the webserver
+     */
     private static int serverDroneCount;
 
-    //KONSTRUKTOR
+    /**
+     *      KONSTRUKTOREN
+     */
 
     /**
      * The default constructor prints that it has been called.
      */
     public Drone() {
         System.out.println("Drone Object Created from empty constructor.");
-    };
+    }
 
     /**
      * This constructor takes in all the attributes
      * an individual drone can have, according to the webserver
      *
-     * @param carriageType Enum representing the type of carriage.
-     *                     It consists of: SEN(sor), ACT(uator), NOT(hing)
-     * @param serialnumber A string representing the serialnumber of the drone
-     * @param created A string representing the date and time the entry was created
-     * @param carriageWeight How much additional weight the drone currently carries
-     * @param id The id is the index of the Drone on the webserver, currently going from 71-95
+     * @param carriageType     Enum representing the type of carriage.
+     *                         It consists of: SEN(sor), ACT(uator), NOT(hing)
+     * @param serialnumber     A string representing the serialnumber of the drone
+     * @param created          A string representing the date and time the entry was created
+     * @param carriageWeight   How much additional weight the drone currently carries
+     * @param id               The id is the index of the Drone on the webserver, currently going from 71-95
      * @param DroneTypePointer A string that contains a link to the DroneType information of this drone.
      */
     public Drone(String carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
@@ -66,22 +82,27 @@ public class Drone implements Printable, Expandable {
     }
 
     //GETTER-Methods
-    public String getDroneTypePointer(){
+    public String getDroneTypePointer() {
         return this.droneTypePointer;
     }
-    public String getSerialnumber(){
+
+    public String getSerialnumber() {
         return this.serialnumber;
     }
-    public int getId(){
+
+    public int getId() {
         return this.id;
     }
-    public int getCarriageWeight(){
+
+    public int getCarriageWeight() {
         return this.carriageWeight;
     }
-    public String getCarriageType(){
+
+    public String getCarriageType() {
         return this.carriageType;
     }
-    public String getCreated(){
+
+    public String getCreated() {
         return this.created;
     }
 
@@ -89,6 +110,7 @@ public class Drone implements Printable, Expandable {
      * This method uses regular expressions to find a sequence of numbers in the
      * String droneTypePointer, to be able to link the fitting DroneType object
      * to the Drone object
+     *
      * @return The ID of the DroneType of the drone that calls the method
      */
     public int getExtractedDroneTypeID() {
@@ -103,7 +125,6 @@ public class Drone implements Printable, Expandable {
     }
 
     /**
-     *
      * @return The DroneType object of calling drone
      */
     public DroneType getDroneTypeObject() {
@@ -111,7 +132,6 @@ public class Drone implements Printable, Expandable {
     }
 
     /**
-     *
      * @return The DroneDynamics arrayList of calling drone
      */
     public ArrayList<DroneDynamics> getDroneDynamicsArrayList() {
@@ -119,28 +139,25 @@ public class Drone implements Printable, Expandable {
     }
 
     //SETTER-Methods
+    /**
+     * Takes in a DroneType object to set the value of this drones DroneType object
+     *
+     * @param droneTypeObject The dronetype of this drone
+     */
     public void setDroneTypeObject(DroneType droneTypeObject) {
         this.droneTypeObject = droneTypeObject;
     }
+
+    /**
+     * Takes in an arraylilst of DroneDynamics objects to set the value of this drones DroneDynamics list
+     *
+     * @param droneDynamicsArrayList All dronedynamics of this drone
+     */
     public void setDroneDynamicsArrayList(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         this.droneDynamicsArrayList = droneDynamicsArrayList;
     }
 
-    /**
-     * This method connects to the webserver to get the current count of the Drones.
-     * It limits the requests to a single entry to prevent a big download.
-     * @return The current count of Drones on the webserver.
-     */
-    public static int getCount() {
-        int i = 0;
-        String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
-        String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
-        JSONObject droneJsonObject = new JSONObject(jsonDrones);
-        return droneJsonObject.getInt("count");
-    }
-
     //PRINT-METHODEN ZUR KONTROLLE
-
     /**
      * Method that prints all individual Drone information.
      */
@@ -200,13 +217,29 @@ public class Drone implements Printable, Expandable {
     }
 
     /**
+     * Uses the dronesim api url of drones with limit=1 to connect to the webserver,
+     * create a json string and look for the key "count" in this string,
+     * which represents the current count of all Drones available.
+     * It limits the requests to a single entry to prevent a big download.
+     *
+     * @return The current count of Drones on the webserver.
+     */
+    @Override
+    public int getServerCount() { //alternativ regex
+        String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
+        String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
+        JSONObject droneJsonObject = new JSONObject(jsonDrones);
+
+        return droneJsonObject.getInt("count");
+    }
+
+    /**
      * This method gets the count of drones that is saved in the local json file.
-     * If the local drones count does not match the server drones count, all data is re-fetched.
-     * @return The number of Drone entries on the webserver.
+     * @return The number of Drone entries in the json file.
      * @throws IOException If an I/O error occurs
      */
     @Override
-    public int getCountOffLocalJson() throws IOException {
+    public int getLocalCount() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("drones.json"));
         StringBuilder jsonContent = new StringBuilder();
         int limit = 20;
@@ -227,16 +260,15 @@ public class Drone implements Printable, Expandable {
      * with the count of drones that is on the webserver.
      * @param serverDroneCount The number of drones on the webserver
      * @return True if the data differs, and false if the count is the same.
-     * @throws FileNotFoundException - If file is not found
+     * @throws FileNotFoundException If file is not found
      */
     @Override
-    public boolean checkForNewData(int serverCount) throws FileNotFoundException {
+    public boolean checkForNewData() throws FileNotFoundException {
         try (BufferedReader reader = new BufferedReader(new FileReader("drones.json"))) {
+            serverDroneCount = getServerCount();
+            localDroneCount = getLocalCount();
 
-            // darf nicht fehlen, sonst dauer refetching
-            localDroneCount = getCountOffLocalJson();
-
-            if (serverCount == localDroneCount) {
+            if (serverDroneCount == localDroneCount) {
                 return false;
             } else {
                 System.out.println("damn, refetching");
@@ -244,7 +276,7 @@ public class Drone implements Printable, Expandable {
             }
         }
         catch (FileNotFoundException fnfE) {
-            return true;
+            return true; // could be used for refresh
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -264,10 +296,8 @@ public class Drone implements Printable, Expandable {
      */
     @Override
     public void saveAsFile() {
-        serverDroneCount = Drone.getCount();
-
         try {
-            if(!(checkForNewData(serverDroneCount))) {
+            if(!(checkForNewData())) {
                 System.out.println("No New Drone Data to fetch from");
                 return;
             }
@@ -275,11 +305,10 @@ public class Drone implements Printable, Expandable {
             throw new RuntimeException(e);
         }
 
-        System.out.println("Drone Count: " + serverDroneCount);
-        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator
-                (JSONDeruloHelper.getDronesUrl() + "?limit=" + serverDroneCount);
+        System.out.println("New fetching started: Current server dronecount: " + serverDroneCount);
+        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDronesUrl() + "?limit=" + serverDroneCount);
 
-        System.out.println("Saving Drone Data from Webserver in file ...");
+        System.out.println("Copying Drone Data from Webserver in file ...");
 
         try (PrintWriter out = new PrintWriter("drones.json")) {
             out.println(forCreatingDroneObjects);
@@ -287,11 +316,4 @@ public class Drone implements Printable, Expandable {
             throw new RuntimeException(e);
         }
     }
-
-//    @Override
-//    public void printWholeList() {
-//        for(int i = 0; i < JSONDeruloHelper.numberOfDrones; i++) {
-//            JSONDeruloHelper.
-//        }
-//    }
 }

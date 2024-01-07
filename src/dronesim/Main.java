@@ -1,11 +1,14 @@
+/**
+ * This is our main class. The starting point of our program.
+ */
 package dronesim;
 
 import data.*;
-import processing.*;
+import processing.JSONDeruloHelper;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
-
 
 public class Main {
     private static JSONDeruloHelper jsonDerulo = new JSONDeruloHelper();
@@ -13,29 +16,20 @@ public class Main {
     private static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
 
     public static void main(String[] args) throws IOException {
-        //option to call saveDroneDynamicsInFile
-        drones = jsonDerulo.getDrones();
-        for(Drone droneObject : drones) {
-            droneObject.print();
-        }
-
-
+        drones = jsonDerulo.getData();
         droneTypes = jsonDerulo.getDroneTypes();
-        for(DroneType droneTypeObject : droneTypes) {
-            droneTypeObject.printDroneType();
+
+        for(Drone object : drones) {
+            System.out.println(object.getDroneTypeObject().getTypename());
+            System.out.println(object.getDroneTypeObject().getControlRange() + "\n");
         }
 
-        jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
+        jsonDerulo.refresh(drones, droneTypes);
 
-        jsonDerulo.addDroneDynamicsData(drones);
-
-        drones.getFirst().getDroneDynamicsArrayList().getFirst().printDroneDynamics();
-
-//        droneTypes = jsonDerulo.getDroneTypes();
-//        jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
-//        jsonDerulo.addDroneDynamicsData(drones);
-//        jsonDerulo.refresh(drones, droneTypes);           ->  case noNewData: do nothing;     case NewData: append new data to local json file;
-
+//        drones.getFirst().saveAsFile();
+//        droneTypes.getFirst().saveAsFile();
+//        drones.getFirst().getDroneDynamicsArrayList().getFirst().saveAsFile();
+//        can be used for refresh but refetches ALL data instead of using offset method
     }
 
 }
