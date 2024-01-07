@@ -24,6 +24,7 @@ public class DroneMenu extends JPanel implements ActionListener {
     private JButton searchButton;
     private JTable table;
     private LinkedList<Drone> drones;
+    private Drone selectedDrone;
 
     public DroneMenu(LinkedList<Drone> drones) {
 
@@ -79,15 +80,13 @@ public class DroneMenu extends JPanel implements ActionListener {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // Detect click abgewandelt
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     int row = table.rowAtPoint(e.getPoint());
                     int column = table.columnAtPoint(e.getPoint());
                     if (row >= 0 && column >= 0) {
-                        // Extract Drone from selected row
-                        Drone selectedDrone = drones.get(row);
-
-                        // Opens new frame to display drone details
-                        openDroneDetailsFrame(selectedDrone.getDroneTypeObject());//dronetypeobject
+                        // Extract the DroneType from the selected row
+                        selectedDrone = drones.get(table.convertRowIndexToModel(row));
+                        openDroneDetailsFrame(selectedDrone.getDroneTypeObject());
                     }
                 }
             }
@@ -148,6 +147,17 @@ public class DroneMenu extends JPanel implements ActionListener {
                 TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
                 table.setRowSorter(sorter);
                 sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+
+                // After applying the filter, check if the selected row is still visible and select it
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    if (!table.getSelectionModel().isSelectedIndex(selectedRow)) {
+                        // If the selected row is not visible, select the row for the previously selected drone
+                        selectedRow = table.getRowSorter().convertRowIndexToView(drones.indexOf(selectedDrone));
+                        table.setRowSelectionInterval(selectedRow, selectedRow);
+                    }
+                }
+
             }
         });
 

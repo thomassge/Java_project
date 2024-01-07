@@ -5,6 +5,7 @@ import data.DroneType;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
@@ -17,6 +18,7 @@ import javax.swing.table.TableRowSorter;
 public class DroneTypeMenu extends JPanel {
     private JFrame frame;
     private LinkedList<DroneType> droneTypes;
+    private DroneType selectedDrone;
     //private Timer refreshTimer;
 
     public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
@@ -70,18 +72,20 @@ public class DroneTypeMenu extends JPanel {
 
         };
 
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sorter);
+        sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(0, SortOrder.ASCENDING))); // Sort by the first column ("ID") in ascending order
+
         //click auf drone/column
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // Detect click abgewandelt
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     int row = table.rowAtPoint(e.getPoint());
                     int column = table.columnAtPoint(e.getPoint());
                     if (row >= 0 && column >= 0) {
                         // Extract the DroneType from the selected row
-                        DroneType selectedDrone = droneTypes.get(row);
-
-                        // Open a new frame to display drone details
+                        selectedDrone = droneTypes.get(table.convertRowIndexToModel(row));
                         openDroneDetailsFrame(selectedDrone);
                     }
                 }
@@ -94,7 +98,7 @@ public class DroneTypeMenu extends JPanel {
 
         //edits specific column width
         TableColumn columnNr = table.getColumnModel().getColumn(0);
-        columnNr.setPreferredWidth(columnNr.getPreferredWidth() - 45);
+        columnNr.setPreferredWidth(columnNr.getPreferredWidth() - 40);
 
         TableColumn columnID = table.getColumnModel().getColumn(1);
         columnID.setPreferredWidth(columnID.getPreferredWidth() + 5);
@@ -151,7 +155,19 @@ public class DroneTypeMenu extends JPanel {
                 TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
                 table.setRowSorter(sorter);
                 sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+
+                // After applying the filter, check if the selected row is still visible and select it
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    if (!table.getSelectionModel().isSelectedIndex(selectedRow)) {
+                        // If the selected row is not visible, select the row for the previously selected drone
+                        selectedRow = table.getRowSorter().convertRowIndexToView(droneTypes.indexOf(selectedDrone));
+                        table.setRowSelectionInterval(selectedRow, selectedRow);
+                    }
+                }
             }
+
+
         });
 
         // menu bar
