@@ -17,6 +17,7 @@ import javax.swing.table.TableRowSorter;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class DroneMenu extends JPanel implements ActionListener {
@@ -27,7 +28,6 @@ public class DroneMenu extends JPanel implements ActionListener {
     private Drone selectedDrone;
 
     public DroneMenu(LinkedList<Drone> drones) {
-
         super(new GridLayout(1, 0));
         this.drones = drones;
 
@@ -42,11 +42,10 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         // Create a data array with the size of the drones list
         Object[][] data = new Object[drones.size()][columnNames.length];
-
+        // Fetch data for each drone and populate the respective columns
         // Loop through the drones list to fill the data array
         for (int i = 0; i < drones.size(); i++) {
             data[i][0] = i + 1; // "Nr." column
-            // Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
             data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht oder DOCH?
             data[i][3] = drones.get(i).getCreated();
@@ -76,6 +75,13 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         };
 
+        /** Tabelle sortieren enthält fehler
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sorter);
+        sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
+        // Sort by first column "0" ("ID") in ascending order
+         */
+
         //click auf drone/column
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -94,9 +100,9 @@ public class DroneMenu extends JPanel implements ActionListener {
 
 
 
-
-        table.setPreferredScrollableViewportSize(new Dimension(200, 200));
-        table.setFillsViewportHeight(true);
+        //???
+        //table.setPreferredScrollableViewportSize(new Dimension(200, 200));
+        //table.setFillsViewportHeight(true);
 
         //edits specific column width
         TableColumn columnNr = table.getColumnModel().getColumn(0);
@@ -161,9 +167,8 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
         });
 
-
-
     }
+
 
     //Methode für neuen frame mit details
     private void openDroneDetailsFrame(DroneType drone) {
@@ -182,11 +187,12 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         detailsFrame.add(detailsPanel);
         detailsFrame.pack();
+        //detailsFrame.setSize(200,200); if we want to decide about framesize
         detailsFrame.setLocationRelativeTo(null);
         detailsFrame.setVisible(true);
     }
 
-
+    //creating the main frame "Drone Simulator"
     public static void createDroneTableGUI(LinkedList<Drone> drones) {
         JFrame frame = new JFrame("Drone Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -204,7 +210,7 @@ public class DroneMenu extends JPanel implements ActionListener {
     public JMenuBar createMenuBar() {
         JMenuBar menuBar;
         JMenu menu;
-        JMenu menu2;
+        //JMenu menu2;
         JMenuItem menuItem;
         JRadioButtonMenuItem rbMenuItem;
         JCheckBoxMenuItem cbMenuItem;
@@ -233,10 +239,13 @@ public class DroneMenu extends JPanel implements ActionListener {
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
 
+        /*
         //hf gl
         menu2 = new JMenu("Refresh");
         menu2.setMnemonic(KeyEvent.VK_R);
         menuBar.add(menu2);
+
+         */
 
         /*
         //Könnte man noch adden, wenn einer Lust hat bittegerne

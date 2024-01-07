@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DroneDynamicsMenu extends JPanel implements ActionListener {
-
     JLabel selectedImage;
     JLabel fixedImage;
     JTextArea topRightText;
@@ -18,6 +17,8 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     private JComboBox<Integer> droneIdDropdown;
     private LinkedList<Drone> drones;
 
+
+    //contructor
     public DroneDynamicsMenu(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         super(new BorderLayout());
 
@@ -88,6 +89,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         gridPanel.add(fixedImage, gbc);
         add(gridPanel, BorderLayout.CENTER);
         //updateLabel("Drone1");
+
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -101,7 +103,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
             createTextTopRight(selectedDroneId);
         }
     }
-/*
+    /*
     protected void updateLabel(String name) {
         ImageIcon icon = createImageIcon("images/" + name + ".jpg");
 
@@ -113,7 +115,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         updateBottomLeftText(); // Update dynamic text
     }
 */
-
+    //obvious
     protected void createTextTopRight(int selectedDroneId) {
 
         Drone selectedDrone = null;
@@ -154,7 +156,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         DroneDynamics selectedDroneDynamic = ProgramStart.drones.get(selectedDroneId-70-1).getDroneDynamicsArrayList().getFirst();
         createTextBottomLeft(selectedDroneId, selectedDroneDynamic);
     }
-
+    //obvious
     protected void createTextBottomLeft(int selectedDroneId, DroneDynamics selectedDroneDynamic) {
 
         // Initialize bottomLeftText if not initialized
@@ -185,7 +187,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         }
         bottomLeftText.setText(text.toString());
     }
-
+    //obvious
     protected static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = DroneDynamicsMenu.class.getResource(path);
         if (imgURL != null) {
@@ -199,9 +201,25 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     public static void createDroneDynamicsOverview(ArrayList<DroneDynamics> droneDynamicsArrayList) {
 
         JFrame frame = new JFrame("Drone Dynamics");
-
         DroneDynamicsMenu droneDM = new DroneDynamicsMenu(droneDynamicsArrayList);
 
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        menu.setMnemonic(KeyEvent.VK_M);
+        JMenuItem back = new JMenuItem("Back");
+        back.setMnemonic(KeyEvent.VK_B);
+
+        menu.add(back);
+        menuBar.add(menu);
+
+        // This closes only the window, not the whole program
+        back.addActionListener(e -> {
+            if (frame != null) {
+                frame.dispose();
+            }
+        });
+
+        frame.setJMenuBar(menuBar);
         frame.getContentPane().add(droneDM);
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
