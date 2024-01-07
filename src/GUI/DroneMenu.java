@@ -8,7 +8,6 @@ import javax.swing.*;
 
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellRenderer;
@@ -46,14 +45,9 @@ public class DroneMenu extends JPanel implements ActionListener {
         // Loop through the drones list to fill the data array
         for (int i = 0; i < drones.size(); i++) {
             data[i][0] = i + 1; // "Nr." column
-
             // Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
-
-            //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
-
             data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht oder DOCH?
-
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
@@ -78,28 +72,6 @@ public class DroneMenu extends JPanel implements ActionListener {
                 }
                 return comp;
             }
-
-
-        final JTable table = new JTable(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Set all cells as non-editable
-            }
-
-            @Override
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-                Component comp = super.prepareRenderer(renderer, row, column);
-                if (comp instanceof JLabel) {
-                    if (column == 0 || column == 1 || column == 2) {
-                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.LEFT); // Align DroneType and Serialnr to the left
-                    } else {
-                        ((JLabel) comp).setHorizontalAlignment(SwingConstants.RIGHT); // Align other columns to the right
-                    }
-                }
-                return comp;
-            }
-
-        };
 
         };
 
