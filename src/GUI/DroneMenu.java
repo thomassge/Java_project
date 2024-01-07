@@ -5,17 +5,17 @@ import data.DroneType;
 import processing.JSONDeruloHelper;
 
 import javax.swing.*;
-<<<<<<< HEAD
+
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-=======
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
->>>>>>> search
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
@@ -49,11 +49,11 @@ public class DroneMenu extends JPanel implements ActionListener {
 
             // Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
-<<<<<<< HEAD
-                    //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
-                    =======
+
+            //data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
+
             data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht oder DOCH?
->>>>>>> search
+
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
@@ -79,7 +79,7 @@ public class DroneMenu extends JPanel implements ActionListener {
                 return comp;
             }
 
-<<<<<<< HEAD
+
             final JTable table = new JTable(data, columnNames) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -100,7 +100,7 @@ public class DroneMenu extends JPanel implements ActionListener {
                 }
 
             };
-=======
+
         };
 
         //click auf drone/column
@@ -121,7 +121,7 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
         });
 
->>>>>>> search
+
 
 
         table.setPreferredScrollableViewportSize(new Dimension(200, 200));
@@ -146,8 +146,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(table);
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
-<<<<<<< HEAD
-                =======
+
 
         /**
          * Um die search funktion zu dynamisch zu triggern ist DocumentListener zum textfeld hinzugefügt
@@ -181,7 +180,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         });
 
 
->>>>>>> search
+
     }
 
     //Methode für neuen frame mit details
