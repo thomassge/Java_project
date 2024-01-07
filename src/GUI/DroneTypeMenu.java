@@ -4,9 +4,7 @@ import data.DroneType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.LinkedList;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
@@ -18,10 +16,12 @@ import javax.swing.table.TableRowSorter;
 
 public class DroneTypeMenu extends JPanel {
     private JFrame frame;
+    private LinkedList<DroneType> droneTypes;
     //private Timer refreshTimer;
 
     public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
         super(new BorderLayout());
+        this.droneTypes = droneTypes;
 
         String[] columnNames = {
                 "ID",
@@ -69,6 +69,24 @@ public class DroneTypeMenu extends JPanel {
             }
 
         };
+
+        //click auf drone/column
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // Detect click abgewandelt
+                    int row = table.rowAtPoint(e.getPoint());
+                    int column = table.columnAtPoint(e.getPoint());
+                    if (row >= 0 && column >= 0) {
+                        // Extract the DroneType from the selected row
+                        DroneType selectedDrone = droneTypes.get(row);
+
+                        // Open a new frame to display drone details
+                        openDroneDetailsFrame(selectedDrone);
+                    }
+                }
+            }
+        });
 
 
         table.setPreferredScrollableViewportSize(new Dimension(200, 200));
@@ -174,6 +192,28 @@ public class DroneTypeMenu extends JPanel {
         //this.frame = frame; // Assign the frame reference to the class variable wofür???
     }
 
+    //Methode für neuen frame mit details
+    private void openDroneDetailsFrame(DroneType drone) {
+        JFrame detailsFrame = new JFrame("Drone Details");
+        JPanel detailsPanel = new JPanel(new GridLayout(0, 1));
+
+        // Add labels to display drone details
+        detailsPanel.add(new JLabel("ID: " + drone.getDroneTypeID()));
+        detailsPanel.add(new JLabel("Manufacturer: " + drone.getManufacturer()));
+        detailsPanel.add(new JLabel("Typename: " + drone.getTypename()));
+        detailsPanel.add(new JLabel("Weight: " + drone.getWeight()));
+        detailsPanel.add(new JLabel("Maximum Speed: " + drone.getMaximumSpeed()));
+        detailsPanel.add(new JLabel("Battery Capacity: " + drone.getBatteryCapacity()));
+        detailsPanel.add(new JLabel("Control Range: " + drone.getControlRange()));
+        detailsPanel.add(new JLabel("Maximum Carriage: " + drone.getMaximumCarriage()));
+
+        detailsFrame.add(detailsPanel);
+        detailsFrame.pack();
+        detailsFrame.setLocationRelativeTo(null);
+        detailsFrame.setVisible(true);
+    }
+
+
     /*
     // Method placeholders, replace these with your actual data retrieval and table update logic
     private LinkedList<DroneType> fetchUpdatedData() {
@@ -225,7 +265,6 @@ public class DroneTypeMenu extends JPanel {
         JTable table = (JTable) ((JScrollPane) this.getComponent(0)).getViewport().getView(); // Assuming table is the first component
         table.setModel(model);
     }
-
      */
 
     public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {

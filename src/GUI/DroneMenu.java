@@ -12,19 +12,19 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.LinkedList;
 
 public class DroneMenu extends JPanel implements ActionListener {
     private JTextField searchField;
     private JButton searchButton;
     private JTable table;
+    private LinkedList<Drone> drones;
 
     public DroneMenu(LinkedList<Drone> drones) {
 
         super(new GridLayout(1, 0));
+        this.drones = drones;
 
         String[] columnNames = {
                 "Nr.",
@@ -44,7 +44,7 @@ public class DroneMenu extends JPanel implements ActionListener {
 
             // Fetch data for each drone and fill the respective columns
             data[i][1] = drones.get(i).getId();
-            data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht
+            data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht oder DOCH?
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
@@ -71,6 +71,24 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
 
         };
+
+        //click auf drone/column
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // Detect click abgewandelt
+                    int row = table.rowAtPoint(e.getPoint());
+                    int column = table.columnAtPoint(e.getPoint());
+                    if (row >= 0 && column >= 0) {
+                        // Extract Drone from selected row
+                        Drone selectedDrone = drones.get(row);
+
+                        // Opens new frame to display drone details
+                        openDroneDetailsFrame(selectedDrone.getDroneTypeObject());//dronetypeobject
+                    }
+                }
+            }
+        });
 
 
 
@@ -130,6 +148,28 @@ public class DroneMenu extends JPanel implements ActionListener {
 
 
     }
+
+    //Methode für neuen frame mit details
+    private void openDroneDetailsFrame(DroneType drone) {
+        JFrame detailsFrame = new JFrame("Drone Details");
+        JPanel detailsPanel = new JPanel(new GridLayout(0, 1));
+
+        // Add labels to display drone details
+        detailsPanel.add(new JLabel("ID: " + drone.getDroneTypeID()));
+        detailsPanel.add(new JLabel("Manufacturer: " + drone.getManufacturer()));
+        detailsPanel.add(new JLabel("Typename: " + drone.getTypename()));
+        detailsPanel.add(new JLabel("Weight: " + drone.getWeight()));
+        detailsPanel.add(new JLabel("Maximum Speed: " + drone.getMaximumSpeed()));
+        detailsPanel.add(new JLabel("Battery Capacity: " + drone.getBatteryCapacity()));
+        detailsPanel.add(new JLabel("Control Range: " + drone.getControlRange()));
+        detailsPanel.add(new JLabel("Maximum Carriage: " + drone.getMaximumCarriage()));
+
+        detailsFrame.add(detailsPanel);
+        detailsFrame.pack();
+        detailsFrame.setLocationRelativeTo(null);
+        detailsFrame.setVisible(true);
+    }
+
 
     public static void createDroneTableGUI(LinkedList<Drone> drones) {
         JFrame frame = new JFrame("Drone Simulator");
