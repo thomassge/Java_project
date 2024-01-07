@@ -132,6 +132,7 @@ public class Drone implements Printable, Expandable {
      * @return The current count of Drones on the webserver.
      */
     public static int getCount() {
+        int i = 0;
         String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
         String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
         JSONObject droneJsonObject = new JSONObject(jsonDrones);
