@@ -82,7 +82,13 @@ public class Drone implements Printable, Expandable {
     }
 
     //GETTER-Methods
+<<<<<<< HEAD
+
+    public DroneType getDroneTypeObject() {return this.droneTypeObject;}
+    public String getDroneTypePointer(){
+=======
     public String getDroneTypePointer() {
+>>>>>>> c7ed5294d99f47fb36ce12bdc3e687ef43f70d96
         return this.droneTypePointer;
     }
 
