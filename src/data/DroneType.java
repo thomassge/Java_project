@@ -1,9 +1,17 @@
+/**
+ * This class represents all the DroneType Information that is available on the webserver.
+ * It will be saved in a List and a method will link a DroneType object to every drone.
+ */
 package data;
 
-import processing.JSONDerulo;
+import processing.*;
+
 import org.json.JSONObject;
 
-public class DroneType {
+import java.io.*;
+
+
+public class DroneType implements Expandable {
 
     //DRONETYPE DATA
     private int droneTypeID;
@@ -14,6 +22,14 @@ public class DroneType {
     private int batteryCapacity;
     private int controlRange;
     private int maximumCarriage;
+    /**
+     * The number of entries of drones in the last downloaded local json file
+     */
+    private static int localDroneTypeCount;
+    /**
+     * The number of entries of drones on the webserver
+     */
+    private static int serverDroneTypeCount;
 
     //Constructor
     public DroneType() {}
@@ -55,13 +71,6 @@ public class DroneType {
         return this.maximumCarriage;
     }
 
-    public static int getCount() {
-        String checkDroneTypes = "https://dronesim.facets-labs.com/api/dronetypes/?limit=1";
-        String jsonDroneTypes = JSONDerulo.jsonCreator(checkDroneTypes);
-        JSONObject droneTypeJsonObject = new JSONObject(jsonDroneTypes);
-        return droneTypeJsonObject.getInt("count");
-    }
-
     //PRINT-methods to test without GETTER
     public void printDroneType() {
         System.out.println("DroneType id: " + this.droneTypeID);
@@ -76,5 +85,80 @@ public class DroneType {
         System.out.println("\n");
     }
 
+    @Override
+    public int getLocalCount() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"));
+        StringBuilder jsonContent = new StringBuilder();
+        int limit = 20;
+        int readChars = 0;
+        int currentChar = 0;
+
+        while ((currentChar = reader.read()) != -1 && readChars < limit) {
+            jsonContent.append((char) currentChar);
+            readChars++;
+        }
+
+        int fileDroneTypeCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
+        return fileDroneTypeCount;
+    }
+
+    @Override
+    public boolean checkForNewData() throws FileNotFoundException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"))) {
+
+            localDroneTypeCount = getLocalCount();
+            serverDroneTypeCount = getServerCount();
+
+            if (serverDroneTypeCount == localDroneTypeCount) {
+                return false;
+            } else {
+                System.out.println("damn, refetching");
+                return true;
+            }
+        }
+        catch (FileNotFoundException fnfE) {
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveAsFile() {
+        try {
+            if(!(checkForNewData())) {
+                System.out.println("No New DroneType Data to fetch from");
+                return;
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("DroneTypes Count: " + serverDroneTypeCount);
+        String forCreatingDroneTypeObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneTypesUrl() + "?limit=" + serverDroneTypeCount);
+
+        System.out.println("Saving DroneType Data from Webserver in file ...");
+
+        try (PrintWriter out = new PrintWriter("dronetypes.json")) {
+            out.println(forCreatingDroneTypeObjects);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int getServerCount() {
+        String checkDroneTypes = "https://dronesim.facets-labs.com/api/dronetypes/?limit=1";
+        String jsonDroneTypes = JSONDeruloHelper.jsonCreator(checkDroneTypes);
+        JSONObject droneTypeJsonObject = new JSONObject(jsonDroneTypes);
+        return droneTypeJsonObject.getInt("count");
+    }
+
+
+
+    /*@Override
+    public void print() {
+        printDroneType();
+    }*/
 
 }
