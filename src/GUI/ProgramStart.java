@@ -26,7 +26,7 @@ public class ProgramStart {
     }
 
     public static void main(String[] args) throws IOException {
-
+        LogMain lm = new LogMain();
         drones = getData();
         javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(drones);}});
 

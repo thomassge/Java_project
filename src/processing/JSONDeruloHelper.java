@@ -19,9 +19,13 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.lang.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class JSONDeruloHelper {
+    private static final Logger logger = Logger.getLogger(JSONDeruloHelper.class.getName());
+
 
     //public static JSONDeruloHelper helper = new JSONDeruloHelper();
     protected Drone droneObject = new Drone();
@@ -59,21 +63,26 @@ public class JSONDeruloHelper {
     }
 
     public LinkedList<Drone> getData() throws IOException {
+        logger.log(Level.INFO, "Data is pulled...");
+
         //Creating Drone objects and filling them with data
         LinkedList<Drone> drones = getDrones();
 
         //Creating DroneType objects and link them our Drone objects
         LinkedList <DroneType> droneTypes = getDroneTypes();
+        logger.log(Level.INFO, "Data successfully retrieved. Data is linked...");
         droneTypeToDroneLinker(droneTypes, drones);
 
         //Add drone dynamics objects to our Drone objects
         addDroneDynamicsData(drones);
 
+        logger.log(Level.INFO, "Data link completed.");
+
         return drones;
     }
 
     //Creating Drone Objects with Data from "Drones" Database
-    public LinkedList<Drone> getDrones() {
+    public LinkedList<Drone> getDrones() throws FileNotFoundException {
         droneObject.saveAsFile(); //checks for refresh when initializing dronedata for the first time
 
         String myJson;
@@ -164,7 +173,7 @@ public class JSONDeruloHelper {
 
             // Step 5: Get the HTTP response code
             int responseCode = connection.getResponseCode(); // Gibt 200 bei eienr successful request zurück, 401 sonst
-            System.out.println("responseCode for jsonCreator: " + responseCode);
+            logger.log(Level.INFO,"responseCode for jsonCreator: " + responseCode);
 
             // Step 6: Read and display response content
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream())); //Speichert den InputStream
@@ -176,13 +185,18 @@ public class JSONDeruloHelper {
                 responseContent.append(line);
             }   // Erschafft den "json String"
 
+            logger.log(Level.INFO, "JSON data successfully received from " + link );
+
             return responseContent.toString();
 
         } catch (MalformedURLException e) {
+            logger.log(Level.SEVERE, "Error retrieving JSON data from " + link, e);
             throw new RuntimeException(e);
         } catch (ProtocolException e) {
+            logger.log(Level.SEVERE, "Error retrieving JSON data from " + link, e);
             throw new RuntimeException(e);
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error retrieving JSON data from " + link, e);
             throw new RuntimeException(e);
         }
     }
@@ -246,38 +260,43 @@ public class JSONDeruloHelper {
 
     //Refresh database to re-fetch data
     public void refresh(LinkedList<Drone> drones, LinkedList<DroneType> droneTypes) throws IOException {
-
-        if(drones.get(0).getServerCount() > getNumberOfDrones()) {
+    try {
+        if (drones.get(0).getServerCount() > getNumberOfDrones()) {
             String modifiedDroneURL = DRONES_URL + "?offset=" + getNumberOfDrones();
             String forCreatingDroneObjects = jsonCreator(modifiedDroneURL);
             individualDroneJsonToObject(forCreatingDroneObjects, drones);
-            System.out.println("New Drones added");
+            logger.log(Level.INFO,"New Drones added");
         } else {
-            System.out.println("No new Drone Information in the database");
+            logger.log(Level.INFO,"No new Drone Information in the database");
         }
 
-        if(droneTypes.get(0).getServerCount() > getNumberOfDroneTypes()) {
+        if (droneTypes.get(0).getServerCount() > getNumberOfDroneTypes()) {
             String modifiedDroneTypeURL = DRONETYPES_URL + "?offset=" + getNumberOfDroneTypes();
             String forCreatingDroneTypeObjects = jsonCreator(modifiedDroneTypeURL);
             droneTypeJsonToObject(forCreatingDroneTypeObjects, droneTypes);
             droneTypeToDroneLinker(droneTypes, drones);
-            System.out.println("New DroneTypes added");
+            logger.log(Level.INFO,"New DroneTypes added");
         } else {
-            System.out.println("No new DroneType Information in the database");
+            logger.log(Level.INFO,"No new DroneType Information in the database");
         }
 
         // this (offset)method works for new data that was appended to the tail of the database (json string),
         // but not if new data was inserted somewhere in the middle
         //problem with this method is, that if the data is being replaced like on 27.12.23 it might produce unsinn since the offset is not a valid abgrenzer yo
-        if(droneDynamicsObject.getServerCount() > getNumberOfDroneDynamics()) {
+        if (droneDynamicsObject.getServerCount() > getNumberOfDroneDynamics()) {
             String modifiedDroneDynamicsURL = DRONEDYNAMICS_URL + "?offset=" + getNumberOfDroneDynamics();
             String forCreatingDroneDynamics = jsonCreator(modifiedDroneDynamicsURL);
             refreshDroneDynamics(drones, modifiedDroneDynamicsURL);
-            System.out.println("New DroneDynamics added");
+            logger.log(Level.INFO,"New DroneDynamics added");
 
         } else {
-            System.out.println("No new DroneDynamic Information in the database");
+            logger.log(Level.INFO,"No new DroneDynamic Information in the database");
         }
+        logger.log(Level.INFO, "Data successfully updated.");
+    }   catch (Exception e) {
+        logger.log(Level.SEVERE, "Fehler beim Aktualisieren der Daten.", e);
+        throw new RuntimeException(e);
+    }
     }
     public void refreshDroneDynamics(LinkedList<Drone> drones, String modifiedDroneDynamicsURL) {
 
@@ -321,7 +340,7 @@ public class JSONDeruloHelper {
         String json1 = mapper.writeValueAsString(drones.get(0).droneDynamicsArrayList);
 
         try (PrintWriter out = new PrintWriter("test.json")) {
-            System.out.println("done");
+            logger.log(Level.INFO,"done");
             out.println(json1);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -334,14 +353,14 @@ public class JSONDeruloHelper {
         int limit = DroneDynamics.getCount();
 
         if(!(helper.droneDynamicsObject.checkForNewData(limit))) {
-            System.out.println("No New DroneDynamics Data to fetch from");
+            logger.log(Level.INFO,"No New DroneDynamics Data to fetch from");
             return;
         }
 
-        System.out.println("DroneDynamics Count: " + limit);
+        logger.log(Level.INFO,"DroneDynamics Count: " + limit);
         String forCreatingDroneObjects = jsonCreator(DRONEDYNAMICS_URL + "?limit=" + limit);
 
-        System.out.println("Saving DroneDynamic Data from Webserver in file ...");
+        logger.log(Level.INFO,"Saving DroneDynamic Data from Webserver in file ...");
 
             try (PrintWriter out = new PrintWriter("dronedynamics.json")) {
                 out.println(forCreatingDroneObjects);

@@ -8,5 +8,5 @@ public interface Expandable {
     public boolean checkForNewData() throws FileNotFoundException;
     public int getLocalCount() throws IOException;
     public int getServerCount();
-    public void saveAsFile();
+    public void saveAsFile() throws FileNotFoundException;
 }

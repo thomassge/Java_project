@@ -5,21 +5,17 @@ import data.DroneType;
 import processing.JSONDeruloHelper;
 
 import javax.swing.*;
-
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 public class DroneMenu extends JPanel implements ActionListener {
+    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
+
     private JTextField searchField;
     private JButton searchButton;
     private JTable table;
@@ -28,9 +24,10 @@ public class DroneMenu extends JPanel implements ActionListener {
 
     public DroneMenu(LinkedList<Drone> drones) {
 
+
         super(new GridLayout(1, 0));
         this.drones = drones;
-
+        LOGGER.info("Initializing DroneMenu...");
         String[] columnNames = {
                 "Nr.",
                 "ID",
@@ -38,29 +35,30 @@ public class DroneMenu extends JPanel implements ActionListener {
                 "Created",
                 "Serialnr",
                 "CarrWeight",
-                "CarrType"};
-
-        // Create a data array with the size of the drones list
+                "CarrType"
+        };
+        //Create a data array with the size of the drones list
         Object[][] data = new Object[drones.size()][columnNames.length];
 
-        // Loop through the drones list to fill the data array
+        //Loop through the drones list to fill the data array
         for (int i = 0; i < drones.size(); i++) {
-            data[i][0] = i + 1; // "Nr." column
-            // Fetch data for each drone and populate the respective columns
+            data[i][0] = i + 1; //"Nr." column
+            //Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
-            data[i][2] = drones.get(i).getDroneTypeObject().getTypename(); // ---->>>>> funktioniert nicht oder DOCH?
+            data[i][2] = drones.get(i).getDroneTypeObject().getTypename();
             data[i][3] = drones.get(i).getCreated();
             data[i][4] = drones.get(i).getSerialnumber();
             data[i][5] = drones.get(i).getCarriageWeight();
             data[i][6] = drones.get(i).getCarriageType();
         }
-        //unveränderbarkeit
-        final JTable table = new JTable(data, columnNames) {
+        //Uneditability
+        table = new JTable(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Set all cells as non-editable
             }
-            //columnbreite
+
+            //Columnwidth
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component comp = super.prepareRenderer(renderer, row, column);
@@ -73,10 +71,9 @@ public class DroneMenu extends JPanel implements ActionListener {
                 }
                 return comp;
             }
-
         };
 
-        //click auf drone/column
+        // click Drone/ Column
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -91,9 +88,6 @@ public class DroneMenu extends JPanel implements ActionListener {
                 }
             }
         });
-
-
-
 
         table.setPreferredScrollableViewportSize(new Dimension(200, 200));
         table.setFillsViewportHeight(true);
@@ -117,7 +111,6 @@ public class DroneMenu extends JPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(table);
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
-
 
         /**
          * Um die search funktion zu dynamisch zu triggern ist DocumentListener zum textfeld hinzugefügt
@@ -152,20 +145,23 @@ public class DroneMenu extends JPanel implements ActionListener {
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
                     if (!table.getSelectionModel().isSelectedIndex(selectedRow)) {
-                        // If the selected row is not visible, select the row for the previously selected drone
+                        // If the selected row is not visible, select the row for the peviously selected drone
                         selectedRow = table.getRowSorter().convertRowIndexToView(drones.indexOf(selectedDrone));
                         table.setRowSelectionInterval(selectedRow, selectedRow);
                     }
                 }
-
             }
         });
 
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.add(new JLabel("Search: "));
+        searchPanel.add(searchField);
+        this.add(searchPanel, BorderLayout.NORTH);
 
-
+        LOGGER.info("DroneMenu initialized.");
     }
 
-    //Methode für neuen frame mit details
+    // Methode für neuen frame mit details
     private void openDroneDetailsFrame(DroneType drone) {
         JFrame detailsFrame = new JFrame("Drone Details");
         JPanel detailsPanel = new JPanel(new GridLayout(0, 1));
@@ -186,8 +182,8 @@ public class DroneMenu extends JPanel implements ActionListener {
         detailsFrame.setVisible(true);
     }
 
-
     public static void createDroneTableGUI(LinkedList<Drone> drones) {
+        LOGGER.info("Creating Drone Table GUI...");
         JFrame frame = new JFrame("Drone Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -199,24 +195,19 @@ public class DroneMenu extends JPanel implements ActionListener {
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        LOGGER.info("Drone Table GUI created.");
     }
 
     public JMenuBar createMenuBar() {
-        JMenuBar menuBar;
-        JMenu menu;
-        JMenu menu2;
-        JMenuItem menuItem;
-        JRadioButtonMenuItem rbMenuItem;
-        JCheckBoxMenuItem cbMenuItem;
+        LOGGER.info("Creating Menu Bar...");
+        JMenuBar menuBar = new JMenuBar();
 
-        menuBar = new JMenuBar();
-
-
-        menu = new JMenu("Menu");
+        JMenu menu = new JMenu("Menu");
         menu.setMnemonic(KeyEvent.VK_M);
         menuBar.add(menu);
 
-        menuItem = new JMenuItem("DroneType",KeyEvent.VK_T);
+        JMenuItem menuItem = new JMenuItem("DroneType", KeyEvent.VK_T);
         menuItem.setActionCommand("dronet"); // Set action command for the drone menu item
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
@@ -233,8 +224,8 @@ public class DroneMenu extends JPanel implements ActionListener {
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
 
-        //hf gl
-        menu2 = new JMenu("Refresh");
+        // hf gl
+        JMenu menu2 = new JMenu("Refresh");
         menu2.setMnemonic(KeyEvent.VK_R);
         menuBar.add(menu2);
 
@@ -267,40 +258,31 @@ public class DroneMenu extends JPanel implements ActionListener {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
-        //searchPanel.add(searchButton);
+        //serchPanel.add(searchButton);
         menuBar.add(searchPanel);
 
+        LOGGER.info("Menu Bar created.");
         return menuBar;
     }
 
-    //Click action
+    // Click action
+    @Override
     public void actionPerformed(ActionEvent e) {
+        LOGGER.info("Action Performed: " + e.getActionCommand());
+
         if ("droned".equals(e.getActionCommand())) {
-            DroneDynamicsMenu.createDroneDynamicsOverview((ProgramStart.drones.getFirst().getDroneDynamicsArrayList()));
-        }
-        else if ("dronet".equals(e.getActionCommand())) {
+            DroneDynamicsMenu.createDroneDynamicsOverview(ProgramStart.drones.getFirst().getDroneDynamicsArrayList());
+        } else if ("dronet".equals(e.getActionCommand())) {
             DroneTypeMenu.createDroneTypeTableGUI(ProgramStart.droneTypes);
-        }
-        else if ("credits".equals(e.getActionCommand())) {
+        } else if ("credits".equals(e.getActionCommand())) {
             CreditsMenu.createCreditList();
-        }
-        else {
+        } else {
             quit();
         }
     }
-    public static void quit(){System.exit(0);}
 
+    public static void quit() {
+        LOGGER.info("Exiting application.");
+        System.exit(0);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

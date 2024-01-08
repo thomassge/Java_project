@@ -14,16 +14,22 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DroneTypeMenu extends JPanel {
     private JFrame frame;
     private LinkedList<DroneType> droneTypes;
     private DroneType selectedDrone;
     //private Timer refreshTimer;
+    private static final Logger LOGGER = Logger.getLogger(DroneTypeMenu.class.getName());
+
 
     public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
         super(new BorderLayout());
         this.droneTypes = droneTypes;
+
+        LOGGER.info("Initializing DroneTypeMenu...");
 
         String[] columnNames = {
                 "ID",
@@ -80,6 +86,8 @@ public class DroneTypeMenu extends JPanel {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                LOGGER.info("Mouse clicked on table.");
+
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     int row = table.rowAtPoint(e.getPoint());
                     int column = table.columnAtPoint(e.getPoint());
@@ -136,17 +144,22 @@ public class DroneTypeMenu extends JPanel {
         JTextField searchField = new JTextField(20);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e)
+            {
+                LOGGER.info("Character inserted.");
                 search();
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e)
+            {
+                LOGGER.info("Character removed.");
                 search();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
+                LOGGER.info("Character changed.");
                 search();
             }
 
@@ -207,10 +220,14 @@ public class DroneTypeMenu extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         //this.frame = frame; // Assign the frame reference to the class variable wofür???
+        LOGGER.info("DroneTypeMenu initialized.");
+
     }
 
     //Methode für neuen frame mit details
     private void openDroneDetailsFrame(DroneType drone) {
+        LOGGER.info("Opening drone details frame...");
+
         JFrame detailsFrame = new JFrame("Drone Details");
         JPanel detailsPanel = new JPanel(new GridLayout(0, 1));
 
@@ -285,30 +302,7 @@ public class DroneTypeMenu extends JPanel {
      */
 
     public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {
+        LOGGER.info("Creating DroneTypeTableGUI...");
         new DroneTypeMenu(droneTypes);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
