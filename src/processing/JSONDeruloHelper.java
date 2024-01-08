@@ -24,9 +24,9 @@ import java.lang.*;
 public class JSONDeruloHelper {
 
     //public static JSONDeruloHelper helper = new JSONDeruloHelper();
-    private Drone droneObject = new Drone();
-    private DroneType droneTypesObject = new DroneType();
-    private DroneDynamics droneDynamicsObject = new DroneDynamics();
+    protected Drone droneObject = new Drone();
+    protected DroneType droneTypesObject = new DroneType();
+    protected DroneDynamics droneDynamicsObject = new DroneDynamics();
 
     private static final String DRONES_URL = "https://dronesim.facets-labs.com/api/drones/";
     private static final String DRONETYPES_URL = "https://dronesim.facets-labs.com/api/dronetypes/";
