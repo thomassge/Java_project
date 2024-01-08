@@ -31,6 +31,7 @@ public class DroneTypeMenu extends JPanel {
 
         LOGGER.info("Initializing DroneTypeMenu...");
 
+        //creating the columns
         String[] columnNames = {
                 "ID",
                 "Manufacturer",
@@ -42,8 +43,10 @@ public class DroneTypeMenu extends JPanel {
                 "Maximum Carriage"
         };
 
+        //array for columns
         Object[][] data = new Object[droneTypes.size()][columnNames.length];
 
+        //fill the columns with life
         for (int i = 0; i < droneTypes.size(); i++) {
             data[i][0] = droneTypes.get(i).getDroneTypeID();
             data[i][1] = droneTypes.get(i).getManufacturer();
@@ -55,14 +58,14 @@ public class DroneTypeMenu extends JPanel {
             data[i][7] = droneTypes.get(i).getMaximumCarriage();
         }
 
-        //unveränderbarkeit
+        //uneditable column
         final JTable table = new JTable(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Set all cells as non-editable
             }
 
-            //columnbreite
+            //columnwidth
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component comp = super.prepareRenderer(renderer, row, column);
@@ -78,11 +81,12 @@ public class DroneTypeMenu extends JPanel {
 
         };
 
+        // Sort by first column "0" ("ID") in ascending order
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
         sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(0, SortOrder.ASCENDING))); // Sort by the first column ("ID") in ascending order
 
-        //click auf drone/column
+        //click on drone/column
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -129,8 +133,7 @@ public class DroneTypeMenu extends JPanel {
 
          */
 
-
-
+        //??
         JScrollPane scrollPane = new JScrollPane(table);
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
@@ -196,7 +199,7 @@ public class DroneTypeMenu extends JPanel {
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
-        //this closes only the windows, not the whole programm
+        //this closes only the windows, not the whole programm!
         exitItem.addActionListener(e -> {
             if (frame != null) {
                 frame.dispose();
@@ -224,7 +227,7 @@ public class DroneTypeMenu extends JPanel {
 
     }
 
-    //Methode für neuen frame mit details
+    //Method for NEW mini frame with details
     private void openDroneDetailsFrame(DroneType drone) {
         LOGGER.info("Opening drone details frame...");
 

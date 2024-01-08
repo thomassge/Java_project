@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DroneDynamicsMenu extends JPanel implements ActionListener {
-
     private static final Logger LOGGER = Logger.getLogger(DroneDynamicsMenu.class.getName());
 
     JLabel selectedImage;
@@ -21,6 +20,8 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     JTextArea bottomLeftText;
     private JComboBox<Integer> droneIdDropdown;
     private LinkedList<Drone> drones;
+
+
 
     public DroneDynamicsMenu(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         super(new BorderLayout());
@@ -220,9 +221,25 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         LOGGER.info("Creating DroneDynamicsOverview frame...");
 
         JFrame frame = new JFrame("Drone Dynamics");
-
         DroneDynamicsMenu droneDM = new DroneDynamicsMenu(droneDynamicsArrayList);
 
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        menu.setMnemonic(KeyEvent.VK_M);
+        JMenuItem back = new JMenuItem("Back");
+        back.setMnemonic(KeyEvent.VK_B);
+
+        menu.add(back);
+        menuBar.add(menu);
+
+        // This closes only the window, not the whole program
+        back.addActionListener(e -> {
+            if (frame != null) {
+                frame.dispose();
+            }
+        });
+
+        frame.setJMenuBar(menuBar);
         frame.getContentPane().add(droneDM);
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);

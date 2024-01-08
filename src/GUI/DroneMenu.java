@@ -40,10 +40,10 @@ public class DroneMenu extends JPanel implements ActionListener {
         //Create a data array with the size of the drones list
         Object[][] data = new Object[drones.size()][columnNames.length];
 
+        //Fetch data for each drone and populate the respective columns
         //Loop through the drones list to fill the data array
         for (int i = 0; i < drones.size(); i++) {
             data[i][0] = i + 1; //"Nr." column
-            //Fetch data for each drone and populate the respective columns
             data[i][1] = drones.get(i).getId();
             data[i][2] = drones.get(i).getDroneTypeObject().getTypename();
             data[i][3] = drones.get(i).getCreated();
@@ -73,6 +73,13 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
         };
 
+        /** Tabelle sortieren enthält fehler. Nicht wirklich nötig
+         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+         table.setRowSorter(sorter);
+         sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
+         // Sort by first column "0" ("ID") in ascending order
+         */
+
         // click Drone/ Column
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -89,8 +96,9 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
         });
 
-        table.setPreferredScrollableViewportSize(new Dimension(200, 200));
-        table.setFillsViewportHeight(true);
+        //??? ACHTUNG WER KANN SAGEN WAS DAS MACHT?
+        //table.setPreferredScrollableViewportSize(new Dimension(200, 200));
+        //table.setFillsViewportHeight(true);
 
         //edits specific column width
         TableColumn columnNr = table.getColumnModel().getColumn(0);
@@ -161,7 +169,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         LOGGER.info("DroneMenu initialized.");
     }
 
-    // Methode für neuen frame mit details
+    // Methodfor new frame with details
     private void openDroneDetailsFrame(DroneType drone) {
         JFrame detailsFrame = new JFrame("Drone Details");
         JPanel detailsPanel = new JPanel(new GridLayout(0, 1));
@@ -178,10 +186,12 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         detailsFrame.add(detailsPanel);
         detailsFrame.pack();
+        //detailsFrame.setSize(200,200); if we want to decide about framesize
         detailsFrame.setLocationRelativeTo(null);
         detailsFrame.setVisible(true);
     }
 
+    //creating the main frame "Drone Simulator"
     public static void createDroneTableGUI(LinkedList<Drone> drones) {
         LOGGER.info("Creating Drone Table GUI...");
         JFrame frame = new JFrame("Drone Simulator");
@@ -198,6 +208,7 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         LOGGER.info("Drone Table GUI created.");
     }
+
 
     public JMenuBar createMenuBar() {
         LOGGER.info("Creating Menu Bar...");
@@ -224,10 +235,11 @@ public class DroneMenu extends JPanel implements ActionListener {
         menuItem.addActionListener(this); // Add ActionListener for the drone menu item
         menu.add(menuItem);
 
-        // hf gl
+        /* //hf gl
         JMenu menu2 = new JMenu("Refresh");
         menu2.setMnemonic(KeyEvent.VK_R);
         menuBar.add(menu2);
+         */
 
         /*
         //Könnte man noch adden, wenn einer Lust hat bittegerne
@@ -254,7 +266,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         menu.add(rbMenuItem);
  */
 
-        //search fenster
+        //search
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
