@@ -8,8 +8,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DroneDynamicsMenu extends JPanel implements ActionListener {
+
+    private static final Logger LOGGER = Logger.getLogger(DroneDynamicsMenu.class.getName());
 
     JLabel selectedImage;
     JLabel fixedImage;
@@ -20,6 +24,9 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
     public DroneDynamicsMenu(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         super(new BorderLayout());
+
+        LOGGER.info("Initializing DroneDynamicsMenu...");
+
 
         droneIdDropdown = new JComboBox<>();
 
@@ -88,6 +95,9 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         gridPanel.add(fixedImage, gbc);
         add(gridPanel, BorderLayout.CENTER);
         //updateLabel("Drone1");
+
+        LOGGER.info("DroneDynamicsMenu initialized.");
+
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -96,8 +106,10 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
             // Wenn ein neues Drone-ID ausgewählt wurde
             int selectedDroneId = (Integer) droneIdDropdown.getSelectedItem();
 
+            LOGGER.info("Selected Drone ID: " + selectedDroneId);
+
             // Hier kannst du die Logik für die Aktualisierung der GUI basierend auf der ausgewählten Drone-ID implementieren
-            System.out.println("Ausgewählte Drone-ID: " + selectedDroneId);
+            LOGGER.info("Ausgewählte Drone-ID: " + selectedDroneId);
             createTextTopRight(selectedDroneId);
         }
     }
@@ -115,6 +127,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 */
 
     protected void createTextTopRight(int selectedDroneId) {
+        LOGGER.info("Creating top right text for Drone ID: " + selectedDroneId);
 
         Drone selectedDrone = null;
         for (Drone drone : ProgramStart.drones) {
@@ -153,9 +166,12 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         // Bei selectedDroneId -70 -1 (weil Drohnen in ArrayList bei [0] anfangen
         DroneDynamics selectedDroneDynamic = ProgramStart.drones.get(selectedDroneId-70-1).getDroneDynamicsArrayList().getFirst();
         createTextBottomLeft(selectedDroneId, selectedDroneDynamic);
+
+        LOGGER.info("Top right text created for Drone ID: " + selectedDroneId);
     }
 
     protected void createTextBottomLeft(int selectedDroneId, DroneDynamics selectedDroneDynamic) {
+        LOGGER.info("Creating bottom left text for Drone ID: " + selectedDroneId);
 
         // Initialize bottomLeftText if not initialized
         if (bottomLeftText == null) {
@@ -184,19 +200,24 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
             text.append(String.format("%s: %s\n", droneAttributes[i], droneValues[i]));
         }
         bottomLeftText.setText(text.toString());
+
+        LOGGER.info("Bottom left text created for Drone ID: " + selectedDroneId);
     }
 
     protected static ImageIcon createImageIcon(String path) {
+        LOGGER.info("Attempting to create ImageIcon from path: " + path);
+
         java.net.URL imgURL = DroneDynamicsMenu.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
-            System.err.println("Couldn't find file: " + path);
+            LOGGER.log(Level.SEVERE, "Couldn't find file: " + path);
             return null;
         }
     }
 
     public static void createDroneDynamicsOverview(ArrayList<DroneDynamics> droneDynamicsArrayList) {
+        LOGGER.info("Creating DroneDynamicsOverview frame...");
 
         JFrame frame = new JFrame("Drone Dynamics");
 
@@ -208,5 +229,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         frame.setVisible(true);
 
         droneDM.createTextTopRight((Integer) droneDM.droneIdDropdown.getSelectedItem());
+
+        LOGGER.info("DroneDynamicsOverview frame created.");
     }
 }

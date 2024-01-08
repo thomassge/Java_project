@@ -1,19 +1,16 @@
-/**
- * This class represents all the DroneType Information that is available on the webserver.
- * It will be saved in a List and a method will link a DroneType object to every drone.
- */
 package data;
 
-import processing.*;
-
 import org.json.JSONObject;
+import processing.JSONDeruloHelper;
 
 import java.io.*;
-
+import java.util.logging.Logger;
 
 public class DroneType implements Expandable {
 
-    //DRONETYPE DATA
+    private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
+
+    // DRONETYPE DATA
     private int droneTypeID;
     private String manufacturer;
     private String typename;
@@ -22,19 +19,23 @@ public class DroneType implements Expandable {
     private int batteryCapacity;
     private int controlRange;
     private int maximumCarriage;
+
     /**
      * The number of entries of drones in the last downloaded local json file
      */
     private static int localDroneTypeCount;
+
     /**
      * The number of entries of drones on the webserver
      */
     private static int serverDroneTypeCount;
 
-    //Constructor
-    public DroneType() {}
+    // Constructor
+    public DroneType() {
+    }
+
     public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed, int batteryCapacity, int controlRange, int maximumCarriage) {
-        System.out.println("DroneType Object created");
+        LOGGER.info("DroneType Object created");
         this.droneTypeID = droneTypeID;
         this.manufacturer = manufacturer;
         this.typename = typename;
@@ -45,44 +46,51 @@ public class DroneType implements Expandable {
         this.maximumCarriage = maximumCarriage;
     }
 
-    //GETTER-methods
-    public int getDroneTypeID(){
+    // GETTER-methods
+
+    public int getDroneTypeID() {
         return this.droneTypeID;
     }
-    public String getManufacturer(){
+
+    public String getManufacturer() {
         return this.manufacturer;
     }
-    public String getTypename(){
+
+    public String getTypename() {
         return this.typename;
     }
-    public int getWeight(){
+
+    public int getWeight() {
         return this.weight;
     }
-    public int getMaximumSpeed(){
+
+    public int getMaximumSpeed() {
         return this.maximumSpeed;
     }
-    public int getBatteryCapacity(){
+
+    public int getBatteryCapacity() {
         return this.batteryCapacity;
     }
-    public int getControlRange(){
+
+    public int getControlRange() {
         return this.controlRange;
     }
-    public int getMaximumCarriage(){
+
+    public int getMaximumCarriage() {
         return this.maximumCarriage;
     }
 
-    //PRINT-methods to test without GETTER
+    // PRINT-methods to test without GETTER
+
     public void printDroneType() {
-        System.out.println("DroneType id: " + this.droneTypeID);
-        System.out.println("___________________________________________");
-        System.out.println("Manufacturer: " + this.manufacturer );
-        System.out.println("TypeName: " + this.typename);
-        System.out.println("Weight: " + this.weight);
-        System.out.println("Maximum Speed: " + this.maximumSpeed);
-        System.out.println("BatteryCapacity: " + this.batteryCapacity);
-        System.out.println("Control Range (int): " + this.controlRange);
-        System.out.println("Maximum Carriage: " + this.maximumCarriage);
-        System.out.println("\n");
+        LOGGER.info("DroneType id: " + this.droneTypeID);
+        LOGGER.info("Manufacturer: " + this.manufacturer);
+        LOGGER.info("TypeName: " + this.typename);
+        LOGGER.info("Weight: " + this.weight);
+        LOGGER.info("Maximum Speed: " + this.maximumSpeed);
+        LOGGER.info("BatteryCapacity: " + this.batteryCapacity);
+        LOGGER.info("Control Range (int): " + this.controlRange);
+        LOGGER.info("Maximum Carriage: " + this.maximumCarriage);
     }
 
     @Override
@@ -105,20 +113,19 @@ public class DroneType implements Expandable {
     @Override
     public boolean checkForNewData() throws FileNotFoundException {
         try (BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"))) {
-
             localDroneTypeCount = getLocalCount();
             serverDroneTypeCount = getServerCount();
 
-            if (serverDroneTypeCount == localDroneTypeCount) {
-                return false;
-            } else {
-                System.out.println("damn, refetching");
+            if (serverDroneTypeCount != localDroneTypeCount) {
+                LOGGER.warning("Data mismatch between local and server for DroneType. Refetching data.");
                 return true;
             }
-        }
-        catch (FileNotFoundException fnfE) {
+            return false;
+        } catch (FileNotFoundException fnfE) {
+            LOGGER.severe("File not found exception while checking for DroneType data.");
             return true;
         } catch (IOException e) {
+            LOGGER.severe("IO exception occurred while checking for DroneType data: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -126,22 +133,24 @@ public class DroneType implements Expandable {
     @Override
     public void saveAsFile() {
         try {
-            if(!(checkForNewData())) {
-                System.out.println("No New DroneType Data to fetch from");
+            if (!(checkForNewData())) {
+                LOGGER.info("No New DroneType Data to fetch from");
                 return;
             }
         } catch (FileNotFoundException e) {
+            LOGGER.severe("File not found exception while checking for new data.");
             throw new RuntimeException(e);
         }
 
-        System.out.println("DroneTypes Count: " + serverDroneTypeCount);
+        LOGGER.info("DroneTypes Count: " + serverDroneTypeCount);
         String forCreatingDroneTypeObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneTypesUrl() + "?limit=" + serverDroneTypeCount);
 
-        System.out.println("Saving DroneType Data from Webserver in file ...");
+        LOGGER.info("Saving DroneType Data from Webserver in file ...");
 
         try (PrintWriter out = new PrintWriter("dronetypes.json")) {
             out.println(forCreatingDroneTypeObjects);
         } catch (FileNotFoundException e) {
+            LOGGER.severe("File not found exception while saving DroneType data.");
             throw new RuntimeException(e);
         }
     }
@@ -153,12 +162,8 @@ public class DroneType implements Expandable {
         JSONObject droneTypeJsonObject = new JSONObject(jsonDroneTypes);
         return droneTypeJsonObject.getInt("count");
     }
-
-
-
-    /*@Override
+ /*@Override
     public void print() {
         printDroneType();
     }*/
-
 }
