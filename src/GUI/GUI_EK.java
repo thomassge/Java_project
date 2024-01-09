@@ -14,6 +14,7 @@ public class GUI_EK {
 
     private static LinkedList<data.Drone> dronesData = new LinkedList<>(); // Angenommen, diese Liste wird gefüllt.
 
+
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("Drone Daten");

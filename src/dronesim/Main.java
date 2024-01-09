@@ -1,5 +1,6 @@
 /**
- * This is our main class. The starting point of our program.
+ * This is our main class and entry poiint of the program. This class is responsible for initializing
+ * the program, fetching data and managing the overall flow of the application.
  */
 package dronesim;
 
@@ -21,6 +22,13 @@ public class Main {
     private static LinkedList<Drone> drones = new LinkedList<Drone>();
     private static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
 
+    /**
+     * The main method that serves as the entry point for the program.
+     * It initializes data and manages the flow of execution.
+     *
+     * @param args Command line arguments (not used in this implementation).
+     * @throws IOException if an I/O error occurs during data fetchhing.
+     */
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
 

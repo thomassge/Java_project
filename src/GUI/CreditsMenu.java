@@ -1,3 +1,7 @@
+/**
+ * This class provides a graphical interface to display the credits for
+ * the drone project. It creates a window with a list of contributors and their details.
+ */
 package GUI;
 
 import javax.swing.*;
@@ -11,6 +15,11 @@ public class CreditsMenu {
     private static final Logger LOGGER = Logger.getLogger(CreditsMenu.class.getName());
 
     //Click Credits
+
+    /**
+     * Creates and displays the credits menu. This method sets up the GUI components
+     * and populates them with the credits information.
+     */
     public static void createCreditList() {
         LOGGER.info("Creating Credits menu...");
 
@@ -38,6 +47,15 @@ public class CreditsMenu {
     }
 
     //for Credit content alignment
+
+    /**
+     * Adds a label with specified text to a given panel at the specified grid position.
+     *
+     * @param panel       The JPanel to which the label should be added.
+     * @param labelText   The text to be displayed on the label.
+     * @param gridx       The grid x position on the panel.
+     * @param gridy       The grid y position on the panel.
+     */
     public static void addtoPanel(JPanel panel, String labelText, int gridx, int gridy){
         LOGGER.info("Adding label to Credits panel: " + labelText);
 
@@ -54,6 +72,10 @@ public class CreditsMenu {
     }
 
     //quitfkt
+
+    /**
+     * Quits the application.
+     */
     protected void quit() {
         LOGGER.info("Exiting the application.");
         System.exit(0);
