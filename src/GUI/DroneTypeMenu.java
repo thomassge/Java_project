@@ -1,3 +1,7 @@
+/**
+ * This class creates a GUI for displaying and interacting with a list of DroneTypes.
+ * It includes features such as sorting, searching and detailed view of drone types.
+ */
 package GUI;
 
 import data.DroneType;
@@ -24,13 +28,18 @@ public class DroneTypeMenu extends JPanel {
     //private Timer refreshTimer;
     private static final Logger LOGGER = Logger.getLogger(DroneTypeMenu.class.getName());
 
-
+    /**
+     * Constructs a new DroneTypeMenu with the specified list of drone types.
+     *
+     * @param droneTypes A LinkedList of DroneType objects to be displayed.
+     */
     public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
         super(new BorderLayout());
         this.droneTypes = droneTypes;
 
         LOGGER.info("Initializing DroneTypeMenu...");
 
+        //creating the columns
         String[] columnNames = {
                 "ID",
                 "Manufacturer",
@@ -42,8 +51,10 @@ public class DroneTypeMenu extends JPanel {
                 "Maximum Carriage"
         };
 
+        //array for columns
         Object[][] data = new Object[droneTypes.size()][columnNames.length];
 
+        //fill the columns with life
         for (int i = 0; i < droneTypes.size(); i++) {
             data[i][0] = droneTypes.get(i).getDroneTypeID();
             data[i][1] = droneTypes.get(i).getManufacturer();
@@ -55,14 +66,34 @@ public class DroneTypeMenu extends JPanel {
             data[i][7] = droneTypes.get(i).getMaximumCarriage();
         }
 
-        //unveränderbarkeit
+        //uneditable column
         final JTable table = new JTable(data, columnNames) {
+
+            /**
+             * Determines wheter a specific cell in the table is editable or not. This implementation makes
+             * all cells in the table non-editable to prevent user modification.
+             *
+             * @param row      The row index of the cell being queried.
+             * @param column   The column index of the cell being queried.
+             * @return false, indicating that no cell can be edited.
+             */
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Set all cells as non-editable
             }
 
-            //columnbreite
+            //columnwidth
+
+            /**
+             * Prepares the renderer for each cell of the table. This method is overridden to customize
+             * the appearence of cells in the table, such as setting alignment for text.
+             * It affects how each cell in the table is displayed.
+             *
+             * @param renderer  The TableCellRenderer to prepare.
+             * @param row       The row of the cell to render, where 0 is the first row.
+             * @param column    The column of the cell to render, where 0 is th first column.
+             * @return The Component that is used to draw the cell.
+             */
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component comp = super.prepareRenderer(renderer, row, column);
@@ -78,12 +109,20 @@ public class DroneTypeMenu extends JPanel {
 
         };
 
+        // Sort by first column "0" ("ID") in ascending order
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
         sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(0, SortOrder.ASCENDING))); // Sort by the first column ("ID") in ascending order
 
-        //click auf drone/column
+        //click on drone/column
         table.addMouseListener(new MouseAdapter() {
+
+            /**
+             * Handles mouse click events on the table. When a table row is double-clicked, this method is
+             * invoked to perform an action, such as opening a detailed view of the selected drone type.
+             *
+             * @param e The MouseEvent object representing the mouse click action.
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 LOGGER.info("Mouse clicked on table.");
@@ -129,8 +168,7 @@ public class DroneTypeMenu extends JPanel {
 
          */
 
-
-
+        //??
         JScrollPane scrollPane = new JScrollPane(table);
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
         this.add(scrollPane, BorderLayout.CENTER);
@@ -143,6 +181,13 @@ public class DroneTypeMenu extends JPanel {
          */
         JTextField searchField = new JTextField(20);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+            /**
+             * Invoked when text is inserted into the search field. This triggers the search
+             * functionality, updating the table's filter based on the current text content.
+             *
+             * @param e The document event indicating that text was inserted.
+             */
             @Override
             public void insertUpdate(DocumentEvent e)
             {
@@ -150,6 +195,12 @@ public class DroneTypeMenu extends JPanel {
                 search();
             }
 
+            /**
+             * Invoked when text is removed from the search field. This also triggers the search
+             * functionality to update the table's filter based on the modified text content.
+             *
+             * @param e The document event indicating that text was removed.
+             */
             @Override
             public void removeUpdate(DocumentEvent e)
             {
@@ -157,6 +208,12 @@ public class DroneTypeMenu extends JPanel {
                 search();
             }
 
+            /**
+             * Invoked when a change occurs to the text in the search field. This method is part of the
+             * DocumentListener interface but may not be directly used in this implementation.
+             *
+             * @param e The document event indicating a change.
+             */
             @Override
             public void changedUpdate(DocumentEvent e) {
                 LOGGER.info("Character changed.");
@@ -196,7 +253,7 @@ public class DroneTypeMenu extends JPanel {
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
-        //this closes only the windows, not the whole programm
+        //this closes only the windows, not the whole programm!
         exitItem.addActionListener(e -> {
             if (frame != null) {
                 frame.dispose();
@@ -224,7 +281,13 @@ public class DroneTypeMenu extends JPanel {
 
     }
 
-    //Methode für neuen frame mit details
+    //Method for NEW mini frame with details
+
+    /**
+     * Opens a new frame displaying details of the selected DroneType.
+     *
+     * @param drone The DroeType object containing details to be displayed.
+     */
     private void openDroneDetailsFrame(DroneType drone) {
         LOGGER.info("Opening drone details frame...");
 
@@ -301,6 +364,11 @@ public class DroneTypeMenu extends JPanel {
     }
      */
 
+    /**
+     * Creates and displays the main GUI frame for the DroneType table.
+     *
+     * @param droneTypes A LinkedList of DroneType objects to be displayed.
+     */
     public static void createDroneTypeTableGUI(LinkedList<DroneType> droneTypes) {
         LOGGER.info("Creating DroneTypeTableGUI...");
         new DroneTypeMenu(droneTypes);

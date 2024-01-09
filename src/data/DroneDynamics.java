@@ -1,3 +1,8 @@
+/**
+ * This class represents the dynamics of a drone, including several metrics such as
+ * speed, alignment, location and battery status. It is capable of checking for new data updates,
+ * saving data to a file and maintaining a count of drone dynamics data from both local and server sources.
+ */
 package data;
 
 import org.json.JSONObject;
@@ -25,9 +30,27 @@ public class DroneDynamics implements Printable, Expandable {
     private static int localDroneDynamicsCount;
     private static int serverDroneDynamicsCount;
 
+    /**
+     * Default constructor for creating an instance of DroneDynamics.
+     */
     public DroneDynamics() {
     }
 
+    /**
+     * Parameterized constructor for creating an instance of DroneDynamics with specified attributes.
+     *
+     * @param dronePointer       Reference to the associated drone.
+     * @param timestamp          Timestamp of the dynamics data.
+     * @param speed              Speed of the drone.
+     * @param alignmentRoll      Roll alignment of the drone.
+     * @param alignmentPitch     Pitch alignment of the drone.
+     * @param alignmentYaw       Yaw alignment of the drone.
+     * @param longitude          Longitude of the drone's location.
+     * @param latitude           Latitude of the drone's location.
+     * @param batteryStatus      Current battery status of the drone.
+     * @param lastSeen           Last seen timestamp of the drone.
+     * @param status             Current status of the drone.
+     */
     public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll, float alignmentPitch, float alignmentYaw, double longitude, double latitude, int batteryStatus, String lastSeen, String status) {
         this.dronePointer = dronePointer;
         this.timestamp = timestamp;
@@ -86,6 +109,9 @@ public class DroneDynamics implements Printable, Expandable {
         return this.status;
     }
 
+    /**
+     * Prints detailed drone dynamics information to the log.
+     */
     public void printDroneDynamics() {
         LOGGER.info("DronePointer: " + this.getDronePointer());
         LOGGER.info("Timestamp: " + this.getTimestamp());
@@ -99,11 +125,20 @@ public class DroneDynamics implements Printable, Expandable {
         LOGGER.info("Last Seen: " + this.getLastSeen());
     }
 
+    /**
+     * Prints drone dynamincs information to the console.
+     */
     @Override
     public void print() {
         printDroneDynamics();
     }
 
+    /**
+     * Checks for new drone dynamics data by comparing local and server data counts.
+     *
+     * @return true if new data is available, false otherwise.
+     * @throws FileNotFoundException if the local file is not found.
+     */
     @Override
     public boolean checkForNewData() throws FileNotFoundException {
         try (BufferedReader reader = new BufferedReader(new FileReader("dronedynamics.json"))) {
@@ -124,6 +159,12 @@ public class DroneDynamics implements Printable, Expandable {
         }
     }
 
+    /**
+     * Gets the count of drone dynamic entries from the local JSON file.
+     *
+     * @return The count of drone dynamics in the local file.
+     * @throws IOException if an I/O error occurs while reading the file.
+     */
     @Override
     public int getLocalCount() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("dronedynamics.json"));
@@ -141,6 +182,9 @@ public class DroneDynamics implements Printable, Expandable {
         return fileDroneDynamicsCount;
     }
 
+    /**
+     * Saves the latest drone dynamics data to a local file.
+     */
     @Override
     public void saveAsFile() {
         try {
@@ -166,6 +210,11 @@ public class DroneDynamics implements Printable, Expandable {
         }
     }
 
+    /**
+     * Gets the count of drone dynamics entries from the server.
+     *
+     * @return The count of drone dynamics entries on the server.
+     */
     @Override
     public int getServerCount() {
         String checkDroneDynamics = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=1";

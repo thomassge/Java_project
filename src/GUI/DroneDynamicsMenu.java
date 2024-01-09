@@ -1,3 +1,8 @@
+/**
+ * This class is a GUI component that displays detailed information about
+ * the dynamics of drones. It is responsible for creating and managing the GUI elements
+ * that present drone dynamics data to the user.
+ */
 package GUI;
 
 import data.Drone;
@@ -12,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DroneDynamicsMenu extends JPanel implements ActionListener {
-
     private static final Logger LOGGER = Logger.getLogger(DroneDynamicsMenu.class.getName());
 
     JLabel selectedImage;
@@ -22,6 +26,12 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     private JComboBox<Integer> droneIdDropdown;
     private LinkedList<Drone> drones;
 
+
+    /**
+     * Constructs a new DroneDynamicsMenu with the specified list of drone dynamics.
+     *
+     * @param droneDynamicsArrayList An ArrayList of DroneDynamics objects.
+     */
     public DroneDynamicsMenu(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         super(new BorderLayout());
 
@@ -100,6 +110,11 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * Handles action events, typically from user interaction.
+     *
+     * @param e The ActionEvent object representing the event.
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == droneIdDropdown) {
 
@@ -126,6 +141,11 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     }
 */
 
+    /**
+     * Creates and updates the text information displayed int the top-right section of the panel.
+     *
+     * @param selectedDroneId The ID of the selected drone.
+     */
     protected void createTextTopRight(int selectedDroneId) {
         LOGGER.info("Creating top right text for Drone ID: " + selectedDroneId);
 
@@ -170,6 +190,12 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         LOGGER.info("Top right text created for Drone ID: " + selectedDroneId);
     }
 
+    /**
+     * Creates and updates the text information displayed in the bottom-left section of the panel.
+     *
+     * @param selectedDroneId        The ID of the selected drone.
+     * @param selectedDroneDynamic   The DroneDynamics object associated with the selected drone.
+     */
     protected void createTextBottomLeft(int selectedDroneId, DroneDynamics selectedDroneDynamic) {
         LOGGER.info("Creating bottom left text for Drone ID: " + selectedDroneId);
 
@@ -204,6 +230,12 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         LOGGER.info("Bottom left text created for Drone ID: " + selectedDroneId);
     }
 
+    /**
+     * Creates an ImageIcon from the specified path.
+     *
+     * @param path The path to the image file.
+     * @return The created ImageIcon, or null if the path is invalid.
+     */
     protected static ImageIcon createImageIcon(String path) {
         LOGGER.info("Attempting to create ImageIcon from path: " + path);
 
@@ -216,13 +248,34 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Creates and displays an overview frame for drone dynamics.
+     *
+     * @param droneDynamicsArrayList An ArrayList of DroneDynamics objects.
+     */
     public static void createDroneDynamicsOverview(ArrayList<DroneDynamics> droneDynamicsArrayList) {
         LOGGER.info("Creating DroneDynamicsOverview frame...");
 
         JFrame frame = new JFrame("Drone Dynamics");
-
         DroneDynamicsMenu droneDM = new DroneDynamicsMenu(droneDynamicsArrayList);
 
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        menu.setMnemonic(KeyEvent.VK_M);
+        JMenuItem back = new JMenuItem("Back");
+        back.setMnemonic(KeyEvent.VK_B);
+
+        menu.add(back);
+        menuBar.add(menu);
+
+        // This closes only the window, not the whole program
+        back.addActionListener(e -> {
+            if (frame != null) {
+                frame.dispose();
+            }
+        });
+
+        frame.setJMenuBar(menuBar);
         frame.getContentPane().add(droneDM);
         frame.setSize(550, 550);
         frame.setLocationRelativeTo(null);

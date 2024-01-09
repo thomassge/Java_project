@@ -1,3 +1,7 @@
+/**
+ * This class is responsible for generating a visual representation of drone locations using Google Maps.
+ * It fetches drone data, including their dynamics and displays their positions on a map.
+ */
 package services;
 
 import data.*;
@@ -22,6 +26,13 @@ public class GoogleMaps {
     private static LinkedList<Drone> drones = new LinkedList<Drone>();
     private static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
 
+    /**
+     * Main method for the GoogleMaps class. It retrieves drone data, processes it and displays the drones' postions
+     * on a map using a static image from the Google Maps API.
+     *
+     * @param args Command line arguments (not used in this application.)
+     * @throws IOException if there is an error in processing the map or drone data.
+     */
     public static void main(String[] args) throws IOException {
 
 
