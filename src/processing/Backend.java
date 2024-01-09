@@ -58,7 +58,7 @@ public class Backend {
                     } // evtl. mit cases arbeiten
 
                     // Wait for 1 minute before the next check
-                    Thread.sleep(10000);
+                    Thread.sleep(5000);
                 }
             } catch (InterruptedException e) {
                 // Thread was interrupted, exit the thread

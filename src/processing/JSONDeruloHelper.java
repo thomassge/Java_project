@@ -99,7 +99,7 @@ public class JSONDeruloHelper {
     }
 
     public LinkedList<DroneType> getDroneTypes() {
-        droneTypesObject.saveAsFile();
+        //droneTypesObject.saveAsFile();
 
         String myJson;
         try {
@@ -117,7 +117,7 @@ public class JSONDeruloHelper {
     /**
      *     Creates DroneDynamic Objects off the File and stores them in the appropriate Drone via LinkedList
      */
-    public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException {
+    public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException { //TODO: evtl. private
         droneDynamicsObject.saveAsFile();
 
         String myJson;

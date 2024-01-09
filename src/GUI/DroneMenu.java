@@ -156,7 +156,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
-        this.add(searchPanel, BorderLayout.NORTH);
+        //this.add(searchPanel, BorderLayout.NORTH);
 
         LOGGER.info("DroneMenu initialized.");
     }
