@@ -1,3 +1,7 @@
+/**
+ * This class represents the type of a drone, including its invariable specifications and attributes.
+ * It is responsible for managing drone type data, checking for updates and saving the data to a file.
+ */
 package data;
 
 import org.json.JSONObject;
@@ -31,9 +35,25 @@ public class DroneType implements Expandable {
     private static int serverDroneTypeCount;
 
     // Constructor
+
+    /**
+     * Default constructor for creating a DroneType instance.
+     */
     public DroneType() {
     }
 
+    /**
+     * Parameterized constructor for creating a DroneType instance with specified attributes.
+     *
+     * @param droneTypeID        Unique identifier for the drone type.
+     * @param manufacturer       Manufacturer of the drone.
+     * @param typename           Name of the drone type.
+     * @param weight             Weight of the drone.
+     * @param maximumSpeed       Maximum speed of the drone.
+     * @param batteryCapacity    Battery capacity of the drone.
+     * @param controlRange       Control range of the drone.
+     * @param maximumCarriage    Maximum carriage capacity of the drone.
+     */
     public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed, int batteryCapacity, int controlRange, int maximumCarriage) {
         LOGGER.info("DroneType Object created");
         this.droneTypeID = droneTypeID;
@@ -82,6 +102,9 @@ public class DroneType implements Expandable {
 
     // PRINT-methods to test without GETTER
 
+    /**
+     * Prints the drone type details to the log.
+     */
     public void printDroneType() {
         LOGGER.info("DroneType id: " + this.droneTypeID);
         LOGGER.info("Manufacturer: " + this.manufacturer);
@@ -93,6 +116,12 @@ public class DroneType implements Expandable {
         LOGGER.info("Maximum Carriage: " + this.maximumCarriage);
     }
 
+    /**
+     * Reads and returns the local count of drone types from a JSON file.
+     *
+     * @return The count of drone types in the local JSON file.
+     * @throws IOException if an I/O error occurs while reading the file.
+     */
     @Override
     public int getLocalCount() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"));
@@ -110,6 +139,12 @@ public class DroneType implements Expandable {
         return fileDroneTypeCount;
     }
 
+    /**
+     * Checks for new drone type data by comparing local and server data counts.
+     *
+     * @return true if new data is available, false otherwise.
+     * @throws FileNotFoundException if the local file is not found.
+     */
     @Override
     public boolean checkForNewData() throws FileNotFoundException {
         try (BufferedReader reader = new BufferedReader(new FileReader("dronetypes.json"))) {
@@ -130,6 +165,9 @@ public class DroneType implements Expandable {
         }
     }
 
+    /**
+     * Saves the latest drone type data to a local file.
+     */
     @Override
     public void saveAsFile() {
         try {
@@ -155,6 +193,11 @@ public class DroneType implements Expandable {
         }
     }
 
+    /**
+     * Gets the count of drone types entries from the server.
+     *
+     * @return The count of drone types entries on the server.
+     */
     @Override
     public int getServerCount() {
         String checkDroneTypes = "https://dronesim.facets-labs.com/api/dronetypes/?limit=1";

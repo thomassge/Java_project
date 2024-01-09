@@ -1,3 +1,8 @@
+/**
+ * This class is responsible for creating and managing the GUI for displaying
+ * a list of drones and their details. It includes features for searching, viewing drone details,
+ * and navigating to different parts of the application.
+ */
 package GUI;
 
 import data.Drone;
@@ -22,6 +27,11 @@ public class DroneMenu extends JPanel implements ActionListener {
     private LinkedList<Drone> drones;
     private Drone selectedDrone;
 
+    /**
+     * Constructs a new DroneMenu with the specified list of drones.
+     *
+     * @param drones A LinkedList of Drone objects to be displayed in the table.
+     */
     public DroneMenu(LinkedList<Drone> drones) {
 
 
@@ -53,12 +63,31 @@ public class DroneMenu extends JPanel implements ActionListener {
         }
         //Uneditability
         table = new JTable(data, columnNames) {
+
+            /**
+             * Determines whether a cell in the table is editable. This implementation makes all
+             * cells in the tabe non-editable.
+             *
+              * @param row     The row index of the cell.
+             * @param column   The coloumn index of the cell.
+             * @return false as none of the cells are editable.
+             */
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Set all cells as non-editable
             }
 
             //Columnwidth
+
+            /**
+             * Prepares the renderer for each cell of the table. This method is overridden to cutomize
+             * the appearence of cells, including alignment and other visual properties.
+             *
+             * @param renderer  The TableCellRenderer to prepare.
+             * @param row       The row of the cell to render, where 0 is the first row.
+             * @param column    The column of the cell to render, where 0 is the first column.
+             * @return The Component that is used to draw the cell.
+             */
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component comp = super.prepareRenderer(renderer, row, column);
@@ -128,16 +157,36 @@ public class DroneMenu extends JPanel implements ActionListener {
          */
         searchField = new JTextField(20);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+            /**
+             * Invoked when text is inserted into the document. Triggers the search
+             * functionality to filter the table based on the updated text.
+             *
+             * @param e The document event representing the insert action.
+             */
             @Override
             public void insertUpdate(DocumentEvent e) {
                 search();
             }
 
+            /**
+             * Invoked when text is removed from the document. Triggers the search
+             * functionality to update the table filter based on the modified text.
+             *
+             * @param e The document event representing the remove action.
+             */
             @Override
             public void removeUpdate(DocumentEvent e) {
                 search();
             }
 
+
+            /**
+             * Invoked when text in the document undergoes a change. This method
+             * is not used in this implementation but is required by the DocumentListener interface.
+             *
+             * @param e The document event representing the change.
+             */
             @Override
             public void changedUpdate(DocumentEvent e) {
                 search();
@@ -169,7 +218,13 @@ public class DroneMenu extends JPanel implements ActionListener {
         LOGGER.info("DroneMenu initialized.");
     }
 
-    // Methodfor new frame with details
+    // Method for new frame with details
+
+    /**
+     * Opens a detailed frame showing specific information about a selected drone type.
+     *
+     * @param drone The DroneType object containing the details to be displayed.
+     */
     private void openDroneDetailsFrame(DroneType drone) {
         JFrame detailsFrame = new JFrame("Drone Details");
         JPanel detailsPanel = new JPanel(new GridLayout(0, 1));
@@ -192,6 +247,12 @@ public class DroneMenu extends JPanel implements ActionListener {
     }
 
     //creating the main frame "Drone Simulator"
+
+    /**
+     * Creates and displays the main GUI frame for the drone table.
+     *
+     * @param drones A LinkedList of Drone objects to be displayed in the table.
+     */
     public static void createDroneTableGUI(LinkedList<Drone> drones) {
         LOGGER.info("Creating Drone Table GUI...");
         JFrame frame = new JFrame("Drone Simulator");
@@ -210,6 +271,11 @@ public class DroneMenu extends JPanel implements ActionListener {
     }
 
 
+    /**
+     * Creates and returns the menu bar with different menu items.
+     *
+     * @return JMenuBar for the DroneMenu
+     */
     public JMenuBar createMenuBar() {
         LOGGER.info("Creating Menu Bar...");
         JMenuBar menuBar = new JMenuBar();
@@ -278,6 +344,12 @@ public class DroneMenu extends JPanel implements ActionListener {
     }
 
     // Click action
+
+    /**
+     * Handles actions performed by the user, such as selecting menu items.
+     *
+     * @param e The ActionEvent object representing the user's action.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         LOGGER.info("Action Performed: " + e.getActionCommand());
@@ -293,6 +365,9 @@ public class DroneMenu extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Quits the application
+     */
     public static void quit() {
         LOGGER.info("Exiting application.");
         System.exit(0);
