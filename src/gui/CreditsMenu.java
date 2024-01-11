@@ -2,11 +2,10 @@
  * This class provides a graphical interface to display the credits for
  * the drone project. It creates a window with a list of contributors and their details.
  */
-package GUI;
+package gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CreditsMenu {

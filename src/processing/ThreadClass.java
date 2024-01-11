@@ -6,7 +6,7 @@ package processing;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 
-public class Backend {
+public class ThreadClass {
 
     private boolean newDronesAvailable;
     private boolean newDroneTypesAvailable;
@@ -17,7 +17,7 @@ public class Backend {
     /**
      * Constructs a new Backend instance with initial states set to indicate no new data is available.
      */
-    public Backend() {
+    public ThreadClass() {
         this.newDronesAvailable = false;
         this.newDroneTypesAvailable = false;
         this.newDroneDynamicsAvailable = false;
@@ -29,21 +29,6 @@ public class Backend {
     public void startDataUpdaterThread() {
         Thread updaterThread = new Thread(new DataUpdater());
         updaterThread.start();
-    }
-
-    /**
-     * Processes new data when available. This includes showing notifications to the user
-     * and potentially restarting the GUI to reflect new data.
-     */
-    private void processData() {
-        // Implement your logic here to process the new data
-        System.out.println("Processing new data...");
-
-        // Notify the user about new data
-        showNotification("New Data Found");
-
-        // Restart the GUI
-        restartGUI();
     }
 
     /**
@@ -77,14 +62,13 @@ public class Backend {
                     newDroneTypesAvailable = helper.droneTypesObject.checkForNewData();
                     newDroneDynamicsAvailable = helper.droneDynamicsObject.checkForNewData();
                     if (newDronesAvailable || newDroneTypesAvailable || newDroneDynamicsAvailable) {
-                        processData();
-                        helper.droneObject.saveAsFile();
-                        helper.droneTypesObject.saveAsFile();
-                        helper.droneDynamicsObject.saveAsFile();
-                    } // evtl. mit cases arbeiten
+                        showNotification("Restart GUI");
+                        restartGUI();
+                        //maybe restart main to call saveAsFile
+                    }
 
                     // Wait for 1 minute before the next check
-                    Thread.sleep(5000);
+                    Thread.sleep(60000);
                 }
             } catch (InterruptedException e) {
                 // Thread was interrupted, exit the thread
@@ -101,7 +85,7 @@ public class Backend {
      * @param args Command line arguments (not used in this application).
      */
     public static void main(String[] args) {
-        Backend backend = new Backend();
-        backend.startDataUpdaterThread();
+        ThreadClass threadClass = new ThreadClass();
+        threadClass.startDataUpdaterThread();
     }
 }

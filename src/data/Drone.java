@@ -17,9 +17,8 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone implements Printable, Expandable {
+public class Drone implements Expandable {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
-
 
     /**
      * INDIVIDUALDRONE DATA
@@ -171,50 +170,40 @@ public class Drone implements Printable, Expandable {
     }
 
     @Override
-    public void print() {
-        printDrone();
-    }
-
-    @Override
     public int getServerCount() {
-        try{
         String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
         String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
         JSONObject droneJsonObject = new JSONObject(jsonDrones);
         return droneJsonObject.getInt("count");
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error retrieving the server count", e);
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public int getLocalCount() throws IOException {
-        try{
-        BufferedReader reader = new BufferedReader(new FileReader("drones.json"));
-        StringBuilder jsonContent = new StringBuilder();
-        int limit = 20;
-        int readChars = 0;
-        int currentChar = 0;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("drones.json"));
+            StringBuilder jsonContent = new StringBuilder();
+            int limit = 20;
+            int readChars = 0;
+            int currentChar = 0;
 
-        while ((currentChar = reader.read()) != -1 && readChars < limit) {
-            jsonContent.append((char) currentChar);
-            readChars++;
-        }
+            while ((currentChar = reader.read()) != -1 && readChars < limit) {
+                jsonContent.append((char) currentChar);
+                readChars++;
+            }
 
-        localDroneCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
-        return localDroneCount;
+            localDroneCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
+            return localDroneCount;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Fehler beim Abrufen des lokalen Counts", e);
-            throw new IOException(e);
+            logger.log(Level.INFO, "No LocalCount found: Creating Drones JSON File.");
+            return 0;
         }
     }
 
     @Override
     public boolean checkForNewData() throws FileNotFoundException {
-        try (BufferedReader reader = new BufferedReader(new FileReader("drones.json"))) {
-            serverDroneCount = getServerCount();
+        try {
             localDroneCount = getLocalCount();
+            serverDroneCount = getServerCount();
 
             if (serverDroneCount == localDroneCount) {
                 return false;
@@ -251,6 +240,7 @@ public class Drone implements Printable, Expandable {
         try (PrintWriter out = new PrintWriter("drones.json")) {
             out.println(forCreatingDroneObjects);
         } catch (FileNotFoundException e) {
+            logger.severe("File not found exception while saving Drone data.");
             throw new RuntimeException(e);
         }
     }

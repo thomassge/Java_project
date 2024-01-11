@@ -22,6 +22,7 @@ public class Main {
     private static LinkedList<Drone> drones = new LinkedList<Drone>();
     private static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
 
+
     /**
      * The main method that serves as the entry point for the program.
      * It initializes data and manages the flow of execution.
@@ -32,26 +33,12 @@ public class Main {
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
 
-        try {
-            drones = jsonDerulo.getData();
-            droneTypes = jsonDerulo.getDroneTypes();
+        drones = jsonDerulo.getDrones();
+        droneTypes = jsonDerulo.getDroneTypes();
+        jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
+        jsonDerulo.addDroneDynamicsData(drones);
 
-            for (Drone object : drones) {
-                LOGGER.info("Drone type name: " + object.getDroneTypeObject().getTypename());
-                LOGGER.info("Drone control range: " + object.getDroneTypeObject().getControlRange() + "\n");
-            }
-
-            jsonDerulo.refresh(drones, droneTypes);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error fetching data from JSONDeruloHelper", e);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Unexpected error occurred", e);
-        }
-
-//        drones.getFirst().saveAsFile();
-//        droneTypes.getFirst().saveAsFile();
-//        drones.getFirst().getDroneDynamicsArrayList().getFirst().saveAsFile();
-//        can be used for refresh but refetches ALL data instead of using offset method
+        jsonDerulo.refresh(drones, droneTypes);
 
         LOGGER.info("Program execution completed.");
     }

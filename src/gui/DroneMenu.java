@@ -3,11 +3,10 @@
  * a list of drones and their details. It includes features for searching, viewing drone details,
  * and navigating to different parts of the application.
  */
-package GUI;
+package gui;
 
 import data.Drone;
 import data.DroneType;
-import processing.JSONDeruloHelper;
 
 import javax.swing.*;
 import javax.swing.table.*;

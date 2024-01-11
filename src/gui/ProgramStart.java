@@ -2,15 +2,12 @@
  * This class serves as the entry point of the application.
  * It initializes the application data and launches the main GUI components.
  */
-package GUI;
+package gui;
 
+import logging.LogMain;
 import data.*;
 import processing.*;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
 import java.util.*;
 import java.io.IOException;
 
@@ -51,7 +48,7 @@ public class ProgramStart {
         //Ich habe hier einen Thread hinzugefügt, der im Hintergrund (momentan) alle 5 Sekunden abfragt
         //ob es neue Daten auf dem Server gibt.
         //Falls es neue Daten gibt, wird ein Fenster erscheinen, um zu signalisieren, dass es neue Daten gibt.
-        Backend backend = new Backend();
-        backend.startDataUpdaterThread();
+        ThreadClass threadClass = new ThreadClass();
+        threadClass.startDataUpdaterThread();
     }
 }

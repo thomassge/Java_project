@@ -2,7 +2,7 @@
  * This class creates a GUI for displaying and interacting with a list of DroneTypes.
  * It includes features such as sorting, searching and detailed view of drone types.
  */
-package GUI;
+package gui;
 
 import data.DroneType;
 
@@ -18,7 +18,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DroneTypeMenu extends JPanel {

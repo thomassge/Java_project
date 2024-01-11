@@ -119,7 +119,7 @@ public class JSONDeruloHelper {
      * @return A LinkedList of DroneType objects.
      */
     public LinkedList<DroneType> getDroneTypes() {
-        //droneTypesObject.saveAsFile();
+        droneTypesObject.saveAsFile();
 
         String myJson;
         try {
@@ -239,7 +239,7 @@ public class JSONDeruloHelper {
      * @param jsonString The JSON string containing drone data.
      * @param drones The list where Drone objects will be added.
      */
-    public void individualDroneJsonToObject(String jsonString, LinkedList<Drone> drones) {
+    private void individualDroneJsonToObject(String jsonString, LinkedList<Drone> drones) {
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
@@ -257,15 +257,13 @@ public class JSONDeruloHelper {
         numberOfDrones = numberOfDrones + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
     }
 
-    //Creates DroneType Objects off the JSON, which is provided in the Parameter
-
     /**
      * Converts drone type data from JSON to DroneType objects.
      *
      * @param jsonString The JSON string containing drone type data.
      * @param droneTypes The list where DroneType objects will be added.
      */
-    public void droneTypeJsonToObject(String jsonString, LinkedList<DroneType> droneTypes) {
+    private void droneTypeJsonToObject(String jsonString, LinkedList<DroneType> droneTypes) {
 
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
@@ -308,8 +306,6 @@ public class JSONDeruloHelper {
         }
     }
 
-    //Refresh database to re-fetch data
-
     /**
      * Refreshes the data by re-fetching from the webserver and updating the lists.
      *
@@ -319,7 +315,7 @@ public class JSONDeruloHelper {
      */
     public void refresh(LinkedList<Drone> drones, LinkedList<DroneType> droneTypes) throws IOException {
     try {
-        if (drones.get(0).getServerCount() > getNumberOfDrones()) {
+        if (droneObject.getServerCount() > getNumberOfDrones()) {
             String modifiedDroneURL = DRONES_URL + "?offset=" + getNumberOfDrones();
             String forCreatingDroneObjects = jsonCreator(modifiedDroneURL);
             individualDroneJsonToObject(forCreatingDroneObjects, drones);
@@ -328,7 +324,7 @@ public class JSONDeruloHelper {
             logger.log(Level.INFO,"No new Drone Information in the database");
         }
 
-        if (droneTypes.get(0).getServerCount() > getNumberOfDroneTypes()) {
+        if (droneTypesObject.getServerCount() > getNumberOfDroneTypes()) {
             String modifiedDroneTypeURL = DRONETYPES_URL + "?offset=" + getNumberOfDroneTypes();
             String forCreatingDroneTypeObjects = jsonCreator(modifiedDroneTypeURL);
             droneTypeJsonToObject(forCreatingDroneTypeObjects, droneTypes);
@@ -346,7 +342,6 @@ public class JSONDeruloHelper {
             String forCreatingDroneDynamics = jsonCreator(modifiedDroneDynamicsURL);
             refreshDroneDynamics(drones, modifiedDroneDynamicsURL);
             logger.log(Level.INFO,"New DroneDynamics added");
-
         } else {
             logger.log(Level.INFO,"No new DroneDynamic Information in the database");
         }
@@ -399,37 +394,4 @@ public class JSONDeruloHelper {
         }
         numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
     }
-
-    //Create a file off our Objects to "save current database state" and reload it the next time the application launches
-    /*public static String fileCreatorOffObjects(LinkedList<Drone> drones) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        String json1 = mapper.writeValueAsString(drones.get(0).droneDynamicsArrayList);
-
-        try (PrintWriter out = new PrintWriter("test.json")) {
-            logger.log(Level.INFO,"done");
-            out.println(json1);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return json1;
-    }*/
-
-    //Saves DroneDynamics JSON locally to reduce application launch speed from the second time we run the program
-    /*public static void saveDroneDynamicsDataInFile() throws FileNotFoundException {
-        int limit = DroneDynamics.getCount();
-
-        if(!(helper.droneDynamicsObject.checkForNewData(limit))) {
-            logger.log(Level.INFO,"No New DroneDynamics Data to fetch from");
-            return;
-        }
-
-        logger.log(Level.INFO,"DroneDynamics Count: " + limit);
-        String forCreatingDroneObjects = jsonCreator(DRONEDYNAMICS_URL + "?limit=" + limit);
-
-        logger.log(Level.INFO,"Saving DroneDynamic Data from Webserver in file ...");
-
-            try (PrintWriter out = new PrintWriter("dronedynamics.json")) {
-                out.println(forCreatingDroneObjects);
-            }
-    }*/
 }

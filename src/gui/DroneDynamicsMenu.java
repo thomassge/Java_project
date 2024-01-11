@@ -3,7 +3,7 @@
  * the dynamics of drones. It is responsible for creating and managing the GUI elements
  * that present drone dynamics data to the user.
  */
-package GUI;
+package gui;
 
 import data.Drone;
 import data.DroneDynamics;

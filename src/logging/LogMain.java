@@ -3,7 +3,7 @@
  * It sets up a logger with a console handler and incudes utility methods for formatting
  * and logging messages and exceptions.
  */
-package GUI;
+package logging;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
