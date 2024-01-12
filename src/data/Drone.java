@@ -3,11 +3,13 @@
  */
 package data;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Level;
@@ -17,7 +19,88 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone implements Expandable {
+public class Drone extends AbstractDrone implements Expandable {
+
+    private static final String DRONES_URL = "https://dronesim.facets-labs.com/api/drones/";
+    private static final String filename = "drones.json";
+
+    /**
+     * Converts individual drone data from JSON to Drone objects.
+     *
+     * @param jsonString The JSON string containing drone data.
+     * @param drones The list where Drone objects will be added.
+     */
+
+     @Override
+     protected String reader(String url) {
+         return super.reader(filename);
+     }
+
+    @Override
+    protected String jsonCreator(String url) {
+        return super.jsonCreator(DRONES_URL);
+    }
+
+    protected ArrayList<Drone> initialise(String jsonString) {
+        ArrayList<Drone> list = new ArrayList<>();
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            list.add(new Drone(
+                    o.getString("carriage_type"),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
+        memoryObjectCount = memoryObjectCount + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+        return list;
+    }
+
+    public ArrayList<Drone> getDrones() {
+        return initialise(jsonCreator(DRONES_URL));
+    }
+
+    public Drone(ArrayList <Drone> drones) {
+         drones = new ArrayList<>();
+        JSONObject wholeHtml = new JSONObject(reader(filename));
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            drones.add(new Drone(
+                    o.getString("carriage_type"),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
+        memoryObjectCount = memoryObjectCount + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+    }
+
+    public void getList(ArrayList <Drone> drones) {
+        drones = new ArrayList<>();
+        JSONObject wholeHtml = new JSONObject(reader(filename));
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            drones.add(new Drone(
+                    o.getString("carriage_type"),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
+        memoryObjectCount = memoryObjectCount + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+    }
+
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
 
     /**
@@ -50,6 +133,8 @@ public class Drone implements Expandable {
      * The number of entries of drones on the webserver.
      */
     private static int serverDroneCount;
+
+
 
     /**
      * Default constructor for the Drone class.

@@ -4,14 +4,79 @@
  */
 package data;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneType implements Expandable {
+public class DroneType extends AbstractDrone implements Expandable {
+
+    private static final String DRONETYPES_URL = "https://dronesim.facets-labs.com/api/dronetypes/";
+    private static final String filename = "dronetypes.json";
+
+    @Override
+    protected String reader(String url) {
+        return super.reader(filename);
+    }
+
+    @Override
+    protected String jsonCreator(String url) {
+        return super.jsonCreator(DRONETYPES_URL);
+    }
+
+    protected ArrayList<DroneType> initialise(String jsonString) {
+        ArrayList<DroneType> list = new ArrayList<>();
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            list.add(new DroneType(
+                    o.getInt("id"),
+                    o.getString("manufacturer"),
+                    o.getString("typename"),
+                    o.getInt("weight"),
+                    o.getInt("max_speed"),
+                    o.getInt("battery_capacity"),
+                    o.getInt("control_range"),
+                    o.getInt("max_carriage")
+            ));
+        }
+        memoryObjectCount = memoryObjectCount + jsonArray.length(); // update numberOfDroneTypes if refresh() created new Drone objects
+    return list;
+    }
+
+    public ArrayList<DroneType> getDroneTypes() {
+        return initialise(jsonCreator(DRONETYPES_URL));
+    }
+
+    public DroneType(ArrayList <DroneType> droneTypes) {
+        droneTypes = new ArrayList<>();
+        JSONObject wholeHtml = new JSONObject(reader(filename));
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneTypes.add(new DroneType(
+                    o.getInt("id"),
+                    o.getString("manufacturer"),
+                    o.getString("typename"),
+                    o.getInt("weight"),
+                    o.getInt("max_speed"),
+                    o.getInt("battery_capacity"),
+                    o.getInt("control_range"),
+                    o.getInt("max_carriage")
+            ));
+        }
+        memoryObjectCount = memoryObjectCount + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+    }
+
+
+
 
     private static final Logger logger = Logger.getLogger(DroneType.class.getName());
 

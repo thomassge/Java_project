@@ -5,14 +5,104 @@
  */
 package data;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics implements Expandable {
+public class DroneDynamics extends AbstractDrone implements Expandable {
+
+    private static final String DRONEDYNAMICS_URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
+    private static final String filename = "dronedynamics.json";
+
+
+    @Override
+    protected String reader(String url) {
+        return super.reader(filename);
+    }
+
+    @Override
+    protected String jsonCreator(String url) {
+        return super.jsonCreator(DRONEDYNAMICS_URL);
+    }
+
+    protected ArrayList<DroneDynamics> initialise(String jsonString) {
+        String data;
+        try {
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("dronedynamics.json")));
+            StringBuilder responseContent = new StringBuilder();
+            while ((data = reader.readLine()) != null) {
+                responseContent.append(data);
+            }   // Erschafft den "json String"
+            reader.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+            // TODO: IMPLEMENT FETCHING FROM SERVER
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+// code insists that number of drones >= number of drones that have dronedynamics data (probably fine since every droneD entry has a drone url)
+
+//            if (drones.get(z).droneDynamicsArrayList == null) {
+//                drones.get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
+//            }
+//            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(z).getId() + "/";
+        ArrayList<DroneDynamics> list = new ArrayList<>();
+        JSONObject myJsonObject = new JSONObject(data);
+        JSONArray jsonArray = myJsonObject.getJSONArray("results");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            list.add(new DroneDynamics(
+                    o.getString("drone"),
+                    o.getString("timestamp"),
+                    o.getInt("speed"),
+                    o.getFloat("align_roll"),
+                    o.getFloat("align_pitch"),
+                    o.getFloat("align_yaw"),
+                    o.getDouble("longitude"),
+                    o.getDouble("latitude"),
+                    o.getInt("battery_status"),
+                    o.getString("last_seen"),
+                    o.getString("status")
+            ));
+        }
+        memoryObjectCount = memoryObjectCount + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
+        return list;
+    }
+
+    public ArrayList<DroneDynamics> getDroneDynamics() {
+        return initialise(jsonCreator(DRONEDYNAMICS_URL));
+    }
+
+    public DroneDynamics(ArrayList <DroneDynamics> droneDynamics) {
+        droneDynamics = new ArrayList<>();
+        JSONObject wholeHtml = new JSONObject(reader(filename));
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneDynamics.add(new DroneDynamics(
+                    o.getString("drone"),
+                    o.getString("timestamp"),
+                    o.getInt("speed"),
+                    o.getFloat("align_roll"),
+                    o.getFloat("align_pitch"),
+                    o.getFloat("align_yaw"),
+                    o.getDouble("longitude"),
+                    o.getDouble("latitude"),
+                    o.getInt("battery_status"),
+                    o.getString("last_seen"),
+                    o.getString("status")
+            ));
+        }
+        memoryObjectCount = memoryObjectCount + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+    }
 
     private static final Logger logger = Logger.getLogger(DroneDynamics.class.getName());
 
@@ -124,6 +214,7 @@ public class DroneDynamics implements Expandable {
         logger.info("Latitude: " + this.getLatitude());
         logger.info("Battery Status: " + this.getBatteryStatus());
         logger.info("Last Seen: " + this.getLastSeen());
+        System.out.println("test");
     }
 
     /**

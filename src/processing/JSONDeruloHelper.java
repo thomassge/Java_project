@@ -88,9 +88,7 @@ public class JSONDeruloHelper {
         return drones;
     }
 
-
     //Creating Drone Objects with Data from "Drones" Database
-
     /**
      * Fetches drone data from a JSON file and converts it into Drone objects.
      *
