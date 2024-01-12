@@ -2,7 +2,7 @@
  * This class serves as the entry point of the application.
  * It initializes the application data and launches the main GUI components.
  */
-package gui;
+package GUI;
 
 import logging.LogMain;
 import data.*;

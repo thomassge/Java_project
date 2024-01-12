@@ -2,7 +2,7 @@
  * This class creates a GUI for displaying and interacting with a list of DroneTypes.
  * It includes features such as sorting, searching and detailed view of drone types.
  */
-package gui;
+package GUI;
 
 import data.DroneType;
 

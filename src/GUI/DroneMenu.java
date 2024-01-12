@@ -3,7 +3,7 @@
  * a list of drones and their details. It includes features for searching, viewing drone details,
  * and navigating to different parts of the application.
  */
-package gui;
+package GUI;
 
 import data.Drone;
 import data.DroneType;
