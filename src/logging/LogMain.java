@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class LogMain {
 
-    private static Logger logger;
+    public final static Logger logger;
 
     static {
         logger = Logger.getLogger("LogUtil");

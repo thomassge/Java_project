@@ -5,6 +5,7 @@ package data;
 
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
+import processing.Streamable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,8 +18,9 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone implements Expandable {
+public class Drone implements Streamable, Expandable {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
+    String filename = "drones.json";
 
     /**
      * INDIVIDUALDRONE DATA

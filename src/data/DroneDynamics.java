@@ -7,12 +7,13 @@ package data;
 
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
+import processing.Streamable;
 
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics implements Expandable {
+public class DroneDynamics implements Streamable, Expandable {
 
     private static final Logger logger = Logger.getLogger(DroneDynamics.class.getName());
 

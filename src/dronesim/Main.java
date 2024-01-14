@@ -22,7 +22,6 @@ public class Main {
     private static LinkedList<Drone> drones = new LinkedList<Drone>();
     private static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
 
-
     /**
      * The main method that serves as the entry point for the program.
      * It initializes data and manages the flow of execution.
@@ -38,7 +37,7 @@ public class Main {
         jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
         jsonDerulo.addDroneDynamicsData(drones);
 
-        jsonDerulo.refresh(drones, droneTypes);
+        refresh(drones, droneTypes);
 
         LOGGER.info("Program execution completed.");
     }
