@@ -4,14 +4,19 @@
  */
 package data;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
+import processing.Streamable;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneType implements Expandable {
+public class DroneType extends Objects implements Expandable, Streamable {
 
     private static final Logger logger = Logger.getLogger(DroneType.class.getName());
 
@@ -211,5 +216,46 @@ public class DroneType implements Expandable {
             logger.severe("File not found exception while saving DroneType data.");
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public ArrayList<DroneType> initialise(String jsonString) {
+        ArrayList<DroneType> list = new ArrayList<DroneType>();
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            list.add(new DroneType(
+                    o.getInt("id"),
+                    o.getString("manufacturer"),
+                    o.getString("typename"),
+                    o.getInt("weight"),
+                    o.getInt("max_speed"),
+                    o.getInt("battery_capacity"),
+                    o.getInt("control_range"),
+                    o.getInt("max_carriage")
+            ));
+        }
+        this.memoryObjectCount = this.memoryObjectCount + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+        return list;
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    /**
+     * Fetches drone type data and converts it into DroneType objects.
+     *
+     * @return A LinkedList of DroneType objects.
+     */
+    public ArrayList<DroneType> getDroneTypes() {
+        this.saveAsFile();
+
+        String myJson = reader("dronetypes.json");
+
+        return initialise(myJson);
     }
 }

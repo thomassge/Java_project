@@ -3,11 +3,15 @@
  */
 package data;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
+import processing.Streamable;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Level;
@@ -17,7 +21,7 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone implements Expandable {
+public class Drone extends Objects implements Expandable, Streamable {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
 
     /**
@@ -30,6 +34,7 @@ public class Drone implements Expandable {
     private int carriageWeight;
     private String carriageType;
     private String created;
+    public ArrayList<Drone> dronesArrayList;
 
     /**
      * Saves the dronetype information of the drone that this object holds.
@@ -243,5 +248,45 @@ public class Drone implements Expandable {
             logger.severe("File not found exception while saving Drone data.");
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public ArrayList<Drone> initialise(String jsonString) {
+        ArrayList<Drone> list = new ArrayList<Drone>();
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            list.add(new Drone(
+                    o.getString("carriage_type"),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
+        this.memoryObjectCount = this.memoryObjectCount + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+        return list;
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    /**
+     * Fetches drone data from a JSON file and converts it into Drone objects.
+     *
+     * @return A LinkedList of Drone objects.
+     * @throws FileNotFoundException if the JSON file is not found.
+     */
+    public ArrayList<Drone> getDrones() throws FileNotFoundException {
+        this.saveAsFile(); //checks for refresh when initializing dronedata for the first time
+
+        String myJson = reader("drones.json");
+
+        return initialise(myJson);
     }
 }

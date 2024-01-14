@@ -5,14 +5,18 @@
  */
 package data;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
+import processing.Streamable;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics implements Expandable {
+public class DroneDynamics extends Objects implements Expandable, Streamable {
 
     private static final Logger logger = Logger.getLogger(DroneDynamics.class.getName());
 
@@ -221,4 +225,49 @@ public class DroneDynamics implements Expandable {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public ArrayList<DroneDynamics> initialise(String jsonString) {
+        ArrayList<DroneDynamics> list = new ArrayList<DroneDynamics>();
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            list.add(new DroneDynamics(
+                    o.getString("drone"),
+                    o.getString("timestamp"),
+                    o.getInt("speed"),
+                    o.getFloat("align_roll"),
+                    o.getFloat("align_pitch"),
+                    o.getFloat("align_yaw"),
+                    o.getDouble("longitude"),
+                    o.getDouble("latitude"),
+                    o.getInt("battery_status"),
+                    o.getString("last_seen"),
+                    o.getString("status")
+            ));
+        }
+        this.memoryObjectCount = this.memoryObjectCount + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+    return list;
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    /**
+     * Fetches drone type data and converts it into DroneType objects.
+     *
+     * @return A LinkedList of DroneType objects.
+     */
+    public ArrayList<DroneDynamics> getDroneDynamics() {
+        this.saveAsFile();
+
+        String myJson = reader("dronedynamics.json");
+
+        return initialise(myJson);
+    }
+
 }

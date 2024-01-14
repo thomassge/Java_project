@@ -8,6 +8,7 @@ import data.*;
 import processing.JSONDeruloHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -19,8 +20,13 @@ public class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     private static JSONDeruloHelper jsonDerulo = new JSONDeruloHelper();
-    private static LinkedList<Drone> drones = new LinkedList<Drone>();
-    private static LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
+    private static ArrayList<Drone> drones = new ArrayList<Drone>();
+    private static ArrayList<DroneType> droneTypes = new ArrayList<DroneType>();
+    private static ArrayList<DroneDynamics> droneDynamics = new ArrayList<DroneDynamics>();
+
+    private static Drone drone = new Drone();
+    private static DroneType droneType = new DroneType();
+    private static DroneDynamics droneDynamic = new DroneDynamics();
 
 
     /**
@@ -33,12 +39,17 @@ public class Main {
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
 
-        drones = jsonDerulo.getDrones();
-        droneTypes = jsonDerulo.getDroneTypes();
-        jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
-        jsonDerulo.addDroneDynamicsData(drones);
+//        drones = jsonDerulo.getDrones();
+//        droneTypes = jsonDerulo.getDroneTypes();
+//        jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
+//        jsonDerulo.addDroneDynamicsData(drones);
+//
+//        jsonDerulo.refresh(drones, droneTypes);
 
-        jsonDerulo.refresh(drones, droneTypes);
+        drones = drone.getDrones();
+        droneTypes = droneType.getDroneTypes();
+        droneDynamics = droneDynamic.getDroneDynamics();
+
 
         LOGGER.info("Program execution completed.");
     }

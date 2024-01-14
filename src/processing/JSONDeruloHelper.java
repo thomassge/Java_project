@@ -63,125 +63,6 @@ public class JSONDeruloHelper {
     }
 
     /**
-     * Fetches and processes drone data.
-     * It links drone types to drones and adds dynamics data to each drone.
-     *
-     * @return A LinkedList of Drone objects with complete data.
-     * @throws IOException if there is an error in fetching or processing the data.
-     */
-    public LinkedList<Drone> getData() throws IOException {
-        logger.log(Level.INFO, "Data is pulled...");
-
-        //Creating Drone objects and filling them with data
-        LinkedList<Drone> drones = getDrones();
-
-        //Creating DroneType objects and link them our Drone objects
-        LinkedList <DroneType> droneTypes = getDroneTypes();
-        logger.log(Level.INFO, "Data successfully retrieved. Data is linked...");
-        droneTypeToDroneLinker(droneTypes, drones);
-
-        //Add drone dynamics objects to our Drone objects
-        addDroneDynamicsData(drones);
-
-        logger.log(Level.INFO, "Data link completed.");
-
-        return drones;
-    }
-
-
-    //Creating Drone Objects with Data from "Drones" Database
-
-    /**
-     * Fetches drone data from a JSON file and converts it into Drone objects.
-     *
-     * @return A LinkedList of Drone objects.
-     * @throws FileNotFoundException if the JSON file is not found.
-     */
-    public LinkedList<Drone> getDrones() throws FileNotFoundException {
-        droneObject.saveAsFile(); //checks for refresh when initializing dronedata for the first time
-
-        String myJson;
-        try {
-            myJson = new Scanner(new File("drones.json")).useDelimiter("\\Z").next();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        LinkedList<Drone> drones = new LinkedList<Drone>();
-        individualDroneJsonToObject(myJson, drones);
-
-        return drones;
-    }
-
-    /**
-     * Fetches drone type data and converts it into DroneType objects.
-     *
-     * @return A LinkedList of DroneType objects.
-     */
-    public LinkedList<DroneType> getDroneTypes() {
-        droneTypesObject.saveAsFile();
-
-        String myJson;
-        try {
-            myJson = new Scanner(new File("dronetypes.json")).useDelimiter("\\Z").next();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
-        droneTypeJsonToObject(myJson, droneTypes);
-
-        return droneTypes;
-    }
-
-    /**
-     * Adds drone dynamics data to the provided list of drones.
-     *
-     * @param drone The list of drones to which the dynamics data will be added.
-     * @throws IOException if there is an error in fetching or processing the data.
-     */
-    public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException { //TODO: evtl. private
-        droneDynamicsObject.saveAsFile();
-
-        String myJson;
-        myJson = new Scanner(new File("dronedynamics.json")).useDelimiter("\\Z").next();
-
-        JSONObject myJsonObject = new JSONObject(myJson);
-        JSONArray jsonArray = myJsonObject.getJSONArray("results");
-
-        // code insists that number of drones >= number of drones that have dronedynamics data (probably fine since every droneD entry has a drone url)
-        for (int z = 0; z < numberOfDrones; z++) {
-            if (drones.get(z).droneDynamicsArrayList == null) {
-                drones.get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
-            }
-            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(z).getId() + "/";
-
-            for (int j = 0; j < jsonArray.length(); j++) {
-                JSONObject o = jsonArray.getJSONObject(j);
-
-                if (o.getString("drone").equals(toCheck)) {
-                    drones.get(z).droneDynamicsArrayList.add(new DroneDynamics(
-                            o.getString("drone"),
-                            o.getString("timestamp"),
-                            o.getInt("speed"),
-                            o.getFloat("align_roll"),
-                            o.getFloat("align_pitch"),
-                            o.getFloat("align_yaw"),
-                            o.getDouble("longitude"),
-                            o.getDouble("latitude"),
-                            o.getInt("battery_status"),
-                            o.getString("last_seen"),
-                            o.getString("status")
-                    ));
-                }
-            }
-        }
-        numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
-    }
-
-    //Connects to the webserver and gets a JSON String according to what url is provided in the Parameter
-
-    /**
      * Creates a JSON string from the provided URL.
      *
      * @param link The URL from which to fetch the JSON data.
@@ -231,7 +112,124 @@ public class JSONDeruloHelper {
         }
     }
 
-    //Creates Drone Objects off the JSON, which is provided as parameter
+    /**
+     * Fetches drone data from a JSON file and converts it into Drone objects.
+     *
+     * @return A LinkedList of Drone objects.
+     * @throws FileNotFoundException if the JSON file is not found.
+     */
+    public LinkedList<Drone> getDrones() throws FileNotFoundException {
+        droneObject.saveAsFile(); //checks for refresh when initializing dronedata for the first time
+
+        String myJson;
+        try {
+            myJson = new Scanner(new File("drones.json")).useDelimiter("\\Z").next();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        LinkedList<Drone> drones = new LinkedList<Drone>();
+        individualDroneJsonToObject(myJson, drones);
+
+        return drones;
+    }
+
+    /**
+     * Fetches drone type data and converts it into DroneType objects.
+     *
+     * @return A LinkedList of DroneType objects.
+     */
+    public LinkedList<DroneType> getDroneTypes() {
+        droneTypesObject.saveAsFile();
+
+        String myJson;
+        try {
+            myJson = new Scanner(new File("dronetypes.json")).useDelimiter("\\Z").next();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
+        droneTypeJsonToObject(myJson, droneTypes);
+
+        return droneTypes;
+    }
+
+    public LinkedList<Drone> getDroneDynamics(LinkedList<Drone> drones) throws IOException {
+        droneDynamicsObject.saveAsFile();
+        addDroneDynamicsData(drones);
+
+        return drones;
+    }
+
+    /**
+     * Fetches and processes drone data.
+     * It links drone types to drones and adds dynamics data to each drone.
+     *
+     * @return A LinkedList of Drone objects with complete data.
+     * @throws IOException if there is an error in fetching or processing the data.
+     */
+    public LinkedList<Drone> getData() throws IOException {
+        logger.log(Level.INFO, "Data is pulled...");
+
+        //Creating Drone objects and filling them with data
+        LinkedList<Drone> drones = getDrones();
+
+        //Creating DroneType objects and link them our Drone objects
+        LinkedList <DroneType> droneTypes = getDroneTypes();
+        logger.log(Level.INFO, "Data successfully retrieved. Data is linked...");
+        droneTypeToDroneLinker(droneTypes, drones);
+
+        //Add drone dynamics objects to our Drone objects
+        addDroneDynamicsData(drones);
+
+        logger.log(Level.INFO, "Data link completed.");
+
+        return drones;
+    }
+
+    /**
+     * Adds drone dynamics data to the provided list of drones.
+     *
+     * @param drone The list of drones to which the dynamics data will be added.
+     * @throws IOException if there is an error in fetching or processing the data.
+     */
+    public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException { //TODO: evtl. private
+        String myJson;
+        myJson = new Scanner(new File("dronedynamics.json")).useDelimiter("\\Z").next();
+
+        JSONObject myJsonObject = new JSONObject(myJson);
+        JSONArray jsonArray = myJsonObject.getJSONArray("results");
+
+        // code insists that number of drones >= number of drones that have dronedynamics data (probably fine since every droneD entry has a drone url)
+        for (int z = 0; z < numberOfDrones; z++) {
+            if (drones.get(z).droneDynamicsArrayList == null) {
+                drones.get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
+            }
+            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(z).getId() + "/";
+
+            for (int j = 0; j < jsonArray.length(); j++) {
+                JSONObject o = jsonArray.getJSONObject(j);
+
+                if (o.getString("drone").equals(toCheck)) {
+                    drones.get(z).droneDynamicsArrayList.add(new DroneDynamics(
+                            o.getString("drone"),
+                            o.getString("timestamp"),
+                            o.getInt("speed"),
+                            o.getFloat("align_roll"),
+                            o.getFloat("align_pitch"),
+                            o.getFloat("align_yaw"),
+                            o.getDouble("longitude"),
+                            o.getDouble("latitude"),
+                            o.getInt("battery_status"),
+                            o.getString("last_seen"),
+                            o.getString("status")
+                    ));
+                }
+            }
+        }
+        numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
+    }
 
     /**
      * Converts individual drone data from JSON to Drone objects.
