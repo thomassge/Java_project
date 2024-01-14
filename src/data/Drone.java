@@ -6,6 +6,7 @@ package data;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.JSONDeruloHelper;
+import processing.Streamable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -19,25 +20,14 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone extends AbstractDrone implements Expandable {
+public class Drone extends AbstractDrone implements Expandable, Streamable {
 
     private static final String DRONES_URL = "https://dronesim.facets-labs.com/api/drones/";
     private static final String filename = "drones.json";
 
-    /**
-     * Converts individual drone data from JSON to Drone objects.
-     *
-     * @param jsonString The JSON string containing drone data.
-     * @param drones The list where Drone objects will be added.
-     */
-
-     @Override
-     protected String reader(String url) {
-         return super.reader(filename);
-     }
 
     @Override
-    protected String jsonCreator(String url) {
+    public String jsonCreator(String url) {
         return super.jsonCreator(DRONES_URL);
     }
 
@@ -329,4 +319,20 @@ public class Drone extends AbstractDrone implements Expandable {
             throw new RuntimeException(e);
         }
     }
+
+
+    /**
+     * STREAMABLE METHODS
+     */
+
+    @Override
+    public String reader(String url) {
+        return super.reader(filename);
+    }
+
+    @Override
+    public void writer (String data, String filename) {
+        Streamable.super.writer(data, filename);
+    }
+
 }

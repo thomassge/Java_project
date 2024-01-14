@@ -28,7 +28,7 @@ public class ProgramStart {
         drones = helper.getDrones();
         droneTypes = helper.getDroneTypes();
         helper.droneTypeToDroneLinker(droneTypes, drones);
-        helper.addDroneDynamicsData(drones);
+        helper.getDroneDynamics(drones);
 
         return drones;
     }
@@ -48,7 +48,7 @@ public class ProgramStart {
         //Ich habe hier einen Thread hinzugefügt, der im Hintergrund (momentan) alle 5 Sekunden abfragt
         //ob es neue Daten auf dem Server gibt.
         //Falls es neue Daten gibt, wird ein Fenster erscheinen, um zu signalisieren, dass es neue Daten gibt.
-        ThreadClass threadClass = new ThreadClass();
-        threadClass.startDataUpdaterThread();
+        AutoRefresher autoRefresher = new AutoRefresher();
+        autoRefresher.startDataUpdaterThread();
     }
 }

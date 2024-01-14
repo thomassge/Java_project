@@ -6,7 +6,7 @@ package processing;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 
-public class ThreadClass {
+public class AutoRefresher {
 
     private boolean newDronesAvailable;
     private boolean newDroneTypesAvailable;
@@ -17,7 +17,7 @@ public class ThreadClass {
     /**
      * Constructs a new Backend instance with initial states set to indicate no new data is available.
      */
-    public ThreadClass() {
+    public AutoRefresher() {
         this.newDronesAvailable = false;
         this.newDroneTypesAvailable = false;
         this.newDroneDynamicsAvailable = false;
@@ -85,7 +85,7 @@ public class ThreadClass {
      * @param args Command line arguments (not used in this application).
      */
     public static void main(String[] args) {
-        ThreadClass threadClass = new ThreadClass();
-        threadClass.startDataUpdaterThread();
+        AutoRefresher autoRefresher = new AutoRefresher();
+        autoRefresher.startDataUpdaterThread();
     }
 }

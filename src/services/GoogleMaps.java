@@ -39,7 +39,7 @@ public class GoogleMaps {
         drones = jsonDerulo.getDrones();
         droneTypes = jsonDerulo.getDroneTypes();
         jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
-        jsonDerulo.addDroneDynamicsData(drones);
+        jsonDerulo.getDroneDynamics(drones);
         System.out.println(drones.get(0).getDroneDynamicsArrayList().get(0).getLatitude());
 
         JFrame test = new JFrame("Google Maps");
