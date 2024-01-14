@@ -165,6 +165,7 @@ public class DroneMenu extends JPanel implements ActionListener {
              */
             @Override
             public void insertUpdate(DocumentEvent e) {
+                LOGGER.info("Character inserted.");
                 search();
             }
 
@@ -176,6 +177,7 @@ public class DroneMenu extends JPanel implements ActionListener {
              */
             @Override
             public void removeUpdate(DocumentEvent e) {
+                LOGGER.info("Character removed.");
                 search();
             }
 
@@ -188,6 +190,7 @@ public class DroneMenu extends JPanel implements ActionListener {
              */
             @Override
             public void changedUpdate(DocumentEvent e) {
+                LOGGER.info("Character changed.");
                 search();
             }
 
