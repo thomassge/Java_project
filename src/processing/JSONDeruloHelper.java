@@ -159,10 +159,10 @@ public class JSONDeruloHelper implements Streamable {
      * @throws IOException if there is an error in fetching or processing the data.
      */
     public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException { //TODO: evtl. private
-        droneDynamicsObject.saveAsFile();
+        //droneDynamicsObject.saveAsFile();
+        droneDynamicsObject.checkForNewData2();
 
-        String myJson;
-        myJson = reader(DroneDynamics.filename);
+        String myJson = reader(DroneDynamics.filename);
 
         JSONObject myJsonObject = new JSONObject(myJson);
         JSONArray jsonArray = myJsonObject.getJSONArray("results");
@@ -233,14 +233,10 @@ public class JSONDeruloHelper implements Streamable {
      * @throws FileNotFoundException if the JSON file is not found.
      */
     public LinkedList<Drone> getDrones() throws FileNotFoundException {
-        droneObject.saveAsFile(); //checks for refresh when initializing dronedata for the first time
+        //droneObject.saveAsFile(); //checks for refresh when initializing dronedata for the first time
+        droneObject.checkForNewData2();
 
-        String myJson;
-        try {
-            myJson = new Scanner(new File("drones.json")).useDelimiter("\\Z").next();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        String myJson = reader(droneObject.filename);
 
         LinkedList<Drone> drones = new LinkedList<Drone>();
         individualDroneJsonToObject(myJson, drones);
@@ -254,14 +250,10 @@ public class JSONDeruloHelper implements Streamable {
      * @return A LinkedList of DroneType objects.
      */
     public LinkedList<DroneType> getDroneTypes() {
-        droneTypesObject.saveAsFile();
+        //droneTypesObject.saveAsFile();
+        droneTypesObject.checkForNewData2();
 
-        String myJson;
-        try {
-            myJson = new Scanner(new File("dronetypes.json")).useDelimiter("\\Z").next();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        String myJson = reader(DroneType.filename);
 
         LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
         droneTypeJsonToObject(myJson, droneTypes);
@@ -300,7 +292,7 @@ public class JSONDeruloHelper implements Streamable {
      */
     public void refresh(LinkedList<Drone> drones, LinkedList<DroneType> droneTypes) throws IOException {
     try {
-        if (droneObject.getServerCount() > getNumberOfDrones()) {
+        if (droneObject.getServerCount2(Drone.getUrl()) > getNumberOfDrones()) {
             String modifiedDroneURL = Drone.getUrl() + "?offset=" + getNumberOfDrones();
             String forCreatingDroneObjects = jsonCreator(modifiedDroneURL);
             individualDroneJsonToObject(forCreatingDroneObjects, drones);
@@ -309,7 +301,7 @@ public class JSONDeruloHelper implements Streamable {
             logger.log(Level.INFO,"No new Drone Information in the database");
         }
 
-        if (droneTypesObject.getServerCount() > getNumberOfDroneTypes()) {
+        if (droneTypesObject.getServerCount2(DroneType.getUrl()) > getNumberOfDroneTypes()) {
             String modifiedDroneTypeURL = DroneType.getUrl() + "?offset=" + getNumberOfDroneTypes();
             String forCreatingDroneTypeObjects = jsonCreator(modifiedDroneTypeURL);
             droneTypeJsonToObject(forCreatingDroneTypeObjects, droneTypes);
@@ -322,7 +314,7 @@ public class JSONDeruloHelper implements Streamable {
         // this (offset)method works for new data that was appended to the tail of the database (json string),
         // but not if new data was inserted somewhere in the middle
         //problem with this method is, that if the data is being replaced like on 27.12.23 it might produce unsinn since the offset is not a valid abgrenzer yo
-        if (droneDynamicsObject.getServerCount() > getNumberOfDroneDynamics()) {
+        if (droneDynamicsObject.getServerCount2(DroneDynamics.getUrl()) > getNumberOfDroneDynamics()) {
             String modifiedDroneDynamicsURL = DroneDynamics.getUrl() + "?offset=" + getNumberOfDroneDynamics();
             String forCreatingDroneDynamics = jsonCreator(modifiedDroneDynamicsURL);
             refreshDroneDynamics(drones, modifiedDroneDynamicsURL);

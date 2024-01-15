@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone implements Expandable {
+public class Drone extends AbstractDroneOperations {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
 
     /**
@@ -44,12 +44,12 @@ public class Drone implements Expandable {
     /**
      * The number of entries of drones in the last downloaded local json file.
      */
-    private static int localDroneCount;
+    private static int localCount;
 
     /**
      * The number of entries of drones on the webserver.
      */
-    private static int serverDroneCount;
+    private static int serverCount;
 
     /**
      * The filename where we store downloaded data
@@ -184,78 +184,23 @@ public class Drone implements Expandable {
     }
 
     @Override
-    public int getServerCount() {
-        String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
-        String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
-        JSONObject droneJsonObject = new JSONObject(jsonDrones);
-        return droneJsonObject.getInt("count");
-    }
+    public void checkForNewData2() {
+        checkFile(filename);
+        localCount = getLocalCount2(filename, localCount);
+        serverCount = getServerCount2(URL);
 
-    @Override
-    public int getLocalCount() throws IOException {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("drones.json"));
-            StringBuilder jsonContent = new StringBuilder();
-            int limit = 20;
-            int readChars = 0;
-            int currentChar = 0;
-
-            while ((currentChar = reader.read()) != -1 && readChars < limit) {
-                jsonContent.append((char) currentChar);
-                readChars++;
-            }
-
-            localDroneCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
-            return localDroneCount;
-        } catch (Exception e) {
-            logger.log(Level.INFO, "No LocalCount found: Creating Drones JSON File.");
-            return 0;
+        if(serverCount == 0) {
+            logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            //TODO: Own Exception
         }
-    }
-
-    @Override
-    public boolean checkForNewData() throws FileNotFoundException {
-        try {
-            localDroneCount = getLocalCount();
-            serverDroneCount = getServerCount();
-
-            if (serverDroneCount == localDroneCount) {
-                return false;
-            } else {
-                logger.log(Level.INFO,"damn, refetching");
-                return true;
-            }
-        } catch (FileNotFoundException fnfE) {
-            logger.log(Level.SEVERE, "Error checking new data", fnfE);
-            return true; // could be used for refresh
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error checking new data", e);
-            throw new RuntimeException(e);
+        if (localCount == serverCount) {
+            logger.log(Level.INFO, "local- and serverDroneCount identical.");
         }
-    }
-
-    @Override
-    public void saveAsFile() {
-        try {
-            if (!(checkForNewData())) {
-                logger.log(Level.INFO,"No New Drone Data to fetch from");
-                return;
-            }
-        } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE, "Error saving data", e);
-            throw new RuntimeException(e);
+        else if(localCount < serverCount) {
+            saveAsFile2(URL, serverCount, filename);
         }
-
-        logger.log(Level.INFO,"New fetching started: Current server dronecount: " + serverDroneCount);
-        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(getUrl() + "?limit=" + serverDroneCount);
-
-        logger.log(Level.INFO,"Copying Drone Data from Webserver in file ...");
-
-        try (PrintWriter out = new PrintWriter("drones.json")) {
-            out.println(forCreatingDroneObjects);
-        } catch (FileNotFoundException e) {
-            logger.severe("File not found exception while saving Drone data.");
-            throw new RuntimeException(e);
+        else {
+            logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
     }
 }

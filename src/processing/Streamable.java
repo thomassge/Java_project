@@ -11,12 +11,13 @@ public interface Streamable {
             responseContent = new StringBuilder();
             while ((data = reader.readLine()) != null) {
                 responseContent.append(data);
-            }   // Erschafft den "json String"
+            }   // Erschafft den String
             reader.close();
         } catch (FileNotFoundException e) {
+            System.out.println("In reader: " + e);
             throw new RuntimeException(e);
-            // TODO: IMPLEMENT FETCHING FROM SERVER
         } catch (IOException e) {
+            System.out.println("In reader: " + e);
             throw new RuntimeException(e);
         }
         return responseContent.toString();

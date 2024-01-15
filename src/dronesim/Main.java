@@ -37,8 +37,8 @@ public class Main {
         droneTypes = jsonDerulo.getDroneTypes();
         jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
         jsonDerulo.addDroneDynamicsData(drones);
-
-        jsonDerulo.refresh(drones, droneTypes);
+        int i = 0;
+        //jsonDerulo.refresh(drones, droneTypes);
 
         LOGGER.info("Program execution completed.");
     }
