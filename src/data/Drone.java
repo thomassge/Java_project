@@ -52,6 +52,20 @@ public class Drone implements Expandable {
     private static int serverDroneCount;
 
     /**
+     * The filename where we store downloaded data
+     */
+    public final static String filename = "drones.json";
+
+    /**
+     * Drones API Endpoint
+     */
+    private static final String URL = "https://dronesim.facets-labs.com/api/drones/";
+    public static String getUrl() {
+        return URL;
+    }
+
+
+    /**
      * Default constructor for the Drone class.
      */
     public Drone() {
@@ -233,7 +247,7 @@ public class Drone implements Expandable {
         }
 
         logger.log(Level.INFO,"New fetching started: Current server dronecount: " + serverDroneCount);
-        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDronesUrl() + "?limit=" + serverDroneCount);
+        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(getUrl() + "?limit=" + serverDroneCount);
 
         logger.log(Level.INFO,"Copying Drone Data from Webserver in file ...");
 

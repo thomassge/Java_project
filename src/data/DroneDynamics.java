@@ -32,6 +32,21 @@ public class DroneDynamics implements Expandable {
     private static int serverDroneDynamicsCount;
 
     /**
+     * The filename where we store downloaded data
+     */
+    public final static String filename = "dronedynamics.json";
+
+    /**
+     * Dronedynamics API Endpoint
+     */
+    private static final String URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
+    public static String getUrl() {
+        return URL;
+    }
+
+
+
+    /**
      * Default constructor for creating an instance of DroneDynamics.
      */
     public DroneDynamics() {
@@ -210,7 +225,7 @@ public class DroneDynamics implements Expandable {
         }
 
         logger.info("DroneDynamics Count: " + serverDroneDynamicsCount);
-        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneDynamicsUrl() + "?limit=" + serverDroneDynamicsCount);
+        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(getUrl() + "?limit=" + serverDroneDynamicsCount);
 
         logger.info("Saving DroneDynamic Data from Webserver in file ...");
 
