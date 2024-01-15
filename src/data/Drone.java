@@ -56,6 +56,8 @@ public class Drone extends Objects implements Expandable, Streamable {
      */
     private static int serverDroneCount;
 
+    private final static String filename = "drones.json";
+
     /**
      * Default constructor for the Drone class.
      */
@@ -272,8 +274,25 @@ public class Drone extends Objects implements Expandable, Streamable {
     }
 
     @Override
-    public void update() {
+    public boolean update() {
+        if (new File(filename).isFile() == false) {
+            //create file and return
+            return true;
+        }
 
+        if (localObjectCount == serverObjectCount) {
+            return false;
+        } else if (localObjectCount < serverObjectCount) {
+
+            //update file
+            return true;
+        } else if (localObjectCount > serverObjectCount) {
+            //delete file and create new one
+            return true;
+        } else {
+            //should never happen
+            return false;
+        }
     }
 
     /**

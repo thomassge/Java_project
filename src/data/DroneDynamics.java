@@ -253,7 +253,7 @@ public class DroneDynamics extends Objects implements Expandable, Streamable {
     }
 
     @Override
-    public void update() {
+    public boolean update() {
 
     }
 

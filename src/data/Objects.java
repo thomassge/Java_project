@@ -9,6 +9,6 @@ public abstract class Objects {
     protected int memoryObjectCount;
 
     public abstract ArrayList<?> initialise(String jsonString);
-    public abstract void update();
+    public abstract boolean update();
 
 }

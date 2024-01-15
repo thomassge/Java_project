@@ -242,7 +242,7 @@ public class DroneType extends Objects implements Expandable, Streamable {
     }
 
     @Override
-    public void update() {
+    public boolean update() {
 
     }
 
