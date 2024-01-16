@@ -3,10 +3,9 @@
  */
 package data;
 
-import org.json.JSONObject;
-import processing.JSONDeruloHelper;
+import data.enums.CarriageType;
+import data.exceptions.DroneTypeIdNotExtractableException;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,8 +27,8 @@ public class Drone extends AbstractDroneOperations {
     private int id;
     private int extractedDroneTypeID;
     private int carriageWeight;
-    private String carriageType;
     private String created;
+    private CarriageType carriageType;
 
     /**
      * Saves the dronetype information of the drone that this object holds.
@@ -50,6 +49,11 @@ public class Drone extends AbstractDroneOperations {
      * The number of entries of drones on the webserver.
      */
     private static int serverCount;
+
+    /**
+     * The number of Objects in memory
+     */
+    private static int memoryCount;
 
     /**
      * The filename where we store downloaded data
@@ -82,7 +86,7 @@ public class Drone extends AbstractDroneOperations {
      * @param id               Index of the Drone on the webserver.
      * @param DroneTypePointer Link to the DroneType information of this drone.
      */
-    public Drone(String carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
+    public Drone(CarriageType carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
         logger.log(Level.INFO, "Drone Object created.");
         this.carriageType = carriageType;
         this.serialnumber = serialnumber;
@@ -110,7 +114,7 @@ public class Drone extends AbstractDroneOperations {
         return this.carriageWeight;
     }
 
-    public String getCarriageType() {
+    public CarriageType getCarriageType(){
         return this.carriageType;
     }
 
@@ -138,6 +142,10 @@ public class Drone extends AbstractDroneOperations {
         return this.droneDynamicsArrayList;
     }
 
+    public static int getMemoryCount() {
+        return memoryCount;
+    }
+
     // SETTER-Methods
 
     public void setDroneTypeObject(DroneType droneTypeObject) {
@@ -148,6 +156,18 @@ public class Drone extends AbstractDroneOperations {
         this.droneDynamicsArrayList = droneDynamicsArrayList;
     }
 
+    public static void setMemoryCount(int memoryCount) {
+        Drone.memoryCount = memoryCount;
+    }
+
+    public static CarriageType mapCarriageType(String carriageType) {
+        return switch (carriageType) {
+            case "ACT" -> CarriageType.ACT;
+            case "SEN" -> CarriageType.SEN;
+            case "NOT" -> CarriageType.NOT;
+            default -> throw new IllegalArgumentException("Invalid CarriageType value: " + carriageType);
+        };
+    }
     // PRINT-METHODEN ZUR KONTROLLE
 
     public void printDrone() {
@@ -184,10 +204,10 @@ public class Drone extends AbstractDroneOperations {
     }
 
     @Override
-    public void checkForNewData2() {
+    public void checkForNewData() {
         checkFile(filename);
-        localCount = getLocalCount2(filename, localCount);
-        serverCount = getServerCount2(URL);
+        localCount = getLocalCount(filename, localCount);
+        serverCount = getServerCount(URL);
 
         if(serverCount == 0) {
             logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
@@ -197,7 +217,7 @@ public class Drone extends AbstractDroneOperations {
             logger.log(Level.INFO, "local- and serverDroneCount identical.");
         }
         else if(localCount < serverCount) {
-            saveAsFile2(URL, serverCount, filename);
+            saveAsFile(URL, serverCount, filename);
         }
         else {
             logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");

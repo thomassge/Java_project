@@ -4,7 +4,6 @@
  */
 package processing;
 import javax.swing.*;
-import java.io.FileNotFoundException;
 
 public class ThreadClass {
 
@@ -58,9 +57,9 @@ public class ThreadClass {
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-                    helper.droneObject.checkForNewData2();
-                    helper.droneTypesObject.checkForNewData2();
-                    helper.droneDynamicsObject.checkForNewData2();
+                    helper.droneObject.checkForNewData();
+                    helper.droneTypesObject.checkForNewData();
+                    helper.droneDynamicsObject.checkForNewData();
                     if (newDronesAvailable || newDroneTypesAvailable || newDroneDynamicsAvailable) {
                         showNotification("Restart GUI");
                         restartGUI();

@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Scanner;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -33,21 +32,6 @@ public class JSONDeruloHelper implements Streamable {
     protected DroneDynamics droneDynamicsObject = new DroneDynamics();
 
     private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
-
-    //might be unnecessary since the invention of local- and serverDronecount
-    private int numberOfDrones;
-    private int numberOfDroneTypes;
-    private int numberOfDroneDynamics;
-
-    public int getNumberOfDrones() {
-        return numberOfDrones;
-    }
-    public int getNumberOfDroneTypes() {
-        return numberOfDroneTypes;
-    }
-    public int getNumberOfDroneDynamics() {
-        return numberOfDroneDynamics;
-    }
 
                                                     //METHODS
 
@@ -114,7 +98,7 @@ public class JSONDeruloHelper implements Streamable {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject o = jsonArray.getJSONObject(i);
             drones.add(new Drone(
-                    o.getString("carriage_type"),
+                    Drone.mapCarriageType(o.getString("carriage_type")),
                     o.getString("serialnumber"),
                     o.getString("created"),
                     o.getInt("carriage_weight"),
@@ -122,7 +106,7 @@ public class JSONDeruloHelper implements Streamable {
                     o.getString("dronetype")
             ));
         }
-        numberOfDrones = numberOfDrones + jsonArray.length(); // update numberOfDrones if refresh() created new Drone objects
+        Drone.setMemoryCount(Drone.getMemoryCount() + jsonArray.length());
     }
 
     /**
@@ -149,7 +133,7 @@ public class JSONDeruloHelper implements Streamable {
                     o.getInt("max_carriage")
             ));
         }
-        numberOfDroneTypes = numberOfDroneTypes + jsonArray.length(); // update numberOfDroneTypes if refresh() created new Drone objects
+        DroneType.setMemoryCount(DroneType.getMemoryCount() + jsonArray.length());
     }
 
     /**
@@ -160,7 +144,7 @@ public class JSONDeruloHelper implements Streamable {
      */
     public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException { //TODO: evtl. private
         //droneDynamicsObject.saveAsFile();
-        droneDynamicsObject.checkForNewData2();
+        droneDynamicsObject.checkForNewData();
 
         String myJson = reader(DroneDynamics.filename);
 
@@ -168,7 +152,7 @@ public class JSONDeruloHelper implements Streamable {
         JSONArray jsonArray = myJsonObject.getJSONArray("results");
 
         // code insists that number of drones >= number of drones that have dronedynamics data (probably fine since every droneD entry has a drone url)
-        for (int z = 0; z < numberOfDrones; z++) {
+        for (int z = 0; z < Drone.getMemoryCount(); z++) {
             if (drones.get(z).droneDynamicsArrayList == null) {
                 drones.get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
             }
@@ -189,12 +173,13 @@ public class JSONDeruloHelper implements Streamable {
                             o.getDouble("latitude"),
                             o.getInt("battery_status"),
                             o.getString("last_seen"),
-                            o.getString("status")
+                            DroneDynamics.mapStatus(o.getString("status"))
                     ));
                 }
             }
         }
-        numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
+        //Drone.setMemoryCount(Drone.getMemoryCount() + jsonArray.length());
+        //numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
     }
 
     /**
@@ -234,7 +219,7 @@ public class JSONDeruloHelper implements Streamable {
      */
     public LinkedList<Drone> getDrones() throws FileNotFoundException {
         //droneObject.saveAsFile(); //checks for refresh when initializing dronedata for the first time
-        droneObject.checkForNewData2();
+        droneObject.checkForNewData();
 
         String myJson = reader(droneObject.filename);
 
@@ -251,7 +236,7 @@ public class JSONDeruloHelper implements Streamable {
      */
     public LinkedList<DroneType> getDroneTypes() {
         //droneTypesObject.saveAsFile();
-        droneTypesObject.checkForNewData2();
+        droneTypesObject.checkForNewData();
 
         String myJson = reader(DroneType.filename);
 
@@ -292,8 +277,8 @@ public class JSONDeruloHelper implements Streamable {
      */
     public void refresh(LinkedList<Drone> drones, LinkedList<DroneType> droneTypes) throws IOException {
     try {
-        if (droneObject.getServerCount2(Drone.getUrl()) > getNumberOfDrones()) {
-            String modifiedDroneURL = Drone.getUrl() + "?offset=" + getNumberOfDrones();
+        if (droneObject.getServerCount(Drone.getUrl()) > Drone.getMemoryCount()) {
+            String modifiedDroneURL = Drone.getUrl() + "?offset=" + Drone.getMemoryCount();
             String forCreatingDroneObjects = jsonCreator(modifiedDroneURL);
             individualDroneJsonToObject(forCreatingDroneObjects, drones);
             logger.log(Level.INFO,"New Drones added");
@@ -301,8 +286,8 @@ public class JSONDeruloHelper implements Streamable {
             logger.log(Level.INFO,"No new Drone Information in the database");
         }
 
-        if (droneTypesObject.getServerCount2(DroneType.getUrl()) > getNumberOfDroneTypes()) {
-            String modifiedDroneTypeURL = DroneType.getUrl() + "?offset=" + getNumberOfDroneTypes();
+        if (droneTypesObject.getServerCount(DroneType.getUrl()) > DroneType.getMemoryCount()) {
+            String modifiedDroneTypeURL = DroneType.getUrl() + "?offset=" + DroneType.getMemoryCount();
             String forCreatingDroneTypeObjects = jsonCreator(modifiedDroneTypeURL);
             droneTypeJsonToObject(forCreatingDroneTypeObjects, droneTypes);
             droneTypeToDroneLinker(droneTypes, drones);
@@ -314,8 +299,8 @@ public class JSONDeruloHelper implements Streamable {
         // this (offset)method works for new data that was appended to the tail of the database (json string),
         // but not if new data was inserted somewhere in the middle
         //problem with this method is, that if the data is being replaced like on 27.12.23 it might produce unsinn since the offset is not a valid abgrenzer yo
-        if (droneDynamicsObject.getServerCount2(DroneDynamics.getUrl()) > getNumberOfDroneDynamics()) {
-            String modifiedDroneDynamicsURL = DroneDynamics.getUrl() + "?offset=" + getNumberOfDroneDynamics();
+        if (droneDynamicsObject.getServerCount(DroneDynamics.getUrl()) > DroneDynamics.getMemoryCount()) {
+            String modifiedDroneDynamicsURL = DroneDynamics.getUrl() + "?offset=" + DroneDynamics.getMemoryCount();
             String forCreatingDroneDynamics = jsonCreator(modifiedDroneDynamicsURL);
             refreshDroneDynamics(drones, modifiedDroneDynamicsURL);
             logger.log(Level.INFO,"New DroneDynamics added");
@@ -343,7 +328,7 @@ public class JSONDeruloHelper implements Streamable {
         JSONObject myJsonObject = new JSONObject(myJson);
         JSONArray jsonArray = myJsonObject.getJSONArray("results");
 
-        for (int z = 0; z < numberOfDrones; z++) { // code insists that number of drones >= number of drones that have dronedynamics
+        for (int z = 0; z < Drone.getMemoryCount(); z++) { // code insists that number of drones >= number of drones that have dronedynamics
             if (drones.get(z).droneDynamicsArrayList == null) {
                 drones.get(z).droneDynamicsArrayList = new ArrayList<DroneDynamics>();
             }
@@ -364,11 +349,12 @@ public class JSONDeruloHelper implements Streamable {
                             o.getDouble("latitude"),
                             o.getInt("battery_status"),
                             o.getString("last_seen"),
-                            o.getString("status")
+                            drones.get(z).getDroneDynamicsArrayList().get(j).mapStatus(o.getString("status"))
                     ));
                 }
             }
         }
-        numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
+        DroneDynamics.setMemoryCount(DroneDynamics.getMemoryCount() + jsonArray.length());
+        //numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
     }
 }

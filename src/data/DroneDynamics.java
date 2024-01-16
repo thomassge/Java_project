@@ -5,10 +5,6 @@
  */
 package data;
 
-import org.json.JSONObject;
-import processing.JSONDeruloHelper;
-
-import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,10 +22,15 @@ public class DroneDynamics extends AbstractDroneOperations {
     private double latitude;
     private int batteryStatus;
     private String lastSeen;
-    private String status;
+    private Status status;
 
     private static int localCount;
     private static int serverCount;
+
+    /**
+     * The number of objects in memory
+     */
+    private static int memoryCount;
 
     /**
      * The filename where we store downloaded data
@@ -67,7 +68,7 @@ public class DroneDynamics extends AbstractDroneOperations {
      * @param lastSeen           Last seen timestamp of the drone.
      * @param status             Current status of the drone.
      */
-    public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll, float alignmentPitch, float alignmentYaw, double longitude, double latitude, int batteryStatus, String lastSeen, String status) {
+    public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll, float alignmentPitch, float alignmentYaw, double longitude, double latitude, int batteryStatus, String lastSeen, Status status) {
         this.dronePointer = dronePointer;
         this.timestamp = timestamp;
         this.speed = speed;
@@ -121,8 +122,29 @@ public class DroneDynamics extends AbstractDroneOperations {
         return this.lastSeen;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return this.status;
+    }
+
+    public static int getMemoryCount() {
+        return memoryCount;
+    }
+
+    public static void setMemoryCount(int memoryCount) {
+        DroneDynamics.memoryCount = memoryCount;
+    }
+
+    public static Status mapStatus(String status) {
+        switch (status) {
+            case "ON":
+                return Status.ON;
+            case "OF":
+                return Status.OF;
+            case "IS":
+                return Status.IS;
+            default:
+                throw new IllegalArgumentException("Invalid status value: " + status);
+        }
     }
 
     /**
@@ -142,10 +164,10 @@ public class DroneDynamics extends AbstractDroneOperations {
     }
 
     @Override
-    public void checkForNewData2() {
+    public void checkForNewData() {
         checkFile(filename);
-        localCount = getLocalCount2(filename, localCount);
-        serverCount = getServerCount2(URL);
+        localCount = getLocalCount(filename, localCount);
+        serverCount = getServerCount(URL);
 
         if(serverCount == 0) {
             logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
@@ -155,7 +177,7 @@ public class DroneDynamics extends AbstractDroneOperations {
             logger.log(Level.INFO, "local- and serverDroneCount identical.");
         }
         else if(localCount < serverCount) {
-            saveAsFile2(URL, serverCount, filename);
+            saveAsFile(URL, serverCount, filename);
         }
         else {
             logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");

@@ -2,7 +2,7 @@
  * This exception is thrown when the DroneType ID cannot be extracted from a URL string.
  * It extends the standard Exception class and logs an error message using Java's logging framework.
  */
-package data;
+package data.exceptions;
 
 
 import java.util.logging.Level;

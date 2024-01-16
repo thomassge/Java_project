@@ -4,10 +4,6 @@
  */
 package data;
 
-import org.json.JSONObject;
-import processing.JSONDeruloHelper;
-
-import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +30,11 @@ public class DroneType extends AbstractDroneOperations {
      * The number of entries of drones on the webserver
      */
     private static int serverCount;
+
+    /**
+     * The number of objects in memory
+     */
+    private static int memoryCount;
 
     /**
      * The filename where we store downloaded data
@@ -116,6 +117,14 @@ public class DroneType extends AbstractDroneOperations {
         return this.maximumCarriage;
     }
 
+    public static int getMemoryCount() {
+        return memoryCount;
+    }
+
+    public static void setMemoryCount(int memoryCount) {
+        DroneType.memoryCount = memoryCount;
+    }
+
     // PRINT-methods to test without GETTER
 
     /**
@@ -133,10 +142,10 @@ public class DroneType extends AbstractDroneOperations {
     }
 
     @Override
-    public void checkForNewData2() {
+    public void checkForNewData() {
         checkFile(filename);
-        localCount = getLocalCount2(filename, localCount);
-        serverCount = getServerCount2(URL);
+        localCount = getLocalCount(filename, localCount);
+        serverCount = getServerCount(URL);
 
         if(serverCount == 0) {
             logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
@@ -146,7 +155,7 @@ public class DroneType extends AbstractDroneOperations {
             logger.log(Level.INFO, "local- and serverDroneCount identical.");
         }
         else if(localCount < serverCount) {
-            saveAsFile2(URL, serverCount, filename);
+            saveAsFile(URL, serverCount, filename);
         }
         else {
             logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");

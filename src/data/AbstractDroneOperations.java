@@ -24,7 +24,7 @@ public abstract class AbstractDroneOperations implements Streamable {
         else return false;
     }
 
-    public int getLocalCount2(String filename, int localCount) {
+    public int getLocalCount(String filename, int localCount) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             StringBuilder jsonContent = new StringBuilder();
@@ -45,17 +45,33 @@ public abstract class AbstractDroneOperations implements Streamable {
         }
     }
 
-    public int getServerCount2(String url) {
+    public int getServerCount(String url) { // static or nah?
         String jsonString = JSONDeruloHelper.jsonCreator(url + "?limit=1");
         JSONObject obj = new JSONObject(jsonString);
         return obj.getInt("count");
     }
 
-    public void saveAsFile2(String url, int limit, String filename) {
+    public void saveAsFile(String url, int limit, String filename) {
         String jsonString = JSONDeruloHelper.jsonCreator(url + "?limit=" + limit);
         logger.log(Level.INFO,"Copying Drone Data from Webserver in file ...");
         writer(jsonString, filename);
     }
 
-    public abstract void checkForNewData2();
+    public abstract void checkForNewData();
+
+    public enum Status {
+        ON("Drone is ON"),
+        OF("Drone is OFF"),
+        IS("Drone has ISSUES");
+
+        private final String description;
+
+        Status(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
 }
