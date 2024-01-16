@@ -161,4 +161,9 @@ public class DroneType extends AbstractDroneOperations {
             logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
     }
+
+    @Override
+    public void refresh() {
+
+    }
 }

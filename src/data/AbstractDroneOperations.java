@@ -45,7 +45,7 @@ public abstract class AbstractDroneOperations implements Streamable {
         }
     }
 
-    public int getServerCount(String url) { // static or nah?
+    public static int getServerCount(String url) { // static or nah?
         String jsonString = JSONDeruloHelper.jsonCreator(url + "?limit=1");
         JSONObject obj = new JSONObject(jsonString);
         return obj.getInt("count");
@@ -59,19 +59,5 @@ public abstract class AbstractDroneOperations implements Streamable {
 
     public abstract void checkForNewData();
 
-    public enum Status {
-        ON("Drone is ON"),
-        OF("Drone is OFF"),
-        IS("Drone has ISSUES");
-
-        private final String description;
-
-        Status(String description) {
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
+    public abstract void refresh();
 }

@@ -34,7 +34,6 @@ public class JSONDeruloHelper implements Streamable {
     private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
                                                     //METHODS
-
     /**
      * Creates a JSON string from the provided URL.
      *
@@ -143,7 +142,6 @@ public class JSONDeruloHelper implements Streamable {
      * @throws IOException if there is an error in fetching or processing the data.
      */
     public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException { //TODO: evtl. private
-        //droneDynamicsObject.saveAsFile();
         droneDynamicsObject.checkForNewData();
 
         String myJson = reader(DroneDynamics.filename);
@@ -208,9 +206,6 @@ public class JSONDeruloHelper implements Streamable {
         return drones;
     }
 
-
-    //Creating Drone Objects with Data from "Drones" Database
-
     /**
      * Fetches drone data from a JSON file and converts it into Drone objects.
      *
@@ -218,7 +213,6 @@ public class JSONDeruloHelper implements Streamable {
      * @throws FileNotFoundException if the JSON file is not found.
      */
     public LinkedList<Drone> getDrones() throws FileNotFoundException {
-        //droneObject.saveAsFile(); //checks for refresh when initializing dronedata for the first time
         droneObject.checkForNewData();
 
         String myJson = reader(droneObject.filename);
@@ -235,7 +229,6 @@ public class JSONDeruloHelper implements Streamable {
      * @return A LinkedList of DroneType objects.
      */
     public LinkedList<DroneType> getDroneTypes() {
-        //droneTypesObject.saveAsFile();
         droneTypesObject.checkForNewData();
 
         String myJson = reader(DroneType.filename);

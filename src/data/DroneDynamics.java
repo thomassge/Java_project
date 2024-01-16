@@ -5,6 +5,8 @@
  */
 package data;
 
+import data.enums.Status;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -182,5 +184,10 @@ public class DroneDynamics extends AbstractDroneOperations {
         else {
             logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }

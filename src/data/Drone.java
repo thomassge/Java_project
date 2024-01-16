@@ -5,6 +5,7 @@ package data;
 
 import data.enums.CarriageType;
 import data.exceptions.DroneTypeIdNotExtractableException;
+import processing.Initializing;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone extends AbstractDroneOperations {
+public class Drone extends AbstractDroneOperations implements Initializing {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
 
     /**
@@ -222,5 +223,14 @@ public class Drone extends AbstractDroneOperations {
         else {
             logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
+    }
+
+    @Override
+    public void refresh() {
+    }
+
+    @Override
+    public void initialize() {
+        
     }
 }
