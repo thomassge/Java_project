@@ -3,10 +3,9 @@
  */
 package data;
 
-import org.json.JSONObject;
-import processing.JSONDeruloHelper;
+import data.enums.CarriageType;
+import data.exceptions.DroneTypeIdNotExtractableException;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +16,7 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone implements Expandable {
+public class Drone extends AbstractDroneOperations {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
 
     /**
@@ -28,8 +27,8 @@ public class Drone implements Expandable {
     private int id;
     private int extractedDroneTypeID;
     private int carriageWeight;
-    private String carriageType;
     private String created;
+    private CarriageType carriageType;
 
     /**
      * Saves the dronetype information of the drone that this object holds.
@@ -44,12 +43,31 @@ public class Drone implements Expandable {
     /**
      * The number of entries of drones in the last downloaded local json file.
      */
-    private static int localDroneCount;
+    private static int localCount;
 
     /**
      * The number of entries of drones on the webserver.
      */
-    private static int serverDroneCount;
+    private static int serverCount;
+
+    /**
+     * The number of Objects in memory
+     */
+    private static int memoryCount;
+
+    /**
+     * The filename where we store downloaded data
+     */
+    public final static String filename = "drones.json";
+
+    /**
+     * Drones API Endpoint
+     */
+    private static final String URL = "https://dronesim.facets-labs.com/api/drones/";
+    public static String getUrl() {
+        return URL;
+    }
+
 
     /**
      * Default constructor for the Drone class.
@@ -68,7 +86,7 @@ public class Drone implements Expandable {
      * @param id               Index of the Drone on the webserver.
      * @param DroneTypePointer Link to the DroneType information of this drone.
      */
-    public Drone(String carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
+    public Drone(CarriageType carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
         logger.log(Level.INFO, "Drone Object created.");
         this.carriageType = carriageType;
         this.serialnumber = serialnumber;
@@ -96,7 +114,7 @@ public class Drone implements Expandable {
         return this.carriageWeight;
     }
 
-    public String getCarriageType() {
+    public CarriageType getCarriageType(){
         return this.carriageType;
     }
 
@@ -124,6 +142,10 @@ public class Drone implements Expandable {
         return this.droneDynamicsArrayList;
     }
 
+    public static int getMemoryCount() {
+        return memoryCount;
+    }
+
     // SETTER-Methods
 
     public void setDroneTypeObject(DroneType droneTypeObject) {
@@ -134,6 +156,18 @@ public class Drone implements Expandable {
         this.droneDynamicsArrayList = droneDynamicsArrayList;
     }
 
+    public static void setMemoryCount(int memoryCount) {
+        Drone.memoryCount = memoryCount;
+    }
+
+    public static CarriageType mapCarriageType(String carriageType) {
+        return switch (carriageType) {
+            case "ACT" -> CarriageType.ACT;
+            case "SEN" -> CarriageType.SEN;
+            case "NOT" -> CarriageType.NOT;
+            default -> throw new IllegalArgumentException("Invalid CarriageType value: " + carriageType);
+        };
+    }
     // PRINT-METHODEN ZUR KONTROLLE
 
     public void printDrone() {
@@ -170,78 +204,23 @@ public class Drone implements Expandable {
     }
 
     @Override
-    public int getServerCount() {
-        String checkDrones = "https://dronesim.facets-labs.com/api/drones/?limit=1";
-        String jsonDrones = JSONDeruloHelper.jsonCreator(checkDrones);
-        JSONObject droneJsonObject = new JSONObject(jsonDrones);
-        return droneJsonObject.getInt("count");
-    }
+    public void checkForNewData() {
+        checkFile(filename);
+        localCount = getLocalCount(filename, localCount);
+        serverCount = getServerCount(URL);
 
-    @Override
-    public int getLocalCount() throws IOException {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("drones.json"));
-            StringBuilder jsonContent = new StringBuilder();
-            int limit = 20;
-            int readChars = 0;
-            int currentChar = 0;
-
-            while ((currentChar = reader.read()) != -1 && readChars < limit) {
-                jsonContent.append((char) currentChar);
-                readChars++;
-            }
-
-            localDroneCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
-            return localDroneCount;
-        } catch (Exception e) {
-            logger.log(Level.INFO, "No LocalCount found: Creating Drones JSON File.");
-            return 0;
+        if(serverCount == 0) {
+            logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            //TODO: Own Exception
         }
-    }
-
-    @Override
-    public boolean checkForNewData() throws FileNotFoundException {
-        try {
-            localDroneCount = getLocalCount();
-            serverDroneCount = getServerCount();
-
-            if (serverDroneCount == localDroneCount) {
-                return false;
-            } else {
-                logger.log(Level.INFO,"damn, refetching");
-                return true;
-            }
-        } catch (FileNotFoundException fnfE) {
-            logger.log(Level.SEVERE, "Error checking new data", fnfE);
-            return true; // could be used for refresh
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error checking new data", e);
-            throw new RuntimeException(e);
+        if (localCount == serverCount) {
+            logger.log(Level.INFO, "local- and serverDroneCount identical.");
         }
-    }
-
-    @Override
-    public void saveAsFile() {
-        try {
-            if (!(checkForNewData())) {
-                logger.log(Level.INFO,"No New Drone Data to fetch from");
-                return;
-            }
-        } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE, "Error saving data", e);
-            throw new RuntimeException(e);
+        else if(localCount < serverCount) {
+            saveAsFile(URL, serverCount, filename);
         }
-
-        logger.log(Level.INFO,"New fetching started: Current server dronecount: " + serverDroneCount);
-        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDronesUrl() + "?limit=" + serverDroneCount);
-
-        logger.log(Level.INFO,"Copying Drone Data from Webserver in file ...");
-
-        try (PrintWriter out = new PrintWriter("drones.json")) {
-            out.println(forCreatingDroneObjects);
-        } catch (FileNotFoundException e) {
-            logger.severe("File not found exception while saving Drone data.");
-            throw new RuntimeException(e);
+        else {
+            logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
     }
 }

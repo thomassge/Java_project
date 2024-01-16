@@ -5,14 +5,10 @@
  */
 package data;
 
-import org.json.JSONObject;
-import processing.JSONDeruloHelper;
-
-import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics implements Expandable {
+public class DroneDynamics extends AbstractDroneOperations {
 
     private static final Logger logger = Logger.getLogger(DroneDynamics.class.getName());
 
@@ -26,10 +22,30 @@ public class DroneDynamics implements Expandable {
     private double latitude;
     private int batteryStatus;
     private String lastSeen;
-    private String status;
+    private Status status;
 
-    private static int localDroneDynamicsCount;
-    private static int serverDroneDynamicsCount;
+    private static int localCount;
+    private static int serverCount;
+
+    /**
+     * The number of objects in memory
+     */
+    private static int memoryCount;
+
+    /**
+     * The filename where we store downloaded data
+     */
+    public final static String filename = "dronedynamics.json";
+
+    /**
+     * Dronedynamics API Endpoint
+     */
+    private static final String URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
+    public static String getUrl() {
+        return URL;
+    }
+
+                                    //CONSTRUCTOR
 
     /**
      * Default constructor for creating an instance of DroneDynamics.
@@ -52,7 +68,7 @@ public class DroneDynamics implements Expandable {
      * @param lastSeen           Last seen timestamp of the drone.
      * @param status             Current status of the drone.
      */
-    public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll, float alignmentPitch, float alignmentYaw, double longitude, double latitude, int batteryStatus, String lastSeen, String status) {
+    public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll, float alignmentPitch, float alignmentYaw, double longitude, double latitude, int batteryStatus, String lastSeen, Status status) {
         this.dronePointer = dronePointer;
         this.timestamp = timestamp;
         this.speed = speed;
@@ -106,8 +122,29 @@ public class DroneDynamics implements Expandable {
         return this.lastSeen;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return this.status;
+    }
+
+    public static int getMemoryCount() {
+        return memoryCount;
+    }
+
+    public static void setMemoryCount(int memoryCount) {
+        DroneDynamics.memoryCount = memoryCount;
+    }
+
+    public static Status mapStatus(String status) {
+        switch (status) {
+            case "ON":
+                return Status.ON;
+            case "OF":
+                return Status.OF;
+            case "IS":
+                return Status.IS;
+            default:
+                throw new IllegalArgumentException("Invalid status value: " + status);
+        }
     }
 
     /**
@@ -126,99 +163,24 @@ public class DroneDynamics implements Expandable {
         logger.info("Last Seen: " + this.getLastSeen());
     }
 
-    /**
-     * Gets the count of drone dynamics entries from the server.
-     *
-     * @return The count of drone dynamics entries on the server.
-     */
     @Override
-    public int getServerCount() {
-        String checkDroneDynamics = "https://dronesim.facets-labs.com/api/dronedynamics/?limit=1";
-        String jsonDroneDynamics = JSONDeruloHelper.jsonCreator(checkDroneDynamics);
-        JSONObject droneDynamicsJsonObject = new JSONObject(jsonDroneDynamics);
-        return droneDynamicsJsonObject.getInt("count");
-    }
+    public void checkForNewData() {
+        checkFile(filename);
+        localCount = getLocalCount(filename, localCount);
+        serverCount = getServerCount(URL);
 
-    /**
-     * Gets the count of drone dynamic entries from the local JSON file.
-     *
-     * @return The count of drone dynamics in the local file.
-     * @throws IOException if an I/O error occurs while reading the file.
-     */
-    @Override
-    public int getLocalCount() throws IOException {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("dronedynamics.json"));
-            StringBuilder jsonContent = new StringBuilder();
-            int limit = 20;
-            int readChars = 0;
-            int currentChar = 0;
-
-            while ((currentChar = reader.read()) != -1 && readChars < limit) {
-                jsonContent.append((char) currentChar);
-                readChars++;
-            }
-
-            localDroneDynamicsCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
-            return localDroneDynamicsCount;
-        } catch (Exception e) {
-            logger.log(Level.INFO, "No LocalCount found: Creating Drones JSON File.");
-            return 0;
+        if(serverCount == 0) {
+            logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            //TODO: Own Exception
         }
-    }
-
-    /**
-     * Checks for new drone dynamics data by comparing local and server data counts.
-     *
-     * @return true if new data is available, false otherwise.
-     * @throws FileNotFoundException if the local file is not found.
-     */
-    @Override
-    public boolean checkForNewData() throws FileNotFoundException {
-        try {
-            localDroneDynamicsCount = getLocalCount();
-            serverDroneDynamicsCount = getServerCount();
-
-            if (serverDroneDynamicsCount == localDroneDynamicsCount) {
-                return false;
-            } else {
-                logger.log(Level.INFO,"damn, refetching");
-                return true;
-            }
-        } catch (FileNotFoundException fnfE) {
-            logger.severe("File not found exception while checking for DroneDynamics data.");
-            return true;
-        } catch (IOException e) {
-            logger.severe("IO exception occurred while checking for DroneDynamics data: " + e.getMessage());
-            throw new RuntimeException(e);
+        if (localCount == serverCount) {
+            logger.log(Level.INFO, "local- and serverDroneCount identical.");
         }
-    }
-
-    /**
-     * Saves the latest drone dynamics data to a local file.
-     */
-    @Override
-    public void saveAsFile() {
-        try {
-            if (!(checkForNewData())) {
-                logger.info("No New DroneDynamics Data to fetch from");
-                return;
-            }
-        } catch (FileNotFoundException e) {
-            logger.severe("File not found exception while checking for new data.");
-            throw new RuntimeException(e);
+        else if(localCount < serverCount) {
+            saveAsFile(URL, serverCount, filename);
         }
-
-        logger.info("DroneDynamics Count: " + serverDroneDynamicsCount);
-        String forCreatingDroneObjects = JSONDeruloHelper.jsonCreator(JSONDeruloHelper.getDroneDynamicsUrl() + "?limit=" + serverDroneDynamicsCount);
-
-        logger.info("Saving DroneDynamic Data from Webserver in file ...");
-
-        try (PrintWriter out = new PrintWriter("dronedynamics.json")) {
-            out.println(forCreatingDroneObjects);
-        } catch (FileNotFoundException e) {
-            logger.severe("Error while saving DroneDynamics data to file: " + e.getMessage());
-            throw new RuntimeException(e);
+        else {
+            logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
     }
 }
