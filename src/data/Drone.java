@@ -22,12 +22,12 @@ public class Drone extends AbstractDroneOperations {
     /**
      * INDIVIDUALDRONE DATA
      */
-    private String droneTypePointer;
-    private String serialnumber;
     private int id;
-    private int extractedDroneTypeID;
-    private int carriageWeight;
     private String created;
+    private int carriageWeight;
+    private String serialnumber;
+    private String droneTypePointer;
+    private int extractedDroneTypeID;
     private CarriageType carriageType;
 
     /**
@@ -41,33 +41,23 @@ public class Drone extends AbstractDroneOperations {
     public ArrayList<DroneDynamics> droneDynamicsArrayList;
 
     /**
-     * The number of entries of drones in the last downloaded local json file.
+     * The number of entries in file, on the server and in memory.
      */
     private static int localCount;
-
-    /**
-     * The number of entries of drones on the webserver.
-     */
     private static int serverCount;
-
-    /**
-     * The number of Objects in memory
-     */
     private static int memoryCount;
 
     /**
      * The filename where we store downloaded data
      */
-    public final static String filename = "drones.json";
+    private final static String filename = "drones.json";
 
     /**
      * Drones API Endpoint
      */
     private static final String URL = "https://dronesim.facets-labs.com/api/drones/";
-    public static String getUrl() {
-        return URL;
-    }
 
+                                // CONSTRUCTORS
 
     /**
      * Default constructor for the Drone class.
@@ -96,30 +86,26 @@ public class Drone extends AbstractDroneOperations {
         this.droneTypePointer = DroneTypePointer;
     }
 
-    // GETTER-Methods
-
-    public String getDroneTypePointer() {
-        return this.droneTypePointer;
-    }
-
-    public String getSerialnumber() {
-        return this.serialnumber;
-    }
+                                // GETTER-METHODS
 
     public int getId() {
         return this.id;
+    }
+
+    public String getCreated() {
+        return this.created;
     }
 
     public int getCarriageWeight() {
         return this.carriageWeight;
     }
 
-    public CarriageType getCarriageType(){
-        return this.carriageType;
+    public String getSerialnumber() {
+        return this.serialnumber;
     }
 
-    public String getCreated() {
-        return this.created;
+    public String getDroneTypePointer() {
+        return this.droneTypePointer;
     }
 
     public int getExtractedDroneTypeID() {
@@ -134,6 +120,10 @@ public class Drone extends AbstractDroneOperations {
         return Integer.parseInt(matcher.group(0));
     }
 
+    public CarriageType getCarriageType(){
+        return this.carriageType;
+    }
+
     public DroneType getDroneTypeObject() {
         return this.droneTypeObject;
     }
@@ -142,11 +132,29 @@ public class Drone extends AbstractDroneOperations {
         return this.droneDynamicsArrayList;
     }
 
+                                // STATIC GETTER-METHODS
+
+    public static int getLocalCount() {
+        return localCount;
+    }
+
+    public static int getServerCount() {
+        return serverCount;
+    }
+
     public static int getMemoryCount() {
         return memoryCount;
     }
 
-    // SETTER-Methods
+    public static String getFilename() {
+        return filename;
+    }
+
+    public static String getUrl() {
+        return URL;
+    }
+
+                                // SETTER-METHODS
 
     public void setDroneTypeObject(DroneType droneTypeObject) {
         this.droneTypeObject = droneTypeObject;
@@ -156,8 +164,8 @@ public class Drone extends AbstractDroneOperations {
         this.droneDynamicsArrayList = droneDynamicsArrayList;
     }
 
-    public static void setMemoryCount(int memoryCount) {
-        Drone.memoryCount = memoryCount;
+    public static void setMemoryCount(int newValue) {
+        memoryCount = newValue;
     }
 
     public static CarriageType mapCarriageType(String carriageType) {
@@ -168,7 +176,8 @@ public class Drone extends AbstractDroneOperations {
             default -> throw new IllegalArgumentException("Invalid CarriageType value: " + carriageType);
         };
     }
-    // PRINT-METHODEN ZUR KONTROLLE
+
+                                // OTHER METHODS
 
     public void printDrone() {
         logger.log(Level.INFO,"Drone id: " + this.id);
@@ -203,11 +212,14 @@ public class Drone extends AbstractDroneOperations {
         }
     }
 
+    /**
+     * Overwritten from AbstractDroneOperations
+     */
     @Override
     public void checkForNewData() {
         checkFile(filename);
-        localCount = getLocalCount(filename, localCount);
-        serverCount = getServerCount(URL);
+        localCount = checkLocalCount(filename);
+        serverCount = checkServerCount(URL);
 
         if(serverCount == 0) {
             logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
@@ -222,5 +234,9 @@ public class Drone extends AbstractDroneOperations {
         else {
             logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
+    }
+
+    @Override
+    public void refresh() {
     }
 }

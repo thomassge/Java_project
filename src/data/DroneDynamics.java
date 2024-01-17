@@ -5,6 +5,8 @@
  */
 package data;
 
+import data.enums.Status;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,9 +43,6 @@ public class DroneDynamics extends AbstractDroneOperations {
      * Dronedynamics API Endpoint
      */
     private static final String URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
-    public static String getUrl() {
-        return URL;
-    }
 
                                     //CONSTRUCTOR
 
@@ -130,21 +129,21 @@ public class DroneDynamics extends AbstractDroneOperations {
         return memoryCount;
     }
 
+    public static String getUrl() {
+        return URL;
+    }
+
     public static void setMemoryCount(int memoryCount) {
         DroneDynamics.memoryCount = memoryCount;
     }
 
     public static Status mapStatus(String status) {
-        switch (status) {
-            case "ON":
-                return Status.ON;
-            case "OF":
-                return Status.OF;
-            case "IS":
-                return Status.IS;
-            default:
-                throw new IllegalArgumentException("Invalid status value: " + status);
-        }
+        return switch (status) {
+            case "ON" -> Status.ON;
+            case "OF" -> Status.OF;
+            case "IS" -> Status.IS;
+            default -> throw new IllegalArgumentException("Invalid status value: " + status);
+        };
     }
 
     /**
@@ -166,8 +165,8 @@ public class DroneDynamics extends AbstractDroneOperations {
     @Override
     public void checkForNewData() {
         checkFile(filename);
-        localCount = getLocalCount(filename, localCount);
-        serverCount = getServerCount(URL);
+        localCount = checkLocalCount(filename);
+        serverCount = checkServerCount(URL);
 
         if(serverCount == 0) {
             logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
@@ -182,5 +181,10 @@ public class DroneDynamics extends AbstractDroneOperations {
         else {
             logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }
