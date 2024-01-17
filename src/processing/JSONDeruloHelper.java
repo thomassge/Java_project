@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.lang.*;
 import java.util.logging.Level;
@@ -26,11 +24,12 @@ public class JSONDeruloHelper implements Streamable {
     private static final Logger logger = Logger.getLogger(JSONDeruloHelper.class.getName());
 
 
-    //public static JSONDeruloHelper helper = new JSONDeruloHelper();
     protected Drone droneObject = new Drone();
     protected DroneType droneTypesObject = new DroneType();
     protected DroneDynamics droneDynamicsObject = new DroneDynamics();
 
+
+    // TODO: How to hide this token?
     private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
                                                     //METHODS
@@ -48,7 +47,6 @@ public class JSONDeruloHelper implements Streamable {
             // Step 3: Open a connection
             HttpURLConnection connection; // Erstellen einer leeren Variable vom Typen HttpUrlConnection;
             connection = (HttpURLConnection) url.openConnection(); // Der Rückgabewert von openConnection ist eig. 'URLConnection', deshalb das Typecasting, da wir speziell mit HTTP arbeiten und der Rückgabewert von openConnection dementsprechend zu HttpUrlConnection wird.
-            //InputStream inputStream = connection.inputStream()?
 
             // Step 4: Set the request method to GET and setRequestProperty -> Übergabeparameter müssen exakt diese sein für Zugriff auf den WebServer
             connection.setRequestProperty("Authorization", TOKEN);
@@ -72,12 +70,6 @@ public class JSONDeruloHelper implements Streamable {
 
             return responseContent.toString();
 
-        } catch (MalformedURLException e) {
-            logger.log(Level.SEVERE, "Error retrieving JSON data from " + link, e);
-            throw new RuntimeException(e);
-        } catch (ProtocolException e) {
-            logger.log(Level.SEVERE, "Error retrieving JSON data from " + link, e);
-            throw new RuntimeException(e);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error retrieving JSON data from " + link, e);
             throw new RuntimeException(e);
@@ -138,10 +130,10 @@ public class JSONDeruloHelper implements Streamable {
     /**
      * Adds drone dynamics data to the provided list of drones.
      *
-     * @param drone The list of drones to which the dynamics data will be added.
+     * @param drones The list of drones to which the dynamics data will be added.
      * @throws IOException if there is an error in fetching or processing the data.
      */
-    public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException { //TODO: evtl. private
+    public void addDroneDynamicsData(LinkedList<Drone> drones) throws IOException {
         droneDynamicsObject.checkForNewData();
 
         String myJson = reader(DroneDynamics.filename);
@@ -180,6 +172,8 @@ public class JSONDeruloHelper implements Streamable {
         //numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
     }
 
+    //factory method
+
     /**
      * Fetches and processes drone data.
      * It links drone types to drones and adds dynamics data to each drone.
@@ -210,12 +204,11 @@ public class JSONDeruloHelper implements Streamable {
      * Fetches drone data from a JSON file and converts it into Drone objects.
      *
      * @return A LinkedList of Drone objects.
-     * @throws FileNotFoundException if the JSON file is not found.
      */
-    public LinkedList<Drone> getDrones() throws FileNotFoundException {
+    public LinkedList<Drone> getDrones() {
         droneObject.checkForNewData();
 
-        String myJson = reader(droneObject.filename);
+        String myJson = reader(Drone.getFilename());
 
         LinkedList<Drone> drones = new LinkedList<Drone>();
         individualDroneJsonToObject(myJson, drones);
@@ -270,7 +263,7 @@ public class JSONDeruloHelper implements Streamable {
      */
     public void refresh(LinkedList<Drone> drones, LinkedList<DroneType> droneTypes) throws IOException {
     try {
-        if (droneObject.getServerCount(Drone.getUrl()) > Drone.getMemoryCount()) {
+        if (Drone.checkServerCount(Drone.getUrl()) > Drone.getMemoryCount()) {
             String modifiedDroneURL = Drone.getUrl() + "?offset=" + Drone.getMemoryCount();
             String forCreatingDroneObjects = jsonCreator(modifiedDroneURL);
             individualDroneJsonToObject(forCreatingDroneObjects, drones);
@@ -279,7 +272,7 @@ public class JSONDeruloHelper implements Streamable {
             logger.log(Level.INFO,"No new Drone Information in the database");
         }
 
-        if (droneTypesObject.getServerCount(DroneType.getUrl()) > DroneType.getMemoryCount()) {
+        if (DroneType.checkServerCount(DroneType.getUrl()) > DroneType.getMemoryCount()) {
             String modifiedDroneTypeURL = DroneType.getUrl() + "?offset=" + DroneType.getMemoryCount();
             String forCreatingDroneTypeObjects = jsonCreator(modifiedDroneTypeURL);
             droneTypeJsonToObject(forCreatingDroneTypeObjects, droneTypes);
@@ -292,7 +285,7 @@ public class JSONDeruloHelper implements Streamable {
         // this (offset)method works for new data that was appended to the tail of the database (json string),
         // but not if new data was inserted somewhere in the middle
         //problem with this method is, that if the data is being replaced like on 27.12.23 it might produce unsinn since the offset is not a valid abgrenzer yo
-        if (droneDynamicsObject.getServerCount(DroneDynamics.getUrl()) > DroneDynamics.getMemoryCount()) {
+        if (DroneDynamics.checkServerCount(DroneDynamics.getUrl()) > DroneDynamics.getMemoryCount()) {
             String modifiedDroneDynamicsURL = DroneDynamics.getUrl() + "?offset=" + DroneDynamics.getMemoryCount();
             String forCreatingDroneDynamics = jsonCreator(modifiedDroneDynamicsURL);
             refreshDroneDynamics(drones, modifiedDroneDynamicsURL);
@@ -342,7 +335,7 @@ public class JSONDeruloHelper implements Streamable {
                             o.getDouble("latitude"),
                             o.getInt("battery_status"),
                             o.getString("last_seen"),
-                            drones.get(z).getDroneDynamicsArrayList().get(j).mapStatus(o.getString("status"))
+                            DroneDynamics.mapStatus(o.getString("status"))
                     ));
                 }
             }

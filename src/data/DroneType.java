@@ -144,8 +144,8 @@ public class DroneType extends AbstractDroneOperations {
     @Override
     public void checkForNewData() {
         checkFile(filename);
-        localCount = getLocalCount(filename, localCount);
-        serverCount = getServerCount(URL);
+        localCount = checkLocalCount(filename);
+        serverCount = checkServerCount(URL);
 
         if(serverCount == 0) {
             logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");

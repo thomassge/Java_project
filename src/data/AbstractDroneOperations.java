@@ -24,7 +24,13 @@ public abstract class AbstractDroneOperations implements Streamable {
         else return false;
     }
 
-    public int getLocalCount(String filename, int localCount) {
+    public void saveAsFile(String url, int limit, String filename) {
+        String jsonString = JSONDeruloHelper.jsonCreator(url + "?limit=" + limit);
+        logger.log(Level.INFO,"Copying Drone Data from Webserver in file ...");
+        writer(jsonString, filename);
+    }
+
+    public int checkLocalCount(String filename) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             StringBuilder jsonContent = new StringBuilder();
@@ -36,26 +42,22 @@ public abstract class AbstractDroneOperations implements Streamable {
                 jsonContent.append((char) currentChar);
                 readChars++;
             }
+            reader.close();
 
-            localCount = Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
-            return localCount;
+            return Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
         } catch (Exception e) {
             logger.log(Level.INFO, "LocalCount Exception: Count is 0.");
             return 0;
         }
     }
 
-    public static int getServerCount(String url) { // static or nah?
+    public static int checkServerCount(String url) { // static or nah?
         String jsonString = JSONDeruloHelper.jsonCreator(url + "?limit=1");
         JSONObject obj = new JSONObject(jsonString);
         return obj.getInt("count");
     }
 
-    public void saveAsFile(String url, int limit, String filename) {
-        String jsonString = JSONDeruloHelper.jsonCreator(url + "?limit=" + limit);
-        logger.log(Level.INFO,"Copying Drone Data from Webserver in file ...");
-        writer(jsonString, filename);
-    }
+
 
     public abstract void checkForNewData();
 
