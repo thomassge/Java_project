@@ -24,7 +24,7 @@ public class ProgramStart {
      * @return A LinkedList of Drone objects with complete data.
      * @throws IOException if there is an error in fetching or processing the data.
      */
-    public static LinkedList<Drone> getData() throws IOException {
+    public static LinkedList<Drone> getMyData() throws IOException {
         drones = helper.getDrones();
         droneTypes = helper.getDroneTypes();
         helper.droneTypeToDroneLinker(droneTypes, drones);
@@ -41,7 +41,7 @@ public class ProgramStart {
      */
     public static void main(String[] args) throws IOException {
         LogMain lm = new LogMain();
-        drones = getData();
+        drones = getMyData();
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(drones);}});
 

@@ -173,7 +173,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
                                 selectedDrone.getSerialnumber(),
                                 selectedDrone.getDroneTypeObject().getTypename(),
                                 Double.toString(selectedDrone.getCarriageWeight()),
-                                selectedDrone.getCarriageType()
+                String.valueOf(selectedDrone.getCarriageType())
                                 };
 
         StringBuilder text = new StringBuilder();

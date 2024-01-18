@@ -4,7 +4,6 @@
  */
 package processing;
 import javax.swing.*;
-import java.io.FileNotFoundException;
 
 public class ThreadClass {
 
@@ -58,9 +57,9 @@ public class ThreadClass {
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-                    newDronesAvailable = helper.droneObject.checkForNewData();
-                    newDroneTypesAvailable = helper.droneTypesObject.checkForNewData();
-                    newDroneDynamicsAvailable = helper.droneDynamicsObject.checkForNewData();
+                    helper.droneObject.checkForNewData();
+                    helper.droneTypesObject.checkForNewData();
+                    helper.droneDynamicsObject.checkForNewData();
                     if (newDronesAvailable || newDroneTypesAvailable || newDroneDynamicsAvailable) {
                         showNotification("Restart GUI");
                         restartGUI();
@@ -68,13 +67,11 @@ public class ThreadClass {
                     }
 
                     // Wait for 1 minute before the next check
-                    Thread.sleep(60000);
+                    Thread.sleep(5000);
                 }
             } catch (InterruptedException e) {
                 // Thread was interrupted, exit the thread
                 System.out.println("DataUpdater Thread was interrupted.");
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
             }
         }
     }
