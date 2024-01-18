@@ -124,7 +124,7 @@ public class DroneMenu extends JPanel implements ActionListener {
             }
         });
 
-        //??? ACHTUNG WER KANN SAGEN WAS DAS MACHT?
+        //??? ACHTUNG WER KANN SAGEN WAS DAS MACHT? :')
         //table.setPreferredScrollableViewportSize(new Dimension(200, 200));
         //table.setFillsViewportHeight(true);
 
@@ -149,7 +149,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         this.add(scrollPane, BorderLayout.CENTER);
 
         /**
-         * Um die search funktion zu dynamisch zu triggern ist DocumentListener zum textfeld hinzugefügt
+         * for triggering search func dynamic -  DocumentListener added to textfeld
          * This code attaches a DocumentListener to the text field.
          * Whenever the text changes (insertion, deletion, or modification), the search() method is triggered,
          * which filters the table based on the text entered.
@@ -194,21 +194,28 @@ public class DroneMenu extends JPanel implements ActionListener {
                 search();
             }
 
+            /**retrieving text entered in searchField - saving into var searchText
+             * create TableRowSorter for table and set same as original
+             * setting row filter on sorter based on (?i + searchtext). show only the rows that match in the search
+             *
+             * select row = .. convert index in orig table"drones" to new index in sorted table
+             */
             private void search() {
                 String searchText = searchField.getText();
                 TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
-                table.setRowSorter(sorter);
-                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+                table.setRowSorter(sorter);//set TRS as rowsorter for table. ctrl row order and filter
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText)); //?!case insensitive
 
                 // After applying the filter, check if the selected row is still visible and select it
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
+                int selectedRow = table.getSelectedRow();//get index of selected row in table
+                if (selectedRow != -1) {//check if row selected
                     if (!table.getSelectionModel().isSelectedIndex(selectedRow)) {
-                        // If the selected row is not visible, select the row for the peviously selected drone
+                        // If the selected row is not visible, select the row for the previously selected drone
                         selectedRow = table.getRowSorter().convertRowIndexToView(drones.indexOf(selectedDrone));
                         table.setRowSelectionInterval(selectedRow, selectedRow);
                     }
                 }
+
             }
         });
 
@@ -247,8 +254,6 @@ public class DroneMenu extends JPanel implements ActionListener {
         detailsFrame.setLocationRelativeTo(null);
         detailsFrame.setVisible(true);
     }
-
-    //creating the main frame "Drone Simulator"
 
     /**
      * Creates and displays the main GUI frame for the drone table.
@@ -344,8 +349,6 @@ public class DroneMenu extends JPanel implements ActionListener {
         LOGGER.info("Menu Bar created.");
         return menuBar;
     }
-
-    // Click action
 
     /**
      * Handles actions performed by the user, such as selecting menu items.

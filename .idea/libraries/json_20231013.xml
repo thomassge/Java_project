@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="json-20231013">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Desktop/json-20231013.jar!/" />
+      <root url="jar://E:/FRAUAS/Sem3/OOP Java/JSON Lib/json-20231013.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/Desktop/json-20231013-javadoc.jar!/" />
+      <root url="jar://E:/FRAUAS/Sem3/OOP Java/JSON Lib/json-20231013-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/Desktop/json-20231013-sources.jar!/" />
+      <root url="jar://E:/FRAUAS/Sem3/OOP Java/JSON Lib/json-20231013-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
