@@ -3,6 +3,10 @@
  * It runs a background thread to regularly check for new drone-related data and processes it as needed.
  */
 package processing;
+import data.Drone;
+import data.DroneDynamics;
+import data.DroneType;
+
 import javax.swing.*;
 
 public class ThreadClass {
@@ -57,9 +61,9 @@ public class ThreadClass {
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-                    helper.droneObject.checkForNewData();
-                    helper.droneTypesObject.checkForNewData();
-                    helper.droneDynamicsObject.checkForNewData();
+//                    Drone.checkForNewData(Drone.getFilename(), Drone.getUrl());
+//                    DroneType.checkForNewData(DroneType.getFilename(), DroneType.getUrl());
+//                    DroneDynamics.checkForNewData(DroneDynamics.getFilename(), DroneDynamics.getUrl());
                     if (newDronesAvailable || newDroneTypesAvailable || newDroneDynamicsAvailable) {
                         showNotification("Restart GUI");
                         restartGUI();

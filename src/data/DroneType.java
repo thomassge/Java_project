@@ -4,10 +4,15 @@
  */
 package data;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import processing.Streamable;
+
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneType extends AbstractDroneOperations {
+public class DroneType {
 
     private static final Logger logger = Logger.getLogger(DroneType.class.getName());
 
@@ -31,6 +36,22 @@ public class DroneType extends AbstractDroneOperations {
      */
     private static int serverCount;
 
+    public static int getLocalCount() {
+        return localCount;
+    }
+
+    public static void setLocalCount(int localCount) {
+        DroneType.localCount = localCount;
+    }
+
+    public static int getServerCount() {
+        return serverCount;
+    }
+
+    public static void setServerCount(int serverCount) {
+        DroneType.serverCount = serverCount;
+    }
+
     /**
      * The number of objects in memory
      */
@@ -39,7 +60,10 @@ public class DroneType extends AbstractDroneOperations {
     /**
      * The filename where we store downloaded data
      */
-    public final static String filename = "dronetypes.json";
+    private final static String filename = "dronetypes.json";
+    public static String getFilename() {
+        return filename;
+    }
 
     /**
      * Dronetypes API Endpoint
@@ -128,6 +152,70 @@ public class DroneType extends AbstractDroneOperations {
     // PRINT-methods to test without GETTER
 
     /**
+     * Converts drone type data from JSON to DroneType objects.
+     *
+     * @param jsonString The JSON string containing drone type data.
+     * @param droneTypes The list where DroneType objects will be added.
+     */
+    public static void initialize(String jsonString, LinkedList<DroneType> droneTypes) {
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneTypes.add(new DroneType(
+                    o.getInt("id"),
+                    o.getString("manufacturer"),
+                    o.getString("typename"),
+                    o.getInt("weight"),
+                    o.getInt("max_speed"),
+                    o.getInt("battery_capacity"),
+                    o.getInt("control_range"),
+                    o.getInt("max_carriage")
+            ));
+        }
+        setMemoryCount(getMemoryCount() + jsonArray.length());
+    }
+
+    /**
+     * Links drone to drones in the provided lists.
+     *
+     * @param droneTypes The list of DroneType objects.
+     * @param drones The list of Drone objects.
+     */
+    public static void droneTypeToDroneLinker(LinkedList<DroneType> droneTypes, LinkedList<Drone> drones) {
+        for(Drone droneObjectThatNeedsDroneTypeInformation : drones) {
+            if(droneObjectThatNeedsDroneTypeInformation.getDroneTypeObject() == null) {
+
+                for (DroneType droneType : droneTypes) {
+                    if (droneObjectThatNeedsDroneTypeInformation.getExtractedDroneTypeID() == (droneType.getDroneTypeID())) {
+
+                        droneObjectThatNeedsDroneTypeInformation.setDroneTypeObject(droneType);
+                        break; //break added
+                    }
+                }
+            }
+            else { continue; }
+        }
+    }
+
+//    /**
+//     * Fetches drone type data and converts it into DroneType objects.
+//     *
+//     * @return A LinkedList of DroneType objects.
+//     */
+//    public static LinkedList<DroneType> initializeDroneTypes() {
+//        checkForNewData(filename, URL, localCount, serverCount);
+//
+//        String myJson = Streamable.reader(filename);
+//
+//        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
+//        DroneType.initialize(myJson, droneTypes);
+//
+//        return droneTypes;
+//    }
+
+    /**
      * Prints the drone type details to the log.
      */
     public void printDroneType() {
@@ -139,31 +227,5 @@ public class DroneType extends AbstractDroneOperations {
         logger.info("BatteryCapacity: " + this.batteryCapacity);
         logger.info("Control Range (int): " + this.controlRange);
         logger.info("Maximum Carriage: " + this.maximumCarriage);
-    }
-
-    @Override
-    public void checkForNewData() {
-        checkFile(filename);
-        localCount = checkLocalCount(filename);
-        serverCount = checkServerCount(URL);
-
-        if(serverCount == 0) {
-            logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
-            //TODO: Own Exception
-        }
-        if (localCount == serverCount) {
-            logger.log(Level.INFO, "local- and serverDroneCount identical.");
-        }
-        else if(localCount < serverCount) {
-            saveAsFile(URL, serverCount, filename);
-        }
-        else {
-            logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
-        }
-    }
-
-    @Override
-    public void refresh() {
-
     }
 }

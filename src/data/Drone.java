@@ -5,8 +5,12 @@ package data;
 
 import data.enums.CarriageType;
 import data.exceptions.DroneTypeIdNotExtractableException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import processing.Streamable;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Level;
@@ -16,7 +20,7 @@ import java.util.logging.Logger;
  * This is the class where all Drone Data will be saved and called from.
  * It contains all the information that is available on the webserver.
  */
-public class Drone extends AbstractDroneOperations {
+public class Drone {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
 
     /**
@@ -39,6 +43,14 @@ public class Drone extends AbstractDroneOperations {
      * Saves an arraylist of DroneDynamics objects that are linked to this drone.
      */
     public ArrayList<DroneDynamics> droneDynamicsArrayList;
+
+    public static void setLocalCount(int localCount) {
+        Drone.localCount = localCount;
+    }
+
+    public static void setServerCount(int serverCount) {
+        Drone.serverCount = serverCount;
+    }
 
     /**
      * The number of entries in file, on the server and in memory.
@@ -179,6 +191,41 @@ public class Drone extends AbstractDroneOperations {
 
                                 // OTHER METHODS
 
+    public static void initialize(String jsonString, LinkedList<Drone> drones) {
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            drones.add(new Drone(
+                    Drone.mapCarriageType(o.getString("carriage_type")),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
+        setMemoryCount(getMemoryCount() + jsonArray.length());
+    }
+
+//    /**
+//     * Fetches drone data from a JSON file and converts it into Drone objects.
+//     *
+//     * @return A LinkedList of Drone objects.
+//     */
+//    public static LinkedList<Drone> initializeDrones() {
+//        checkForNewData(filename, URL, localCount, serverCount);
+//
+//        String myJson = Streamable.reader(filename);
+//
+//        LinkedList<Drone> drones = new LinkedList<Drone>();
+//        Drone.initialize(myJson, drones);
+//
+//        return drones;
+//    }
+
+
     public void printDrone() {
         logger.log(Level.INFO,"Drone id: " + this.id);
         logger.log(Level.INFO,"Serialnumber: " + this.serialnumber);
@@ -210,33 +257,5 @@ public class Drone extends AbstractDroneOperations {
         if (!boo) {
             throw new DroneTypeIdNotExtractableException();
         }
-    }
-
-    /**
-     * Overwritten from AbstractDroneOperations
-     */
-    @Override
-    public void checkForNewData() {
-        checkFile(filename);
-        localCount = checkLocalCount(filename);
-        serverCount = checkServerCount(URL);
-
-        if(serverCount == 0) {
-            logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
-            //TODO: Own Exception
-        }
-        if (localCount == serverCount) {
-            logger.log(Level.INFO, "local- and serverDroneCount identical.");
-        }
-        else if(localCount < serverCount) {
-            saveAsFile(URL, serverCount, filename);
-        }
-        else {
-            logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
-        }
-    }
-
-    @Override
-    public void refresh() {
     }
 }

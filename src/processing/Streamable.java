@@ -3,7 +3,7 @@ package processing;
 import java.io.*;
 
 public interface Streamable {
-    public default String reader(String filename) {
+    public static String reader(String filename) {
         StringBuilder responseContent;
         try {
             String data;
@@ -23,7 +23,7 @@ public interface Streamable {
         return responseContent.toString();
     }
 
-    public default void writer(String data, String filename) {
+    public static void writer(String data, String filename) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
             writer.write(data);

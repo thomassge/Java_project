@@ -6,11 +6,18 @@
 package data;
 
 import data.enums.Status;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import processing.Streamable;
 
+import java.io.IOException;
+import java.sql.Ref;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics extends AbstractDroneOperations {
+public class DroneDynamics {
 
     private static final Logger logger = Logger.getLogger(DroneDynamics.class.getName());
 
@@ -29,6 +36,22 @@ public class DroneDynamics extends AbstractDroneOperations {
     private static int localCount;
     private static int serverCount;
 
+    public static int getLocalCount() {
+        return localCount;
+    }
+
+    public static void setLocalCount(int localCount) {
+        DroneDynamics.localCount = localCount;
+    }
+
+    public static int getServerCount() {
+        return serverCount;
+    }
+
+    public static void setServerCount(int serverCount) {
+        DroneDynamics.serverCount = serverCount;
+    }
+
     /**
      * The number of objects in memory
      */
@@ -37,7 +60,10 @@ public class DroneDynamics extends AbstractDroneOperations {
     /**
      * The filename where we store downloaded data
      */
-    public final static String filename = "dronedynamics.json";
+    private final static String filename = "dronedynamics.json";
+    public static String getFilename() {
+        return filename;
+    }
 
     /**
      * Dronedynamics API Endpoint
@@ -146,6 +172,89 @@ public class DroneDynamics extends AbstractDroneOperations {
         };
     }
 
+//    /**
+//     * Adds drone dynamics data to the provided list of drones.
+//     *
+//     * @param drones The list of drones to which the dynamics data will be added.
+//     */
+//    public static void addDroneDynamicsData(LinkedList<Drone> drones) {
+//        checkForNewData(filename, URL, localCount, serverCount);
+//
+//        String myJson = Streamable.reader(filename);
+//
+//        JSONObject myJsonObject = new JSONObject(myJson);
+//        JSONArray jsonArray = myJsonObject.getJSONArray("results");
+//
+//        // code insists that number of drones >= number of drones that have dronedynamics data (probably fine since every droneD entry has a drone url)
+//        for (int z = 0; z < Drone.getMemoryCount(); z++) {
+//            if (drones.get(z).droneDynamicsArrayList == null) {
+//                drones.get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
+//            }
+//            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(z).getId() + "/";
+//
+//            for (int j = 0; j < jsonArray.length(); j++) {
+//                JSONObject o = jsonArray.getJSONObject(j);
+//
+//                if (o.getString("drone").equals(toCheck)) {
+//                    drones.get(z).droneDynamicsArrayList.add(new DroneDynamics(
+//                            o.getString("drone"),
+//                            o.getString("timestamp"),
+//                            o.getInt("speed"),
+//                            o.getFloat("align_roll"),
+//                            o.getFloat("align_pitch"),
+//                            o.getFloat("align_yaw"),
+//                            o.getDouble("longitude"),
+//                            o.getDouble("latitude"),
+//                            o.getInt("battery_status"),
+//                            o.getString("last_seen"),
+//                            DroneDynamics.mapStatus(o.getString("status"))
+//                    ));
+//                }
+//            }
+//        }
+//        setMemoryCount(getMemoryCount() + jsonArray.length());
+//        //numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
+//    }
+
+    public static void droneDynamicsLinker(DataStorage dataStorage) {
+        for (int z = 0; z < Drone.getMemoryCount(); z++) {
+            if (dataStorage.getDrones().get(z).droneDynamicsArrayList == null) {
+                dataStorage.getDrones().get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
+            }
+            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + dataStorage.getDrones().get(z).getId() + "/";
+            for (int j = 0; j < DroneDynamics.getMemoryCount(); j++) {
+                if (dataStorage.getDroneDynamics().get(j).getDronePointer().equals(toCheck)) {
+                    dataStorage.setData(dataStorage);
+                    dataStorage.getDrones().get(z).droneDynamicsArrayList.add(dataStorage.getDroneDynamics().get(j));
+                }
+            }
+
+        }
+    }
+
+    public static void initialize(String jsonString, ArrayList<DroneDynamics> droneDynamics) {
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneDynamics.add(new DroneDynamics(
+                    o.getString("drone"),
+                            o.getString("timestamp"),
+                            o.getInt("speed"),
+                            o.getFloat("align_roll"),
+                            o.getFloat("align_pitch"),
+                            o.getFloat("align_yaw"),
+                            o.getDouble("longitude"),
+                            o.getDouble("latitude"),
+                            o.getInt("battery_status"),
+                            o.getString("last_seen"),
+                            DroneDynamics.mapStatus(o.getString("status"))
+            ));
+        }
+        setMemoryCount(getMemoryCount() + jsonArray.length());
+    }
+
     /**
      * Prints detailed drone dynamics information to the log.
      */
@@ -160,31 +269,5 @@ public class DroneDynamics extends AbstractDroneOperations {
         logger.info("Latitude: " + this.getLatitude());
         logger.info("Battery Status: " + this.getBatteryStatus());
         logger.info("Last Seen: " + this.getLastSeen());
-    }
-
-    @Override
-    public void checkForNewData() {
-        checkFile(filename);
-        localCount = checkLocalCount(filename);
-        serverCount = checkServerCount(URL);
-
-        if(serverCount == 0) {
-            logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
-            //TODO: Own Exception
-        }
-        if (localCount == serverCount) {
-            logger.log(Level.INFO, "local- and serverDroneCount identical.");
-        }
-        else if(localCount < serverCount) {
-            saveAsFile(URL, serverCount, filename);
-        }
-        else {
-            logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
-        }
-    }
-
-    @Override
-    public void refresh() {
-
     }
 }

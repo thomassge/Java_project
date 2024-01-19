@@ -25,10 +25,10 @@ public class ProgramStart {
      * @throws IOException if there is an error in fetching or processing the data.
      */
     public static LinkedList<Drone> getMyData() throws IOException {
-        drones = helper.getDrones();
-        droneTypes = helper.getDroneTypes();
-        helper.droneTypeToDroneLinker(droneTypes, drones);
-        helper.addDroneDynamicsData(drones);
+//        drones = helper.getDrones();
+//        droneTypes = helper.getDroneTypes();
+//        helper.droneTypeToDroneLinker(droneTypes, drones);
+//        helper.addDroneDynamicsData(drones);
 
         return drones;
     }
