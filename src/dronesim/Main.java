@@ -8,6 +8,7 @@ import data.*;
 import processing.JSONDeruloHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
@@ -26,17 +27,18 @@ public class Main {
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
 
-        DataStorage dataStorage = new DataStorage();
-        //DataFactory dataFactory = new DataFactory(dataStorage);
-        dataStorage.getDrones().getFirst().printDrone();
+//        DataFactory factory = new DataFactory();
+//        ArrayList<DataStorage> data = factory.getDataStorage();
+//
+//        data.getFirst().getDrone().printDrone();
+//        data.getFirst().getDroneType().printDroneType();
+//        data.getFirst().getDroneDynamicsList().getFirst().printDroneDynamics();
 
+        DataFactory dataFactory = new DataFactory();
+        ArrayList<DataStorage> data = dataFactory.getDataStorage();
 
+        data.getFirst();
 
-
-//        jsonDerulo.droneTypeToDroneLinker(droneTypes, drones);
-        //jsonDerulo.addDroneDynamicsData(drones);
-
-//        jsonDerulo.refresh(drones, droneTypes);
 
         LOGGER.info("Program execution completed.");
     }

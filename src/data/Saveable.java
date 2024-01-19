@@ -29,17 +29,11 @@ public interface Saveable {
         }
     }
 
-    public static boolean checkFile(String filename) {
-        if(new File(filename).exists()) {
-            //logger.log(Level.INFO, filename + " exists.");
-            return true;
-        }
-        else if(!(new File(filename).exists())) {
-            File newFile = new File(filename);
+    public static void createFile(String filename) {
+        if (!(new File(filename).exists())) {
+            new File(filename);
             //logger.log(Level.INFO, filename + " created.");
-            return false;
-        } // should never happen
-        else return false;
+        }
     }
 
     public static void saveAsFile(String url, int limit, String filename) {

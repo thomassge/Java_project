@@ -216,21 +216,21 @@ public class DroneDynamics {
 //        //numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
 //    }
 
-    public static void droneDynamicsLinker(DataStorage dataStorage) {
-        for (int z = 0; z < Drone.getMemoryCount(); z++) {
-            if (dataStorage.getDrones().get(z).droneDynamicsArrayList == null) {
-                dataStorage.getDrones().get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
-            }
-            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + dataStorage.getDrones().get(z).getId() + "/";
-            for (int j = 0; j < DroneDynamics.getMemoryCount(); j++) {
-                if (dataStorage.getDroneDynamics().get(j).getDronePointer().equals(toCheck)) {
-                    dataStorage.setData(dataStorage);
-                    dataStorage.getDrones().get(z).droneDynamicsArrayList.add(dataStorage.getDroneDynamics().get(j));
-                }
-            }
-
-        }
-    }
+//    public static void droneDynamicsLinker(DataStorage dataStorage) {
+//        for (int z = 0; z < Drone.getMemoryCount(); z++) {
+//            if (dataStorage.getDrones().get(z).droneDynamicsArrayList == null) {
+//                dataStorage.getDrones().get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
+//            }
+//            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + dataStorage.getDrones().get(z).getId() + "/";
+//            for (int j = 0; j < DroneDynamics.getMemoryCount(); j++) {
+//                if (dataStorage.getDroneDynamics().get(j).getDronePointer().equals(toCheck)) {
+//                    //dataStorage.setDroneDynamics();
+//                    dataStorage.getDrones().get(z).droneDynamicsArrayList.add(dataStorage.getDroneDynamics().get(j));
+//                }
+//            }
+//
+//        }
+//    }
 
     public static void initialize(String jsonString, ArrayList<DroneDynamics> droneDynamics) {
         JSONObject wholeHtml = new JSONObject(jsonString);
