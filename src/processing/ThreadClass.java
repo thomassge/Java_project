@@ -6,11 +6,13 @@ package processing;
 import data.Drone;
 import data.DroneDynamics;
 import data.DroneType;
+import gui.DroneMenu;
 
 import javax.swing.*;
+import java.util.logging.Logger;
 
 public class ThreadClass {
-
+    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
     private boolean newDronesAvailable;
     private boolean newDroneTypesAvailable;
     private boolean newDroneDynamicsAvailable;
@@ -50,7 +52,7 @@ public class ThreadClass {
     private void restartGUI() {
         // Implement your logic here to restart the GUI
         // For example: create a new instance of the GUI class and close the existing one
-        System.out.println("Restarting the GUI...");
+        LOGGER.info("Restarting the GUI...");
     }
 
     /**
@@ -75,7 +77,7 @@ public class ThreadClass {
                 }
             } catch (InterruptedException e) {
                 // Thread was interrupted, exit the thread
-                System.out.println("DataUpdater Thread was interrupted.");
+                LOGGER.warning("DataUpdater Thread was interrupted.");
             }
         }
     }

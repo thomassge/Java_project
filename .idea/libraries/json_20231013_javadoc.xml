@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="json-20231013-javadoc">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../Frankfurt UAS/Java OOP Project - General/json_librarys/json-20231013.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../Frankfurt UAS/Java OOP Project - General/json_librarys/json-20231013-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../Frankfurt UAS/Java OOP Project - General/json_librarys/json-20231013-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

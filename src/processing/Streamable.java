@@ -1,6 +1,8 @@
 package processing;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public interface Streamable {
     public static String reader(String filename) {
@@ -14,10 +16,10 @@ public interface Streamable {
             }   // Erschafft den String
             reader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("In reader: " + e);
+            Logger.getLogger(Level.INFO + "In reader: " + e);
             throw new RuntimeException(e);
         } catch (IOException e) {
-            System.out.println("In reader: " + e);
+            Logger.getLogger(Level.INFO + "In reader: " + e);
             throw new RuntimeException(e);
         }
         return responseContent.toString();
@@ -29,7 +31,7 @@ public interface Streamable {
             writer.write(data);
             writer.close();
         } catch (IOException e) {
-            System.out.println("In writer: " + e);
+            Logger.getLogger(Level.INFO + "In writer: " + e);
             throw new RuntimeException(e);
         }
     }

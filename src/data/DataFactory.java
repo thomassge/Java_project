@@ -1,5 +1,6 @@
 package data;
 
+import gui.DroneMenu;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.Streamable;
@@ -7,8 +8,10 @@ import util.WebserverDataFetcher;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 public class DataFactory extends Refresh {
+    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
 
     // FIELDS
     private ArrayList<DataStorage> dataStorage;
@@ -90,7 +93,7 @@ public class DataFactory extends Refresh {
                 DroneDynamics.initialize(jsonString, droneDynamics);
                 break;
             default:
-                System.out.println(jsonString);
+                LOGGER.info(jsonString);
                 break;
         }
     }
@@ -108,7 +111,7 @@ public class DataFactory extends Refresh {
                 DroneDynamics.initialize(jsonString, droneDynamics);
                 break;
             default:
-                System.out.println(jsonString);
+                LOGGER.info(jsonString);
                 break;
         }
     }

@@ -13,25 +13,7 @@ import java.io.IOException;
 
 public class ProgramStart {
 
-    public static JSONDeruloHelper helper = new JSONDeruloHelper();
-    public static LinkedList<Drone> drones = new LinkedList<>();
-    public static LinkedList<DroneType> droneTypes = new LinkedList<>();
 
-    /**
-     * Fetches and processes drone data from an external source using the JSONDeruloHelper.
-     * It links drone types to drone and adds dynamics data to each drone.
-     *
-     * @return A LinkedList of Drone objects with complete data.
-     * @throws IOException if there is an error in fetching or processing the data.
-     */
-    public static LinkedList<Drone> getMyData() throws IOException {
-//        drones = helper.getDrones();
-//        droneTypes = helper.getDroneTypes();
-//        helper.droneTypeToDroneLinker(droneTypes, drones);
-//        helper.addDroneDynamicsData(drones);
-
-        return drones;
-    }
 
     /**
      * The main method to start the application. It initializes data and sets up the GUI.
@@ -41,9 +23,10 @@ public class ProgramStart {
      */
     public static void main(String[] args) throws IOException {
         LogMain lm = new LogMain();
-        drones = getMyData();
+        DataFactory dataFactory = new DataFactory();
+        ArrayList<DataStorage> data = dataFactory.getDataStorage();
 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(drones);}});
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(data);}});
 
         //Ich habe hier einen Thread hinzugefügt, der im Hintergrund (momentan) alle 5 Sekunden abfragt
         //ob es neue Daten auf dem Server gibt.

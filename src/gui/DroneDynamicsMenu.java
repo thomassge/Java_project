@@ -5,13 +5,14 @@
  */
 package gui;
 
+import data.DataFactory;
 import data.Drone;
 import data.DroneDynamics;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,19 +21,18 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamicsMenu.class.getName());
 
     JLabel selectedImage;
-    JLabel fixedImage;
     JTextArea topRightText;
     JTextArea bottomLeftText;
     private JComboBox<Integer> droneIdDropdown;
     private LinkedList<Drone> drones;
-
+    private DataFactory factory = new DataFactory();
 
     /**
      * Constructs a new DroneDynamicsMenu with the specified list of drone dynamics.
      *
      * @param droneDynamicsArrayList An ArrayList of DroneDynamics objects.
      */
-    public DroneDynamicsMenu(ArrayList<DroneDynamics> droneDynamicsArrayList) {
+    public DroneDynamicsMenu(DroneDynamics droneDynamicsArrayList) {
         super(new BorderLayout());
 
         LOGGER.info("Initializing DroneDynamicsMenu...");
@@ -40,27 +40,17 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
         droneIdDropdown = new JComboBox<>();
 
-        for (int i=0;i<ProgramStart.drones.size();i++) {
-            droneIdDropdown.addItem(ProgramStart.drones.get(i).getId());
+        for (int i=0;i<factory.getDrones().size();i++) {
+            droneIdDropdown.addItem(factory.getDrones().get(i).getId());
         }
         droneIdDropdown.addActionListener(this);
         add(droneIdDropdown);
 
         // Set up the combo box and the selected image on top left
         JPanel topPanel = new JPanel(new BorderLayout());
-        selectedImage = new JLabel();
         droneIdDropdown.setMaximumSize(new Dimension(50, droneIdDropdown.getPreferredSize().height));
         droneIdDropdown.setSelectedIndex(0);
-
-        topPanel.add(selectedImage, BorderLayout.CENTER);
         topPanel.add(droneIdDropdown, BorderLayout.NORTH);
-
-        // Set up the fixed image "Drone1.jpg" on bottom right
-        fixedImage = new JLabel();
-        ImageIcon fixedIcon = createImageIcon("images/image.jpg");
-        if (fixedIcon != null) {
-            fixedImage.setIcon(fixedIcon);
-        }
 
         // Set up the text areas
         topRightText = new JTextArea();
@@ -102,12 +92,9 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         gbc.weighty = 1.0;
         gbc.gridheight = 2;
 
-        gridPanel.add(fixedImage, gbc);
+
         add(gridPanel, BorderLayout.CENTER);
-        //updateLabel("Drone1");
-
         LOGGER.info("DroneDynamicsMenu initialized.");
-
     }
 
     /**
@@ -128,18 +115,6 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
             createTextTopRight(selectedDroneId);
         }
     }
-/*
-    protected void updateLabel(String name) {
-        ImageIcon icon = createImageIcon("images/" + name + ".jpg");
-
-        if (icon != null) {
-            selectedImage.setIcon(icon);
-            updateTopRightText(name);
-        }
-
-        updateBottomLeftText(); // Update dynamic text
-    }
-*/
 
     /**
      * Creates and updates the text information displayed int the top-right section of the panel.
@@ -150,7 +125,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         LOGGER.info("Creating top right text for Drone ID: " + selectedDroneId);
 
         Drone selectedDrone = null;
-        for (Drone drone : ProgramStart.drones) {
+        for (Drone drone : factory.getDrones()) {
             if (drone.getId() == selectedDroneId) {
                 selectedDrone = drone;
                 break;
@@ -173,7 +148,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
                                 selectedDrone.getSerialnumber(),
                                 selectedDrone.getDroneTypeObject().getTypename(),
                                 Double.toString(selectedDrone.getCarriageWeight()),
-                String.valueOf(selectedDrone.getCarriageType())
+                                String.valueOf(selectedDrone.getCarriageType())
                                 };
 
         StringBuilder text = new StringBuilder();
@@ -184,8 +159,9 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         topRightText.setText(text.toString());
 
         // Bei selectedDroneId -70 -1 (weil Drohnen in ArrayList bei [0] anfangen
-        DroneDynamics selectedDroneDynamic = ProgramStart.drones.get(selectedDroneId-70-1).getDroneDynamicsArrayList().getFirst();
-        createTextBottomLeft(selectedDroneId, selectedDroneDynamic);
+        DroneDynamics selectedDroneDynamic = factory.getDroneDynamics().getFirst();
+        String selectedTimestamp = null;
+        createTextBottomLeft(selectedDroneId, selectedDroneDynamic,selectedTimestamp);
 
         LOGGER.info("Top right text created for Drone ID: " + selectedDroneId);
     }
@@ -196,7 +172,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
      * @param selectedDroneId        The ID of the selected drone.
      * @param selectedDroneDynamic   The DroneDynamics object associated with the selected drone.
      */
-    protected void createTextBottomLeft(int selectedDroneId, DroneDynamics selectedDroneDynamic) {
+    protected void createTextBottomLeft(int selectedDroneId, DroneDynamics selectedDroneDynamic,String selectedTimestamp) {
         LOGGER.info("Creating bottom left text for Drone ID: " + selectedDroneId);
 
         // Initialize bottomLeftText if not initialized
@@ -211,13 +187,23 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
                                     "Time Stamp",
                                     "Speed",
                                     "Last seen",
+                                    "Longitude",
+                                    "Latitude",
+                                    "Alignment Pitch",
+                                    "Alignment Roll",
+                                    "Alignment Yaw"
                                     };
 
         String[] droneValues = {
                 String.valueOf(selectedDroneDynamic.getBatteryStatus()),
                 selectedDroneDynamic.getTimestamp(),
                 String.valueOf(selectedDroneDynamic.getSpeed()),
-                selectedDroneDynamic.getLastSeen()
+                selectedDroneDynamic.getLastSeen(),
+                String.valueOf(selectedDroneDynamic.getLongitude()),
+                String.valueOf(selectedDroneDynamic.getLatitude()),
+                String.valueOf(selectedDroneDynamic.getAlignmentPitch()),
+                String.valueOf(selectedDroneDynamic.getAlignmentRoll()),
+                String.valueOf(selectedDroneDynamic.getAlignmentYaw())
         };
 
         StringBuilder text = new StringBuilder();
@@ -239,7 +225,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     protected static ImageIcon createImageIcon(String path) {
         LOGGER.info("Attempting to create ImageIcon from path: " + path);
 
-        java.net.URL imgURL = DroneDynamicsMenu.class.getResource(path);
+        URL imgURL = DroneDynamicsMenu.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
@@ -253,11 +239,11 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
      *
      * @param droneDynamicsArrayList An ArrayList of DroneDynamics objects.
      */
-    public static void createDroneDynamicsOverview(ArrayList<DroneDynamics> droneDynamicsArrayList) {
+    public static void createDroneDynamicsOverview(DroneDynamics droneDynamics) {
         LOGGER.info("Creating DroneDynamicsOverview frame...");
 
         JFrame frame = new JFrame("Drone Dynamics");
-        DroneDynamicsMenu droneDM = new DroneDynamicsMenu(droneDynamicsArrayList);
+        DroneDynamicsMenu droneDM = new DroneDynamicsMenu(droneDynamics);
 
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Menu");
@@ -267,13 +253,6 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
         menu.add(back);
         menuBar.add(menu);
-
-        // This closes only the window, not the whole program
-        back.addActionListener(e -> {
-            if (frame != null) {
-                frame.dispose();
-            }
-        });
 
         frame.setJMenuBar(menuBar);
         frame.getContentPane().add(droneDM);

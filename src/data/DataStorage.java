@@ -1,8 +1,12 @@
 package data;
 
+import gui.DroneMenu;
+
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class DataStorage {
+    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
 
     private Drone drone;
     private DroneType droneType;
@@ -19,7 +23,14 @@ public class DataStorage {
         return data;
     }
 
-
+//    public ArrayList<DroneType> getDroneTypeArrayList(ArrayList<DataStorage> data) {
+//        ArrayList<DroneType> droneTypeArrayList = new ArrayList<>();
+//        for(int i = 0; i < DroneType.getLocalCount(); i++) {
+//            droneTypeArrayList.add(data.get);
+//            LOGGER.info("LocalCount:" + localCount);
+//        }
+//
+//    }
 
     public Drone getDrone() {
         return drone;

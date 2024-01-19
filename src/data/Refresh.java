@@ -1,15 +1,20 @@
 package data;
 
+import gui.DroneMenu;
 import org.json.JSONObject;
 import util.WebserverDataFetcher;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public abstract class Refresh implements Saveable {
+    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
     static boolean isDronesNew;
     static boolean isDroneTypesNew;
     static boolean isDroneDynamicsNew;
 
     public Refresh() {
-        System.out.println("called Refresh constructor");
+        LOGGER.info("called Refresh constructor");
         updateCount();
         isDronesNew = isNewDataAvailable(Drone.getFilename(), Drone.getUrl(), Drone.getLocalCount(), Drone.getServerCount());
         isDroneTypesNew = isNewDataAvailable(DroneType.getFilename(), DroneType.getUrl(), DroneType.getLocalCount(), DroneType.getServerCount());
@@ -46,12 +51,12 @@ public abstract class Refresh implements Saveable {
             return false;
         }
         else if(localCount < serverCount) {
-            System.out.println("ja");
+            LOGGER.info("Yes");
             Saveable.saveAsFile(URL, serverCount, filename);
             return true;
         }
         else {
-            //logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
+            LOGGER.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
         return false;
     }
