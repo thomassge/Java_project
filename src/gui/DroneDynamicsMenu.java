@@ -125,7 +125,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         LOGGER.info("Creating top right text for Drone ID: " + selectedDroneId);
 
         Drone selectedDrone = null;
-        for (Drone drone : factory.getDrones()) {
+        for (Drone drone : factory.getDrones()) { //data.getDrone();
             if (drone.getId() == selectedDroneId) {
                 selectedDrone = drone;
                 break;
@@ -144,7 +144,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
                                     "Weight",
                                     "CarriageType"};
 
-        String[] droneValues = { Integer.toString(selectedDroneId),
+        String[] droneValues = {Integer.toString(selectedDroneId),
                                 selectedDrone.getSerialnumber(),
                                 selectedDrone.getDroneTypeObject().getTypename(),
                                 Double.toString(selectedDrone.getCarriageWeight()),
