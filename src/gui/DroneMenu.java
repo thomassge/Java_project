@@ -165,7 +165,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         LOGGER.info("Action Performed: " + e.getActionCommand());
 
         if ("droned".equals(e.getActionCommand())) {
-            DroneDynamicsMenu.createDroneDynamicsOverview(factory.getDroneDynamics().getFirst());
+            DroneDynamicsMenu.createDroneDynamicsOverview(factory.getDataStorage());
         } else if ("dronet".equals(e.getActionCommand())) {
             DroneTypeMenu.createDroneTypeTableGUI(factory.getDataStorage());
         } else if ("credits".equals(e.getActionCommand())) {
