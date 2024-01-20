@@ -10,10 +10,7 @@ import java.util.logging.Logger;
 
 public class CreditsMenu {
 
-    // Ein Logger für diese Klasse erstellen
     private static final Logger LOGGER = Logger.getLogger(CreditsMenu.class.getName());
-
-    //Click Credits
 
     /**
      * Creates and displays the credits menu. This method sets up the GUI components
@@ -44,8 +41,6 @@ public class CreditsMenu {
 
         LOGGER.info("Credits menu created.");
     }
-
-    //for Credit content alignment
 
     /**
      * Adds a label with specified text to a given panel at the specified grid position.
