@@ -6,12 +6,14 @@
 package gui;
 
 import data.*;
-//import jdk.internal.org.jline.terminal.TerminalBuilder;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
@@ -19,23 +21,12 @@ import java.util.ArrayList;
 
 
 public class DroneMenu extends JPanel implements ActionListener {
+
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
-
-    private JTextField searchField;
-    private JButton searchButton;
-    private JTable table;
     private DataFactory factory;
-
-    private Drone selectedDrone;
-    private String[] columnNames = {"Nr.",
-            "ID",
-            "DroneType",
-            "Created",
-            "Serialnr",
-            "CarrWeight",
-            "CarrType"};
-    private Object[][] droneMenuData ;
-
+    private final String[] columnNames = {"Nr.", "ID", "DroneType", "Created", "Serialnr", "CarrWeight", "CarrType"};
+    private Object[][] droneMenuData;
+    private final int[] columnWidth = {-55, -55, 0, 0, 0, -55, -55};
 
     /**
      * Constructs a new DroneMenu with the specified list of drones.
@@ -48,42 +39,12 @@ public class DroneMenu extends JPanel implements ActionListener {
         this.factory  = factory;
         LOGGER.info("Initializing DroneMenu...");
 
-        JFrame frame = (JFrame) createFrame();
+        JFrame frame = createFrame();
         JMenuBar menuBar = createMenuBar();
         frame.setJMenuBar(menuBar);
 
-        initiallizeGuiData(data);
-
-        table = new JTable(droneMenuData, columnNames) {
-            /**
-             * Determines whether a cell in the table is editable. This implementation makes all
-             * cells in the tabe non-editable.
-             *
-             * @param row     The row index of the cell.
-             * @param column   The coloumn index of the cell.
-             * @return false as none of the cells are editable.
-             */
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
-        //edits specific column width
-        TableColumn columnNr = table.getColumnModel().getColumn(0);
-        columnNr.setPreferredWidth(columnNr.getPreferredWidth() - 55);
-
-        TableColumn columnID = table.getColumnModel().getColumn(1);
-        columnID.setPreferredWidth(columnID.getPreferredWidth() - 55);
-
-        TableColumn columnsr = table.getColumnModel().getColumn(4);
-        columnsr.setPreferredWidth(columnsr.getPreferredWidth() + 15);
-
-        TableColumn columnCW = table.getColumnModel().getColumn(5);
-        columnCW.setPreferredWidth(columnCW.getPreferredWidth() - 35);
-
-        TableColumn columnCT = table.getColumnModel().getColumn(6);
-        columnCT.setPreferredWidth(columnCT.getPreferredWidth() - 35);
+        initializeGuiData(data);
+        JTable table = createTable();
 
         JScrollPane scrollPane = new JScrollPane(table);
         this.setLayout(new BorderLayout()); // Setting a layout manager to the container
@@ -105,8 +66,32 @@ public class DroneMenu extends JPanel implements ActionListener {
         LOGGER.info("Drone Table GUI created.");
     }
 
-    private Frame createFrame(){
-        JFrame frame = new JFrame("Drone Simulator");
+    private JTable createTable(){
+        JTable table = new JTable(droneMenuData, columnNames) {
+            /**
+             * Determines whether a cell in the table is editable. This implementation makes all
+             * cells in the tabe non-editable.
+             *
+             * @param row     The row index of the cell.
+             * @param column   The coloumn index of the cell.
+             * @return false as none of the cells are editable.
+             */
+            @Override
+            public boolean isCellEditable ( int row, int column){
+            return false;
+        }
+    };
+        TableColumnModel columnModel = table.getColumnModel();
+
+        for(int i=0; i<columnWidth.length; i++){
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth((column.getPreferredWidth() + columnWidth[i]));
+        }
+        return table;
+    }
+
+    private JFrame createFrame(){
+        JFrame frame = new JFrame("Drones Overview");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this);
 
@@ -155,7 +140,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         menu.add(menuItem);
     }
 
-    private void initiallizeGuiData(ArrayList<DataStorage> data){
+    private void initializeGuiData(ArrayList<DataStorage> data){
         droneMenuData = new Object[data.size()][columnNames.length];
 
         for (int i = 0; i < data.size(); i++) {
@@ -180,7 +165,6 @@ public class DroneMenu extends JPanel implements ActionListener {
         LOGGER.info("Action Performed: " + e.getActionCommand());
 
         if ("droned".equals(e.getActionCommand())) {
-            // openDroneD();
             DroneDynamicsMenu.createDroneDynamicsOverview(factory.getDroneDynamics().getFirst());
         } else if ("dronet".equals(e.getActionCommand())) {
             DroneTypeMenu.createDroneTypeTableGUI(factory.getDataStorage());
@@ -193,9 +177,6 @@ public class DroneMenu extends JPanel implements ActionListener {
             quit();
         }
     }
-    //private void openDroneD(){
-
-    //}
 
     /**
      * Quits the application
