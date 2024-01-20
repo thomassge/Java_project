@@ -12,13 +12,11 @@ public class DataStorage {
     private DroneType droneType;
     private ArrayList<DroneDynamics> droneDynamicsList = new ArrayList<>();
 
-
-
     public DataStorage() {
     }
 
 
-    public ArrayList<DataStorage> getData() {
+    public ArrayList<DataStorage> getData() { //useless
         ArrayList<DataStorage> data = new ArrayList<>();
         return data;
     }

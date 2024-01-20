@@ -23,7 +23,8 @@ public class DroneMenu extends JPanel implements ActionListener {
     private JTextField searchField;
     private JButton searchButton;
     private JTable table;
-    private DataFactory factory = new DataFactory();
+    DataFactory factory = new DataFactory();
+    ArrayList<DataStorage> data = factory.getDataStorage();
     private Drone selectedDrone;
 
 

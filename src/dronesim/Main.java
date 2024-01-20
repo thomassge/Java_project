@@ -34,12 +34,12 @@ public class Main {
 //        data.getFirst().getDroneType().printDroneType();
 //        data.getFirst().getDroneDynamicsList().getFirst().printDroneDynamics();
 
-        DataFactory dataFactory = new DataFactory();
-        ArrayList<DataStorage> data = dataFactory.getDataStorage();
-
-        data.getFirst();
+        DataFactory factory = new DataFactory();
+        ArrayList<DataStorage> data = factory.getDataStorage();
 
 
+        data.getFirst().getDrone().getDroneTypeObject();
+        int i = 0;
         LOGGER.info("Program execution completed.");
     }
 }

@@ -6,6 +6,7 @@
 package gui;
 
 import data.DataFactory;
+import data.DataStorage;
 import data.Drone;
 import data.DroneDynamics;
 
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +27,9 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     JTextArea bottomLeftText;
     private JComboBox<Integer> droneIdDropdown;
     private LinkedList<Drone> drones;
-    private DataFactory factory = new DataFactory();
+    DataFactory factory = new DataFactory();
+    ArrayList<DataStorage> data = factory.getDataStorage();
+
 
     /**
      * Constructs a new DroneDynamicsMenu with the specified list of drone dynamics.

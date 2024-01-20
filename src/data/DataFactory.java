@@ -22,21 +22,27 @@ public class DataFactory extends Refresh {
     // CONSTRUCTOR
     public DataFactory() {
         if(isDronesNew) {
+            System.out.println("Specific Drone Fetch");
             specificFetch(Drone.getUrl(), Drone.getServerCount(), 0);
         } else {
+            System.out.println("File Drone Fetch");
             fileFetch(Drone.getFilename());
         }
         if (isDroneTypesNew) {
+            System.out.println("Specific DroneType Fetch");
             specificFetch(DroneType.getUrl(), DroneType.getServerCount(), 0);
         } else {
+            System.out.println("File DroneType Fetch");
             fileFetch(DroneType.getFilename());
         }
         if(isDroneDynamicsNew) {
+            System.out.println("Specific DroneDynamics Fetch");
             specificFetch(DroneDynamics.getUrl(), DroneDynamics.getServerCount(), 0);
         } else {
+            System.out.println("File DroneDynamics Fetch");
             fileFetch(DroneDynamics.getFilename());
         }
-        setDataStorage(linker());
+        this.dataStorage = linker();
     }
 
 
@@ -72,7 +78,6 @@ public class DataFactory extends Refresh {
     public void setDroneDynamics(ArrayList<DroneDynamics> droneDynamics) {
         this.droneDynamics = droneDynamics;
     }
-
 
 
                                     // METHODS
@@ -137,9 +142,10 @@ public class DataFactory extends Refresh {
 
     private ArrayList<DataStorage> linker () {
         ArrayList<DataStorage> list = new ArrayList<>();
-        DataStorage item = new DataStorage();
+
         int i = 0;
         for(Drone obj : drones) {
+            DataStorage item = new DataStorage();
 
             item.setDrone(selectDrone(i));
             item.setDroneType(selectDroneType(i));
@@ -153,6 +159,7 @@ public class DataFactory extends Refresh {
     }
 
     private Drone selectDrone(int i) {
+
         return drones.get(i);
         //remove from list after selection
     }
@@ -166,20 +173,19 @@ public class DataFactory extends Refresh {
             }
             else j++;
         }
+
         return null;
     }
 
     private ArrayList<DroneDynamics> selectDroneDynamics(int i) {
         ArrayList<DroneDynamics> list = new ArrayList<>();
-        int j = 0;
         String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(i).getId() + "/";
 
         for (DroneDynamics obj : droneDynamics) {
-                if (droneDynamics.get(j).getDronePointer().equals(toCheck)) {
-                    list.add(droneDynamics.get(j));
+                if (obj.getDronePointer().equals(toCheck)) {
+                    list.add(obj);
                 }
-                else j++;
-            }
+        }
 
         return list;
     }

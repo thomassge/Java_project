@@ -23,8 +23,9 @@ public class ProgramStart {
      */
     public static void main(String[] args) throws IOException {
         LogMain lm = new LogMain();
-        DataFactory dataFactory = new DataFactory();
-        ArrayList<DataStorage> data = dataFactory.getDataStorage();
+        DataFactory factory = new DataFactory();
+        ArrayList<DataStorage> data = factory.getDataStorage();
+
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(data);}});
 
