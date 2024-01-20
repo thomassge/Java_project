@@ -26,18 +26,14 @@ public class DroneMenu extends JPanel implements ActionListener {
     private JTable table;
     private DataFactory factory = new DataFactory();
     private Drone selectedDrone;
-
-  String[] columnNames = {
-            "Nr.",
-            "ID",
-            "DroneType",
-            "Created",
-            "Serialnr",
-            "CarrWeight",
-            "CarrType"
-    };
+    private String[] columnNames = {"Nr.",
+                                    "ID",
+                                    "DroneType",
+                                    "Created",
+                                    "Serialnr",
+                                    "CarrWeight",
+                                    "CarrType"};
     private Object[][] droneMenuData ;
-
 
     /**
      * Constructs a new DroneMenu with the specified list of drones.
@@ -52,7 +48,8 @@ public class DroneMenu extends JPanel implements ActionListener {
         JMenuBar menuBar = createMenuBar();
         frame.setJMenuBar(menuBar);
 
-        String[] columnNames = {
+        initiallizeGuiData(data);
+        /*String[] columnNames = {
                 "Nr.",
                 "ID",
                 "DroneType",
@@ -60,12 +57,11 @@ public class DroneMenu extends JPanel implements ActionListener {
                 "Serialnr",
                 "CarrWeight",
                 "CarrType"
-        };
-       // initiallizeGuiData(data);
+        };*/
 
-        Object[][] droneMenuData = new Object[data.size()][columnNames.length];
+       // Object[][] droneMenuData = new Object[data.size()][columnNames.length];
 
-        for (int i = 0; i < data.size(); i++) {
+        /*for (int i = 0; i < data.size(); i++) {
             droneMenuData[i][0] = i + 1;
             droneMenuData[i][1] = factory.getDrones().get(i).getId();
             //  guiData[i][2] = factory.getDroneTypes().get(i).getTypename();
@@ -74,6 +70,8 @@ public class DroneMenu extends JPanel implements ActionListener {
             droneMenuData[i][5] = factory.getDrones().get(i).getCarriageWeight();
             droneMenuData[i][6] = factory.getDrones().get(i).getCarriageType();
         }
+
+         */
 
         table = new JTable(droneMenuData, columnNames) {
             /**
