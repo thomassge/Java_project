@@ -137,9 +137,9 @@ public class DataFactory extends Refresh {
 
     private ArrayList<DataStorage> linker () {
         ArrayList<DataStorage> list = new ArrayList<>();
-        DataStorage item = new DataStorage();
         int i = 0;
         for(Drone obj : drones) {
+            DataStorage item = new DataStorage();
 
             item.setDrone(selectDrone(i));
             item.setDroneType(selectDroneType(i));
@@ -171,14 +171,14 @@ public class DataFactory extends Refresh {
 
     private ArrayList<DroneDynamics> selectDroneDynamics(int i) {
         ArrayList<DroneDynamics> list = new ArrayList<>();
-        int j = 0;
+
         String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(i).getId() + "/";
 
         for (DroneDynamics obj : droneDynamics) {
-                if (droneDynamics.get(j).getDronePointer().equals(toCheck)) {
-                    list.add(droneDynamics.get(j));
+                if (obj.getDronePointer().equals(toCheck)) {
+                    list.add(obj);
                 }
-                else j++;
+
             }
 
         return list;

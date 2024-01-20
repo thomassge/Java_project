@@ -24,7 +24,8 @@ public class DroneMenu extends JPanel implements ActionListener {
     private JTextField searchField;
     private JButton searchButton;
     private JTable table;
-    private DataFactory factory = new DataFactory();
+    private DataFactory factory;
+
     private Drone selectedDrone;
     private String[] columnNames = {"Nr.",
                                     "ID",
@@ -35,13 +36,16 @@ public class DroneMenu extends JPanel implements ActionListener {
                                     "CarrType"};
     private Object[][] droneMenuData ;
 
+
     /**
      * Constructs a new DroneMenu with the specified list of drones.
      *
      * @param drones A LinkedList of Drone objects to be displayed in the table.
      */
-    public DroneMenu(ArrayList<DataStorage> data) {
+    public DroneMenu(ArrayList<DataStorage> data, DataFactory factory) {
+
         super(new GridLayout(1, 0));
+        this.factory  = factory;
         LOGGER.info("Initializing DroneMenu...");
 
         JFrame frame = (JFrame) createFrame();
@@ -49,29 +53,6 @@ public class DroneMenu extends JPanel implements ActionListener {
         frame.setJMenuBar(menuBar);
 
         initiallizeGuiData(data);
-        /*String[] columnNames = {
-                "Nr.",
-                "ID",
-                "DroneType",
-                "Created",
-                "Serialnr",
-                "CarrWeight",
-                "CarrType"
-        };*/
-
-       // Object[][] droneMenuData = new Object[data.size()][columnNames.length];
-
-        /*for (int i = 0; i < data.size(); i++) {
-            droneMenuData[i][0] = i + 1;
-            droneMenuData[i][1] = factory.getDrones().get(i).getId();
-            //  guiData[i][2] = factory.getDroneTypes().get(i).getTypename();
-            droneMenuData[i][3] = formatCreatedDateTime(factory.getDrones().get(i).getCreated());
-            droneMenuData[i][4] = factory.getDrones().get(i).getSerialnumber();
-            droneMenuData[i][5] = factory.getDrones().get(i).getCarriageWeight();
-            droneMenuData[i][6] = factory.getDrones().get(i).getCarriageType();
-        }
-
-         */
 
         table = new JTable(droneMenuData, columnNames) {
             /**
@@ -116,10 +97,10 @@ public class DroneMenu extends JPanel implements ActionListener {
      *
      * @param drones A LinkedList of Drone objects to be displayed in the table.
      */
-    public static void createDroneTableGUI(ArrayList<DataStorage> data) {
+    public static void createDroneTableGUI(ArrayList<DataStorage> data, DataFactory factory) {
         LOGGER.info("Creating Drone Table GUI...");
 
-        DroneMenu droneM = new DroneMenu(data);
+        DroneMenu droneM = new DroneMenu(data, factory);
 
         LOGGER.info("Drone Table GUI created.");
     }
@@ -179,12 +160,12 @@ public class DroneMenu extends JPanel implements ActionListener {
 
         for (int i = 0; i < data.size(); i++) {
             droneMenuData[i][0] = i + 1;
-            droneMenuData[i][1] = factory.getDrones().get(i).getId();
-            droneMenuData[i][2] = factory.getDroneTypes().get(i).getTypename();
-            droneMenuData[i][3] = formatCreatedDateTime(factory.getDrones().get(i).getCreated());
-            droneMenuData[i][4] = factory.getDrones().get(i).getSerialnumber();
-            droneMenuData[i][5] = factory.getDrones().get(i).getCarriageWeight();
-            droneMenuData[i][6] = factory.getDrones().get(i).getCarriageType();
+            droneMenuData[i][1] = data.get(i).getDrone().getId();
+            droneMenuData[i][2] = data.get(i).getDroneType().getTypename();
+            droneMenuData[i][3] = formatCreatedDateTime(data.get(i).getDrone().getCreated());
+            droneMenuData[i][4] = data.get(i).getDrone().getSerialnumber();
+            droneMenuData[i][5] = data.get(i).getDrone().getCarriageWeight();
+            droneMenuData[i][6] = data.get(i).getDrone().getCarriageType();
         }
     }
 
@@ -199,9 +180,10 @@ public class DroneMenu extends JPanel implements ActionListener {
         LOGGER.info("Action Performed: " + e.getActionCommand());
 
         if ("droned".equals(e.getActionCommand())) {
+           // openDroneD();
             DroneDynamicsMenu.createDroneDynamicsOverview(factory.getDroneDynamics().getFirst());
         } else if ("dronet".equals(e.getActionCommand())) {
-            //DroneTypeMenu.createDroneTypeTableGUI(data);
+            DroneTypeMenu.createDroneTypeTableGUI(factory.getDataStorage());
         } else if ("credits".equals(e.getActionCommand())) {
             CreditsMenu.createCreditList();
         } else if ("refresh".equals(e.getActionCommand())){
@@ -211,6 +193,10 @@ public class DroneMenu extends JPanel implements ActionListener {
             quit();
         }
     }
+    //private void openDroneD(){
+
+    //}
+
     /**
      * Quits the application
      */
