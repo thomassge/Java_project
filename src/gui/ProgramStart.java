@@ -26,8 +26,7 @@ public class ProgramStart {
         DataFactory factory = new DataFactory();
         ArrayList<DataStorage> data = factory.getDataStorage();
 
-
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(data);}});
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {DroneMenu.createDroneTableGUI(data, factory);}});
 
         //Ich habe hier einen Thread hinzugefügt, der im Hintergrund (momentan) alle 5 Sekunden abfragt
         //ob es neue Daten auf dem Server gibt.

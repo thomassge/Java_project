@@ -6,7 +6,6 @@
 package gui;
 
 import data.DataFactory;
-import data.DataStorage;
 import data.Drone;
 import data.DroneDynamics;
 
@@ -14,7 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,9 +25,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
     JTextArea bottomLeftText;
     private JComboBox<Integer> droneIdDropdown;
     private LinkedList<Drone> drones;
-    DataFactory factory = new DataFactory();
-    ArrayList<DataStorage> data = factory.getDataStorage();
-
+    private DataFactory factory = new DataFactory();
 
     /**
      * Constructs a new DroneDynamicsMenu with the specified list of drone dynamics.
@@ -129,7 +125,7 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         LOGGER.info("Creating top right text for Drone ID: " + selectedDroneId);
 
         Drone selectedDrone = null;
-        for (Drone drone : factory.getDrones()) {
+        for (Drone drone : factory.getDrones()) { //data.getDrone();
             if (drone.getId() == selectedDroneId) {
                 selectedDrone = drone;
                 break;
@@ -143,17 +139,17 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
             topRightText.setPreferredSize(new Dimension(120, 100));
         }
         String[] droneAttributes = {"ID",
-                                    "Serialnr",
-                                    "DroneType",
-                                    "Weight",
-                                    "CarriageType"};
+                "Serialnr",
+                "DroneType",
+                "Weight",
+                "CarriageType"};
 
-        String[] droneValues = { Integer.toString(selectedDroneId),
-                                selectedDrone.getSerialnumber(),
-                                selectedDrone.getDroneTypeObject().getTypename(),
-                                Double.toString(selectedDrone.getCarriageWeight()),
-                                String.valueOf(selectedDrone.getCarriageType())
-                                };
+        String[] droneValues = {Integer.toString(selectedDroneId),
+                selectedDrone.getSerialnumber(),
+                selectedDrone.getDroneTypeObject().getTypename(),
+                Double.toString(selectedDrone.getCarriageWeight()),
+                String.valueOf(selectedDrone.getCarriageType())
+        };
 
         StringBuilder text = new StringBuilder();
         text.append("Details:\n");
@@ -187,16 +183,16 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
         }
 
         String[] droneAttributes =  {
-                                    "Battery Status",
-                                    "Time Stamp",
-                                    "Speed",
-                                    "Last seen",
-                                    "Longitude",
-                                    "Latitude",
-                                    "Alignment Pitch",
-                                    "Alignment Roll",
-                                    "Alignment Yaw"
-                                    };
+                "Battery Status",
+                "Time Stamp",
+                "Speed",
+                "Last seen",
+                "Longitude",
+                "Latitude",
+                "Alignment Pitch",
+                "Alignment Roll",
+                "Alignment Yaw"
+        };
 
         String[] droneValues = {
                 String.valueOf(selectedDroneDynamic.getBatteryStatus()),

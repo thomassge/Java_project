@@ -17,9 +17,7 @@ import java.util.logging.Logger;
 public class DroneTypeMenu extends JPanel {
     private JFrame frame;
     private DroneType selectedDrone;
-    DataFactory factory = new DataFactory();
-    ArrayList<DataStorage> data = factory.getDataStorage();
-
+    private DataFactory factory = new DataFactory();
     //private Timer refreshTimer;
     private static final Logger LOGGER = Logger.getLogger(DroneTypeMenu.class.getName());
 
@@ -43,6 +41,7 @@ public class DroneTypeMenu extends JPanel {
                 "Control Range",
                 "Maximum Carriage"
         };
+
         //array for columns
         Object[][] data1 = new Object[factory.getDroneTypes().size()][columnNames.length];
 
