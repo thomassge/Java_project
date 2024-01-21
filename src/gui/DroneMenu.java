@@ -172,6 +172,7 @@ public class DroneMenu extends JPanel implements ActionListener {
             CreditsMenu.createCreditList();
         } else if ("refresh".equals(e.getActionCommand())){
             //  Refresh refreshaction = new Refresh();
+            Refresh refreshaction = new Refresh();
         }
         else {
             quit();

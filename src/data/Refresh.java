@@ -7,7 +7,7 @@ import util.WebserverDataFetcher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class Refresh implements Saveable {
+public  class Refresh implements Saveable {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
     static boolean isDronesNew;
     static boolean isDroneTypesNew;
