@@ -16,7 +16,7 @@ public class CreditsMenu {
      * Creates and displays the credits menu. This method sets up the GUI components
      * and populates them with the credits information.
      */
-    public static void createCreditList() {
+    public CreditsMenu() {
         LOGGER.info("Creating Credits menu...");
 
         JFrame droneFrame = new JFrame("Credits");
@@ -64,8 +64,6 @@ public class CreditsMenu {
 
         LOGGER.info("Label added successfully.");
     }
-
-    //quitfkt
 
     /**
      * Quits the application.

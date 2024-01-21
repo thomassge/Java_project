@@ -116,15 +116,4 @@ public class DroneTypeMenu extends JPanel {
             droneTypeMenuData[i][7] = data.get(i).getDroneType().getMaximumCarriage();
         }
     }
-
-    /**
-     * Creates and displays the main GUI frame for the DroneType table.
-     *
-     * @param droneTypes A LinkedList of DroneType objects to be displayed.
-     */
-    public static void createDroneTypeTableGUI(ArrayList<DataStorage> data) {
-        LOGGER.info("Creating DroneTypeTableGUI...");
-       DroneTypeMenu dronet = new DroneTypeMenu(data);
-
-    }
 }
