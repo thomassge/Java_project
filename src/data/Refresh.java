@@ -12,6 +12,7 @@ public abstract class Refresh implements Saveable {
     static boolean isDronesNew;
     static boolean isDroneTypesNew;
     static boolean isDroneDynamicsNew;
+    static boolean initial = true;
 
     public Refresh() {
         LOGGER.info("called Refresh constructor");
@@ -51,7 +52,7 @@ public abstract class Refresh implements Saveable {
             return false;
         }
         else if(localCount < serverCount) {
-            LOGGER.info("Yes");
+            LOGGER.info("Yes new data available");
             Saveable.saveAsFile(URL, serverCount, filename);
             return true;
         }
