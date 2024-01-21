@@ -37,7 +37,6 @@ public class DroneDynamicsMenu extends JPanel implements ActionListener {
 
         LOGGER.info("Initializing DroneDynamicsMenu...");
 
-
         droneIdDropdown = new JComboBox<>();
 
         for (int i=0;i<factory.getDrones().size();i++) {
