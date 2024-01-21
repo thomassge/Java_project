@@ -4,7 +4,6 @@ import gui.DroneMenu;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.Streamable;
-import util.WebserverDataFetcher;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -24,39 +23,10 @@ public class DataFactory extends Refresher {
     public DataFactory() {
         if(isInitial) {
             LOGGER.log(Level.INFO,"Initial Fetch started");
-            fetch();
-            this.dataStorage = linker();
+            fetchAll();
+            setDataStorage(linker());
             isInitial = false;
         }
-    }
-
-    private void deleteData() {
-        setDrones(null);
-        setDroneTypes(null);
-        setDroneDynamics(null);
-        setDataStorage(null);
-    }
-
-    public void refresh() {
-        checkForRefresh();
-        if(isRefreshNeeded) {
-            deleteData();
-            fetch();
-            this.dataStorage = linker();
-        }
-    }
-
-    private void fetch() {
-        System.out.println("File Drone Fetch");
-        fileFetch(Drone.getFilename());
-
-        System.out.println("File DroneType Fetch");
-        fileFetch(DroneType.getFilename());
-
-        System.out.println("File DroneDynamics Fetch");
-        fileFetch(DroneDynamics.getFilename());
-
-        //this.dataStorage = linker();
     }
 
     // GETTER AND SETTER
@@ -95,25 +65,39 @@ public class DataFactory extends Refresher {
 
                                     // METHODS
 
-    private void specificFetch(String url, int limit, int offset) {
-        url = url + WebserverDataFetcher.urlModifier(limit, offset);
-        String jsonString = WebserverDataFetcher.jsonCreator(url);
-
-        switch(checkObject(jsonString)) {
-            case "Drone":
-                //dataStorage.setDrones(Drone.initialize(jsonString, dataStorage.getDrones()));
-                setDrones(Drone.initialize(jsonString));
-                break;
-            case "DroneType":
-                setDroneTypes(DroneType.initialize(jsonString));
-                break;
-            case "DroneDynamics":
-                setDroneDynamics(DroneDynamics.initialize(jsonString));
-                break;
-            default:
-                LOGGER.info(jsonString);
-                break;
+    /**
+     * This method checks for a refresh by comparing the local and server count of every data type.
+     * If any of them is different, all data is refreshed.
+     * It's refreshed by deleting the old data and fetching the new one.
+     * The new data is then linked.
+     */
+    public void refresh() {
+        checkForRefresh();
+        if(isRefreshNeeded) {
+            deleteData();
+            fetchAll();
+            setDataStorage(linker());
         }
+    }
+
+    private void deleteData() {
+        setDrones(null);
+        setDroneTypes(null);
+        setDroneDynamics(null);
+        setDataStorage(null);
+    }
+
+    private void fetchAll() {
+        System.out.println("File Drone Fetch");
+        fileFetch(Drone.getFilename());
+
+        System.out.println("File DroneType Fetch");
+        fileFetch(DroneType.getFilename());
+
+        System.out.println("File DroneDynamics Fetch");
+        fileFetch(DroneDynamics.getFilename());
+
+        //this.dataStorage = linker();
     }
 
     private void fileFetch(String filename) {
