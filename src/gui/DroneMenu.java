@@ -47,23 +47,10 @@ public class DroneMenu extends JPanel implements ActionListener {
         JTable table = createTable();
 
         JScrollPane scrollPane = new JScrollPane(table);
-        this.setLayout(new BorderLayout()); // Setting a layout manager to the container
+        this.setLayout(new BorderLayout());
         this.add(scrollPane, BorderLayout.CENTER);
 
         LOGGER.info("DroneMenu initialized.");
-    }
-
-    /**
-     * Creates and displays the main GUI frame for the drone table.
-     *
-     * @param drones A LinkedList of Drone objects to be displayed in the table.
-     */
-    public static void createDroneTableGUI(ArrayList<DataStorage> data, DataFactory factory) {
-        LOGGER.info("Creating Drone Table GUI...");
-
-        DroneMenu droneM = new DroneMenu(data, factory);
-
-        LOGGER.info("Drone Table GUI created.");
     }
 
     private JTable createTable(){
@@ -127,7 +114,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         addItemToMenuWithActionCommand(menu, "Drone Types", "dronet");
         addItemToMenuWithActionCommand(menu, "Drone Dynamics", "droned");
         addItemToMenuWithActionCommand(menu, "Refresh", "refresh");
-        addItemToMenuWithActionCommand(menu, "Credits", "droned");
+        addItemToMenuWithActionCommand(menu, "Credits", "credits");
 
         LOGGER.info("Menu Bar created.");
         return menuBar;
@@ -164,18 +151,18 @@ public class DroneMenu extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         LOGGER.info("Action Performed: " + e.getActionCommand());
 
-        if ("droned".equals(e.getActionCommand())) {
-            DroneDynamicsMenu.createDroneDynamicsOverview(factory.getDroneDynamics().getFirst());
-        } else if ("dronet".equals(e.getActionCommand())) {
-            DroneTypeMenu.createDroneTypeTableGUI(factory.getDataStorage());
-        } else if ("credits".equals(e.getActionCommand())) {
-            CreditsMenu.createCreditList();
-        } else if ("refresh".equals(e.getActionCommand())){
-            //  Refresh refreshaction = new Refresh();
-        }
-        else {
-            quit();
-        }
+            if ("dronet".equals(e.getActionCommand())) {
+                DroneTypeMenu dronet = new DroneTypeMenu(factory.getDataStorage());
+            } else if ("droned".equals(e.getActionCommand())) {
+                //DroneDynamicsMenu droned = new DroneDynamicsMenu(factory.getDroneDynamics().getFirst());
+                //DroneDynamicsMenu.createDroneDynamicsOverview(factory.getDroneDynamics().getFirst());
+            } else if ("refresh".equals(e.getActionCommand())) {
+                //Refresh refreshaction = new Refresh();
+            } else if ("credits".equals(e.getActionCommand())){
+                CreditsMenu cm = new CreditsMenu();
+            } else{
+                quit();
+            }
     }
 
     /**
