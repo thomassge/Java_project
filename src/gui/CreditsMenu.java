@@ -24,7 +24,7 @@ public class CreditsMenu {
         droneFrame.getContentPane().add(panel);
 
         panel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        //GridBagConstraints gbc = new GridBagConstraints();
 
         addtoPanel(panel, "FRA UAS - OOP Java", 0, 0);
         addtoPanel(panel, "Professor: Prof. Dr. Müller-Bady", 0, 1);

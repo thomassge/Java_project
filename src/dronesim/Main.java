@@ -6,8 +6,9 @@ package dronesim;
 
 import data.*;
 import gui.DroneMenu;
+import logging.LogMain;
 import processing.JSONDeruloHelper;
-import processing.ThreadClass;
+import data.ThreadClass;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -17,8 +18,7 @@ import java.util.logging.Logger;
 
 public class Main {
 
-    // Ein Logger für diese Klasse erstellen
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+   private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     /**
      * The main method that serves as the entry point for the program.
@@ -28,14 +28,10 @@ public class Main {
      * @throws IOException if an I/O error occurs during data fetchhing.
      */
     public static void main(String[] args) throws IOException {
+
+        LogMain lm = new LogMain();
         LOGGER.info("Starting the program...");
 
-//        DataFactory factory = new DataFactory();
-//        ArrayList<DataStorage> data = factory.getDataStorage();
-//
-//        data.getFirst().getDrone().printDrone();
-//        data.getFirst().getDroneType().printDroneType();
-//        data.getFirst().getDroneDynamicsList().getFirst().printDroneDynamics();
 
         DataFactory factory = new DataFactory();
         ArrayList<DataStorage> data = factory.getDataStorage();
@@ -45,11 +41,10 @@ public class Main {
                 DroneMenu droneM = new DroneMenu(data, factory);
             }
         });
+
         ThreadClass threadClass = new ThreadClass();
         threadClass.startDataUpdaterThread();
 
-        data.getFirst().getDrone().getDroneTypeObject();
-        int i = 0;
         LOGGER.info("Program execution completed.");
     }
 }
