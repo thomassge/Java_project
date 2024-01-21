@@ -21,7 +21,6 @@ public interface Saveable {
                 readChars++;
             }
             reader.close();
-
             return Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
         } catch (Exception e) {
             //logger.log(Level.INFO, "LocalCount Exception: Count is 0.");
