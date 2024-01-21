@@ -28,26 +28,25 @@ public class DataFactory extends Refresh {
             initialFetch2();
             initial = false;
         } else {
-            LOGGER.log(Level.INFO,"Refresh Button activated");
             refreshButton();
         }
     }
 
     private void refreshButton() {
         if(isDronesNew) {
-            System.out.println("Specific Drone Fetch");
+            LOGGER.log(Level.INFO,"Specific Drone Fetch");
             specificFetch(Drone.getUrl(), Drone.getServerCount(), Drone.getLocalCount());
-        } else System.out.println("No new Drone data");
+        } else LOGGER.log(Level.INFO ,"No new Drone data");
 
         if(isDroneTypesNew) {
-            System.out.println("Specific DroneType Fetch");
+            LOGGER.log(Level.INFO ,"Specific DroneType Fetch");
             specificFetch(DroneType.getUrl(), DroneType.getServerCount(), DroneType.getLocalCount());
-        } else System.out.println("No new DroneType data");
+        } else LOGGER.log(Level.INFO , "No new DroneType data");
 
         if(isDroneDynamicsNew) {
-            System.out.println("Specific DroneDynamics Fetch");
+            LOGGER.log(Level.INFO ,"Specific DroneDynamics Fetch");
             specificFetch(DroneDynamics.getUrl(), DroneDynamics.getServerCount(), DroneDynamics.getLocalCount());
-        } else System.out.println("No new DroneDynamics data");
+        } else LOGGER.log(Level.INFO ,"No new DroneDynamics data");
 
         if(isDronesNew || isDroneTypesNew || isDroneDynamicsNew) {
             this.dataStorage = linker();
@@ -56,13 +55,13 @@ public class DataFactory extends Refresh {
 
     private void initialFetch2() {
 
-        System.out.println("File Drone Fetch");
+        LOGGER.log(Level.INFO , "File Drone Fetch");
         fileFetch(Drone.getFilename());
 
-        System.out.println("File DroneType Fetch");
+        LOGGER.log(Level.INFO ,"File DroneType Fetch");
         fileFetch(DroneType.getFilename());
 
-        System.out.println("File DroneDynamics Fetch");
+        LOGGER.log(Level.INFO ,"File DroneDynamics Fetch");
         fileFetch(DroneDynamics.getFilename());
 
         this.dataStorage = linker();
@@ -70,26 +69,26 @@ public class DataFactory extends Refresh {
 
     private void initialFetch() {
         if(isDronesNew) {
-            System.out.println("Specific Drone Fetch");
+            LOGGER.log(Level.INFO ,"Specific Drone Fetch");
             specificFetch(Drone.getUrl(), Drone.getServerCount(), 0);
         } else {
-            System.out.println("File Drone Fetch");
+            LOGGER.log(Level.INFO ,"File Drone Fetch");
             fileFetch(Drone.getFilename());
         }
 
         if (isDroneTypesNew) {
-            System.out.println("Specific DroneType Fetch");
+            LOGGER.log(Level.INFO ,"Specific DroneType Fetch");
             specificFetch(DroneType.getUrl(), DroneType.getServerCount(), 0);
         } else {
-            System.out.println("File DroneType Fetch");
+            LOGGER.log(Level.INFO ,"File DroneType Fetch");
             fileFetch(DroneType.getFilename());
         }
 
         if(isDroneDynamicsNew) {
-            System.out.println("Specific DroneDynamics Fetch");
+            LOGGER.log(Level.INFO ,"Specific DroneDynamics Fetch");
             specificFetch(DroneDynamics.getUrl(), DroneDynamics.getServerCount(), 0);
         } else {
-            System.out.println("File DroneDynamics Fetch");
+            LOGGER.log(Level.INFO ,"File DroneDynamics Fetch");
             fileFetch(DroneDynamics.getFilename());
         }
 
@@ -149,7 +148,7 @@ public class DataFactory extends Refresh {
                 DroneDynamics.initialize(jsonString, droneDynamics);
                 break;
             default:
-                LOGGER.info(jsonString);
+                LOGGER.warning(jsonString);
                 break;
         }
     }

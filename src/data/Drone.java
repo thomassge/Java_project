@@ -236,7 +236,7 @@ public class Drone {
         logger.log(Level.INFO,"\n");
     }
 
-    public void printAllDroneInformation() {
+    /*public void printAllDroneInformation() {
         logger.log(Level.INFO,"All the following Information is linked to the Drone " + this.droneTypeObject.getTypename() + " with the Serialnumber: " + this.serialnumber);
         logger.log(Level.INFO,"Individual Drone Information: ");
         this.printDrone();
@@ -244,7 +244,7 @@ public class Drone {
         this.droneTypeObject.printDroneType();
         logger.log(Level.INFO,"DroneDynamics Information: ");
         iterateThroughList(this.droneDynamicsArrayList);
-    }
+    }*/
 
     public void iterateThroughList(ArrayList<DroneDynamics> myList) {
         for (int i = 0; i < myList.size(); i++) {
