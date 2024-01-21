@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneType {
+public class DroneType implements Refreshable {
 
     private static final Logger logger = Logger.getLogger(DroneType.class.getName());
 
@@ -157,7 +157,8 @@ public class DroneType {
      * @param jsonString The JSON string containing drone type data.
      * @param droneTypes The list where DroneType objects will be added.
      */
-    public static void initialize(String jsonString, LinkedList<DroneType> droneTypes) {
+    public static LinkedList<DroneType> initialize(String jsonString) {
+        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
@@ -175,45 +176,31 @@ public class DroneType {
             ));
         }
         setMemoryCount(getMemoryCount() + jsonArray.length());
+        return droneTypes;
     }
 
-    /**
-     * Links drone to drones in the provided lists.
-     *
-     * @param droneTypes The list of DroneType objects.
-     * @param drones The list of Drone objects.
-     */
-    public static void droneTypeToDroneLinker(LinkedList<DroneType> droneTypes, LinkedList<Drone> drones) {
-        for(Drone droneObjectThatNeedsDroneTypeInformation : drones) {
-            if(droneObjectThatNeedsDroneTypeInformation.getDroneTypeObject() == null) {
+    public static boolean isNewDataAvailable() {
+        Saveable.createFile(filename);
 
-                for (DroneType droneType : droneTypes) {
-                    if (droneObjectThatNeedsDroneTypeInformation.getExtractedDroneTypeID() == (droneType.getDroneTypeID())) {
-
-                        droneObjectThatNeedsDroneTypeInformation.setDroneTypeObject(droneType);
-                        break; //break added
-                    }
-                }
-            }
-            else { continue; }
+        if(serverCount == 0) {
+            //logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            //TODO: Own Exception
+            return false;
         }
+        else if (localCount == serverCount) {
+            //logger.log(Level.INFO, "local- and serverDroneCount identical.");
+            return false;
+        }
+        else if(localCount < serverCount) {
+            logger.info("Yes new data available");
+            Saveable.saveAsFile(URL, serverCount, filename);
+            return true;
+        }
+        else {
+            logger.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
+        }
+        return false;
     }
-
-//    /**
-//     * Fetches drone type data and converts it into DroneType objects.
-//     *
-//     * @return A LinkedList of DroneType objects.
-//     */
-//    public static LinkedList<DroneType> initializeDroneTypes() {
-//        checkForNewData(filename, URL, localCount, serverCount);
-//
-//        String myJson = Streamable.reader(filename);
-//
-//        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
-//        DroneType.initialize(myJson, droneTypes);
-//
-//        return droneTypes;
-//    }
 
     /**
      * Prints the drone type details to the log.

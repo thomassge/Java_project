@@ -6,6 +6,7 @@ import util.WebserverDataFetcher;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 public interface Saveable {
     public static int checkLocalCount(String filename) {
@@ -29,6 +30,7 @@ public interface Saveable {
     }
 
     public static void createFile(String filename) {
+
         if (!(new File(filename).exists())) {
             new File(filename);
             //logger.log(Level.INFO, filename + " created.");

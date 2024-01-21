@@ -1,7 +1,7 @@
+package data;
 /**
  * This package contains classes related to drone data management.
  */
-package data;
 
 import data.enums.CarriageType;
 import data.exceptions.DroneTypeIdNotExtractableException;
@@ -16,10 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is the class where all Drone Data will be saved and called from.
- * It contains all the information that is available on the webserver.
+ * This class holds all individual Drone data that can be retrieved from the webserver.
  */
-public class Drone {
+public class Drone implements Saveable, Refreshable {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
 
     /**
@@ -32,37 +31,16 @@ public class Drone {
     private String droneTypePointer;
     private int extractedDroneTypeID;
     private CarriageType carriageType;
-
-    /**
-     * Saves the dronetype information of the drone that this object holds.
-     */
-    private DroneType droneTypeObject;
-
-    /**
-     * Saves an arraylist of DroneDynamics objects that are linked to this drone.
-     */
-    public ArrayList<DroneDynamics> droneDynamicsArrayList;
-
-    public static void setLocalCount(int localCount) {
-        Drone.localCount = localCount;
-    }
-
-    public static void setServerCount(int serverCount) {
-        Drone.serverCount = serverCount;
-    }
-
     /**
      * The number of entries in file, on the server and in memory.
      */
     private static int localCount;
     private static int serverCount;
     private static int memoryCount;
-
     /**
      * The filename where we store downloaded data
      */
     private final static String filename = "drones.json";
-
     /**
      * Drones API Endpoint
      */
@@ -119,6 +97,11 @@ public class Drone {
         return this.droneTypePointer;
     }
 
+    /**
+     * Extracts the DroneTypeID from the DroneTypePointer via RegEx.
+     * This helps to link the DroneType to the Drone.
+     * @return Extracted DroneTypeID as integer
+     */
     public int getExtractedDroneTypeID() {
         Pattern pattern = Pattern.compile("[0-9]+", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(this.droneTypePointer);
@@ -135,26 +118,27 @@ public class Drone {
         return this.carriageType;
     }
 
-    public DroneType getDroneTypeObject() {
-        return this.droneTypeObject;
-    }
-
-    public ArrayList<DroneDynamics> getDroneDynamicsArrayList() {
-        return this.droneDynamicsArrayList;
-    }
-
-                                // STATIC GETTER-METHODS
+                                // STATIC GETTER-/SETTER METHODS
 
     public static int getLocalCount() {
         return localCount;
+    }
+    public static void setLocalCount(int localCount) {
+        Drone.localCount = localCount;
     }
 
     public static int getServerCount() {
         return serverCount;
     }
+    public static void setServerCount(int serverCount) {
+        Drone.serverCount = serverCount;
+    }
 
     public static int getMemoryCount() {
         return memoryCount;
+    }
+    public static void setMemoryCount(int newValue) {
+        memoryCount = newValue;
     }
 
     public static String getFilename() {
@@ -167,18 +151,6 @@ public class Drone {
 
                                 // SETTER-METHODS
 
-    public void setDroneTypeObject(DroneType droneTypeObject) {
-        this.droneTypeObject = droneTypeObject;
-    }
-
-    public void setDroneDynamicsArrayList(ArrayList<DroneDynamics> droneDynamicsArrayList) {
-        this.droneDynamicsArrayList = droneDynamicsArrayList;
-    }
-
-    public static void setMemoryCount(int newValue) {
-        memoryCount = newValue;
-    }
-
     public static CarriageType mapCarriageType(String carriageType) {
         return switch (carriageType) {
             case "ACT" -> CarriageType.ACT;
@@ -190,7 +162,8 @@ public class Drone {
 
                                 // OTHER METHODS
 
-    public static void initialize(String jsonString, LinkedList<Drone> drones) {
+    public static LinkedList<Drone> initialize(String jsonString) {
+        LinkedList<Drone> drones = new LinkedList<Drone>();
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
@@ -206,6 +179,30 @@ public class Drone {
             ));
         }
         setMemoryCount(getMemoryCount() + jsonArray.length());
+        return drones;
+    }
+
+    public static boolean isNewDataAvailable() {
+        Saveable.createFile(filename);
+
+        if(serverCount == 0) {
+            //logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            //TODO: Own Exception
+            return false;
+        }
+        else if (localCount == serverCount) {
+            //logger.log(Level.INFO, "local- and serverDroneCount identical.");
+            return false;
+        }
+        else if(localCount < serverCount) {
+            logger.info("Yes new data available");
+            Saveable.saveAsFile(URL, serverCount, filename);
+            return true;
+        }
+        else {
+            logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
+        }
+        return false;
     }
 
 //    /**
@@ -237,13 +234,10 @@ public class Drone {
     }
 
     public void printAllDroneInformation() {
-        logger.log(Level.INFO,"All the following Information is linked to the Drone " + this.droneTypeObject.getTypename() + " with the Serialnumber: " + this.serialnumber);
         logger.log(Level.INFO,"Individual Drone Information: ");
         this.printDrone();
         logger.log(Level.INFO,"DroneTypes Information: ");
-        this.droneTypeObject.printDroneType();
         logger.log(Level.INFO,"DroneDynamics Information: ");
-        iterateThroughList(this.droneDynamicsArrayList);
     }
 
     public void iterateThroughList(ArrayList<DroneDynamics> myList) {

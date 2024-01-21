@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DataFactory extends Refresh {
+public class DataFactory extends Refresher {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
 
     // FIELDS
@@ -22,40 +22,31 @@ public class DataFactory extends Refresh {
 
     // CONSTRUCTOR
     public DataFactory() {
-
-        if(initial) {
+        if(isInitial) {
             LOGGER.log(Level.INFO,"Initial Fetch started");
-            initialFetch2();
-            initial = false;
-        } else {
-            LOGGER.log(Level.INFO,"Refresh Button activated");
-            refreshButton();
+            fetch();
+            this.dataStorage = linker();
+            isInitial = false;
         }
     }
 
-    private void refreshButton() {
-        if(isDronesNew) {
-            System.out.println("Specific Drone Fetch");
-            specificFetch(Drone.getUrl(), Drone.getServerCount(), Drone.getLocalCount());
-        } else System.out.println("No new Drone data");
+    private void deleteData() {
+        setDrones(null);
+        setDroneTypes(null);
+        setDroneDynamics(null);
+        setDataStorage(null);
+    }
 
-        if(isDroneTypesNew) {
-            System.out.println("Specific DroneType Fetch");
-            specificFetch(DroneType.getUrl(), DroneType.getServerCount(), DroneType.getLocalCount());
-        } else System.out.println("No new DroneType data");
-
-        if(isDroneDynamicsNew) {
-            System.out.println("Specific DroneDynamics Fetch");
-            specificFetch(DroneDynamics.getUrl(), DroneDynamics.getServerCount(), DroneDynamics.getLocalCount());
-        } else System.out.println("No new DroneDynamics data");
-
-        if(isDronesNew || isDroneTypesNew || isDroneDynamicsNew) {
+    public void refresh() {
+        checkForRefresh();
+        if(isRefreshNeeded) {
+            deleteData();
+            fetch();
             this.dataStorage = linker();
         }
     }
 
-    private void initialFetch2() {
-
+    private void fetch() {
         System.out.println("File Drone Fetch");
         fileFetch(Drone.getFilename());
 
@@ -65,37 +56,8 @@ public class DataFactory extends Refresh {
         System.out.println("File DroneDynamics Fetch");
         fileFetch(DroneDynamics.getFilename());
 
-        this.dataStorage = linker();
+        //this.dataStorage = linker();
     }
-
-    private void initialFetch() {
-        if(isDronesNew) {
-            System.out.println("Specific Drone Fetch");
-            specificFetch(Drone.getUrl(), Drone.getServerCount(), 0);
-        } else {
-            System.out.println("File Drone Fetch");
-            fileFetch(Drone.getFilename());
-        }
-
-        if (isDroneTypesNew) {
-            System.out.println("Specific DroneType Fetch");
-            specificFetch(DroneType.getUrl(), DroneType.getServerCount(), 0);
-        } else {
-            System.out.println("File DroneType Fetch");
-            fileFetch(DroneType.getFilename());
-        }
-
-        if(isDroneDynamicsNew) {
-            System.out.println("Specific DroneDynamics Fetch");
-            specificFetch(DroneDynamics.getUrl(), DroneDynamics.getServerCount(), 0);
-        } else {
-            System.out.println("File DroneDynamics Fetch");
-            fileFetch(DroneDynamics.getFilename());
-        }
-
-        this.dataStorage = linker();
-    }
-
 
     // GETTER AND SETTER
     public ArrayList<DataStorage> getDataStorage() {
@@ -140,13 +102,13 @@ public class DataFactory extends Refresh {
         switch(checkObject(jsonString)) {
             case "Drone":
                 //dataStorage.setDrones(Drone.initialize(jsonString, dataStorage.getDrones()));
-                Drone.initialize(jsonString, drones);
+                setDrones(Drone.initialize(jsonString));
                 break;
             case "DroneType":
-                DroneType.initialize(jsonString, droneTypes);
+                setDroneTypes(DroneType.initialize(jsonString));
                 break;
             case "DroneDynamics":
-                DroneDynamics.initialize(jsonString, droneDynamics);
+                setDroneDynamics(DroneDynamics.initialize(jsonString));
                 break;
             default:
                 LOGGER.info(jsonString);
@@ -158,13 +120,13 @@ public class DataFactory extends Refresh {
         String jsonString = Streamable.reader(filename);
         switch(checkObject(jsonString)) {
             case "Drone":
-                Drone.initialize(jsonString, drones);
+                setDrones(Drone.initialize(jsonString));
                 break;
             case "DroneType":
-                DroneType.initialize(jsonString, droneTypes);
+                setDroneTypes(DroneType.initialize(jsonString));
                 break;
             case "DroneDynamics":
-                DroneDynamics.initialize(jsonString, droneDynamics);
+                setDroneDynamics(DroneDynamics.initialize(jsonString));
                 break;
             default:
                 LOGGER.info(jsonString);
@@ -219,7 +181,7 @@ public class DataFactory extends Refresh {
 
     private DroneType selectDroneType(int i) {
         int j = 0;
-        for(Drone obj : drones) {
+        for(DroneType obj : droneTypes) {
             if(drones.get(i).getExtractedDroneTypeID() == droneTypes.get(j).getDroneTypeID()) {
                 return droneTypes.get(j);
                 //remove from list after selection

@@ -51,18 +51,18 @@ public class ThreadClass {
     /**
      * Inner class DataUpdater implements the Runnable interface and defines the task for the data update thread.
      */
-    private class DataUpdater extends Refresh implements Runnable {
+    private class DataUpdater implements Runnable {
         @Override
         public void run() {
             try {
                 while (!Thread.interrupted()) {
+                    Refresher.checkForRefresh();
 
-                    DataFactory factory = new DataFactory();
+                    if (Refresher.isRefreshNeeded) {
+                        //showNotification("Restart GUI");
+                        //restartGUI();
+                        //one of these two methods makes the thread stop
 
-                    if (isDronesNew || isDroneTypesNew || isDroneDynamicsNew) {
-                        showNotification("Restart GUI");
-                        restartGUI();
-                        //maybe restart main to call saveAsFile
                     }
 
                     // Wait for 1 minute before the next check

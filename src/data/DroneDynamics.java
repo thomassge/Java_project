@@ -172,67 +172,8 @@ public class DroneDynamics {
         };
     }
 
-//    /**
-//     * Adds drone dynamics data to the provided list of drones.
-//     *
-//     * @param drones The list of drones to which the dynamics data will be added.
-//     */
-//    public static void addDroneDynamicsData(LinkedList<Drone> drones) {
-//        checkForNewData(filename, URL, localCount, serverCount);
-//
-//        String myJson = Streamable.reader(filename);
-//
-//        JSONObject myJsonObject = new JSONObject(myJson);
-//        JSONArray jsonArray = myJsonObject.getJSONArray("results");
-//
-//        // code insists that number of drones >= number of drones that have dronedynamics data (probably fine since every droneD entry has a drone url)
-//        for (int z = 0; z < Drone.getMemoryCount(); z++) {
-//            if (drones.get(z).droneDynamicsArrayList == null) {
-//                drones.get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
-//            }
-//            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(z).getId() + "/";
-//
-//            for (int j = 0; j < jsonArray.length(); j++) {
-//                JSONObject o = jsonArray.getJSONObject(j);
-//
-//                if (o.getString("drone").equals(toCheck)) {
-//                    drones.get(z).droneDynamicsArrayList.add(new DroneDynamics(
-//                            o.getString("drone"),
-//                            o.getString("timestamp"),
-//                            o.getInt("speed"),
-//                            o.getFloat("align_roll"),
-//                            o.getFloat("align_pitch"),
-//                            o.getFloat("align_yaw"),
-//                            o.getDouble("longitude"),
-//                            o.getDouble("latitude"),
-//                            o.getInt("battery_status"),
-//                            o.getString("last_seen"),
-//                            DroneDynamics.mapStatus(o.getString("status"))
-//                    ));
-//                }
-//            }
-//        }
-//        setMemoryCount(getMemoryCount() + jsonArray.length());
-//        //numberOfDroneDynamics = numberOfDroneDynamics + jsonArray.length(); // Update numberOfDroneDynamics if refresh() creates new DroneDynamics data
-//    }
-
-//    public static void droneDynamicsLinker(DataStorage dataStorage) {
-//        for (int z = 0; z < Drone.getMemoryCount(); z++) {
-//            if (dataStorage.getDrones().get(z).droneDynamicsArrayList == null) {
-//                dataStorage.getDrones().get(z).setDroneDynamicsArrayList(new ArrayList<DroneDynamics>());
-//            }
-//            String toCheck = "http://dronesim.facets-labs.com/api/drones/" + dataStorage.getDrones().get(z).getId() + "/";
-//            for (int j = 0; j < DroneDynamics.getMemoryCount(); j++) {
-//                if (dataStorage.getDroneDynamics().get(j).getDronePointer().equals(toCheck)) {
-//                    //dataStorage.setDroneDynamics();
-//                    dataStorage.getDrones().get(z).droneDynamicsArrayList.add(dataStorage.getDroneDynamics().get(j));
-//                }
-//            }
-//
-//        }
-//    }
-
-    public static void initialize(String jsonString, ArrayList<DroneDynamics> droneDynamics) {
+    public static ArrayList<DroneDynamics> initialize(String jsonString) {
+        ArrayList<DroneDynamics> droneDynamics = new ArrayList<DroneDynamics>();
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
@@ -253,6 +194,30 @@ public class DroneDynamics {
             ));
         }
         setMemoryCount(getMemoryCount() + jsonArray.length());
+        return droneDynamics;
+    }
+
+    public static boolean isNewDataAvailable() {
+        Saveable.createFile(filename);
+
+        if(serverCount == 0) {
+            //logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            //TODO: Own Exception
+            return false;
+        }
+        else if (localCount == serverCount) {
+            //logger.log(Level.INFO, "local- and serverDroneCount identical.");
+            return false;
+        }
+        else if(localCount < serverCount) {
+            logger.info("Yes new data available");
+            Saveable.saveAsFile(URL, serverCount, filename);
+            return true;
+        }
+        else {
+            logger.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
+        }
+        return false;
     }
 
     /**

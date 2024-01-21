@@ -45,7 +45,8 @@ public class WebserverDataFetcher {
 
             // Step 5: Get the HTTP response code
             int responseCode = connection.getResponseCode(); // Gibt 200 bei eienr successful request zurück, 401 sonst
-            LogMain.getLogger().log(Level.INFO,"responseCode for jsonCreator: " + responseCode);
+            //LogMain.getLogger().log(Level.INFO,"responseCode for jsonCreator: " + responseCode);
+            System.out.println("ResonseCode: " + responseCode);
 
             // Step 6: Read and display response content
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream())); //Speichert den InputStream
@@ -57,7 +58,8 @@ public class WebserverDataFetcher {
                 responseContent.append(line);
             }   // Erschafft den "json String"
 
-            LogMain.getLogger().log(Level.INFO, "JSON data successfully received from " + link );
+            //LogMain.getLogger().log(Level.INFO, "JSON data successfully received from " + link );
+            System.out.println("JSON Data successfully retrieved from: " + link);
 
             return responseContent.toString();
 
