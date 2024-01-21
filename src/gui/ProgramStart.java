@@ -6,7 +6,6 @@ package gui;
 
 import logging.LogMain;
 import data.*;
-import processing.*;
 
 import java.util.*;
 import java.io.IOException;

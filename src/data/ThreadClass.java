@@ -2,10 +2,7 @@
  * This class manages the data update and processing mechanism for the application.
  * It runs a background thread to regularly check for new drone-related data and processes it as needed.
  */
-package processing;
-import data.Drone;
-import data.DroneDynamics;
-import data.DroneType;
+package data;
 import gui.DroneMenu;
 
 import javax.swing.*;
@@ -13,19 +10,15 @@ import java.util.logging.Logger;
 
 public class ThreadClass {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
-    private boolean newDronesAvailable;
-    private boolean newDroneTypesAvailable;
-    private boolean newDroneDynamicsAvailable;
-
-    private static JSONDeruloHelper helper = new JSONDeruloHelper();
+//    private boolean newDronesAvailable;
+//    private boolean newDroneTypesAvailable;
+//    private boolean newDroneDynamicsAvailable;
 
     /**
      * Constructs a new Backend instance with initial states set to indicate no new data is available.
      */
     public ThreadClass() {
-        this.newDronesAvailable = false;
-        this.newDroneTypesAvailable = false;
-        this.newDroneDynamicsAvailable = false;
+
     }
 
     /**
@@ -58,15 +51,15 @@ public class ThreadClass {
     /**
      * Inner class DataUpdater implements the Runnable interface and defines the task for the data update thread.
      */
-    private class DataUpdater implements Runnable {
+    private class DataUpdater extends Refresh implements Runnable {
         @Override
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-//                    Drone.checkForNewData(Drone.getFilename(), Drone.getUrl());
-//                    DroneType.checkForNewData(DroneType.getFilename(), DroneType.getUrl());
-//                    DroneDynamics.checkForNewData(DroneDynamics.getFilename(), DroneDynamics.getUrl());
-                    if (newDronesAvailable || newDroneTypesAvailable || newDroneDynamicsAvailable) {
+
+                    DataFactory factory = new DataFactory();
+
+                    if (isDronesNew || isDroneTypesNew || isDroneDynamicsNew) {
                         showNotification("Restart GUI");
                         restartGUI();
                         //maybe restart main to call saveAsFile

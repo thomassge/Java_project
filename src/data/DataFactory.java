@@ -8,6 +8,7 @@ import util.WebserverDataFetcher;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DataFactory extends Refresh {
@@ -21,6 +22,53 @@ public class DataFactory extends Refresh {
 
     // CONSTRUCTOR
     public DataFactory() {
+
+        if(initial) {
+            LOGGER.log(Level.INFO,"Initial Fetch started");
+            initialFetch2();
+            initial = false;
+        } else {
+            LOGGER.log(Level.INFO,"Refresh Button activated");
+            refreshButton();
+        }
+    }
+
+    private void refreshButton() {
+        if(isDronesNew) {
+            System.out.println("Specific Drone Fetch");
+            specificFetch(Drone.getUrl(), Drone.getServerCount(), Drone.getLocalCount());
+        } else System.out.println("No new Drone data");
+
+        if(isDroneTypesNew) {
+            System.out.println("Specific DroneType Fetch");
+            specificFetch(DroneType.getUrl(), DroneType.getServerCount(), DroneType.getLocalCount());
+        } else System.out.println("No new DroneType data");
+
+        if(isDroneDynamicsNew) {
+            System.out.println("Specific DroneDynamics Fetch");
+            specificFetch(DroneDynamics.getUrl(), DroneDynamics.getServerCount(), DroneDynamics.getLocalCount());
+        } else System.out.println("No new DroneDynamics data");
+
+        if(isDronesNew || isDroneTypesNew || isDroneDynamicsNew) {
+            this.dataStorage = linker();
+        }
+    }
+
+    private void initialFetch2() {
+
+        System.out.println("File Drone Fetch");
+        fileFetch(Drone.getFilename());
+
+        System.out.println("File DroneType Fetch");
+        fileFetch(DroneType.getFilename());
+
+        System.out.println("File DroneDynamics Fetch");
+        fileFetch(DroneDynamics.getFilename());
+
+        this.dataStorage = linker();
+    }
+
+    private void initialFetch() {
         if(isDronesNew) {
             System.out.println("Specific Drone Fetch");
             specificFetch(Drone.getUrl(), Drone.getServerCount(), 0);
@@ -28,6 +76,7 @@ public class DataFactory extends Refresh {
             System.out.println("File Drone Fetch");
             fileFetch(Drone.getFilename());
         }
+
         if (isDroneTypesNew) {
             System.out.println("Specific DroneType Fetch");
             specificFetch(DroneType.getUrl(), DroneType.getServerCount(), 0);
@@ -35,6 +84,7 @@ public class DataFactory extends Refresh {
             System.out.println("File DroneType Fetch");
             fileFetch(DroneType.getFilename());
         }
+
         if(isDroneDynamicsNew) {
             System.out.println("Specific DroneDynamics Fetch");
             specificFetch(DroneDynamics.getUrl(), DroneDynamics.getServerCount(), 0);
@@ -42,6 +92,7 @@ public class DataFactory extends Refresh {
             System.out.println("File DroneDynamics Fetch");
             fileFetch(DroneDynamics.getFilename());
         }
+
         this.dataStorage = linker();
     }
 
@@ -139,6 +190,8 @@ public class DataFactory extends Refresh {
             return "Error";
         }
     }
+
+                                    // METHODS FOR LINKING DATA
 
     private ArrayList<DataStorage> linker () {
         ArrayList<DataStorage> list = new ArrayList<>();

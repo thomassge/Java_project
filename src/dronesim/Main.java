@@ -37,9 +37,8 @@ public class Main {
         DataFactory factory = new DataFactory();
         ArrayList<DataStorage> data = factory.getDataStorage();
 
-
-        data.getFirst().getDrone().getDroneTypeObject();
         int i = 0;
+        //DataFactory newFactory = new DataFactory();
         LOGGER.info("Program execution completed.");
     }
 }
