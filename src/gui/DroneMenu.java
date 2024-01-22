@@ -13,7 +13,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
@@ -155,7 +154,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         if ("dronet".equals(e.getActionCommand())) {
             DroneTypeMenu dronet = new DroneTypeMenu(data);
         } else if ("droned".equals(e.getActionCommand())) {
-            DDMenu droned = new DDMenu(data);
+            DroneDynamicsMenu droned = new DroneDynamicsMenu(data);
         } else if ("refresh".equals(e.getActionCommand())) {
             Refresh refreshaction = new DataFactory();
             LOGGER.log(Level.INFO,"Refresh Button activated");
