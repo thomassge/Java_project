@@ -34,7 +34,7 @@ public class DroneMenu extends JPanel implements ActionListener {
      *
      * @param drones A LinkedList of Drone objects to be displayed in the table.
      */
-    public DroneMenu(ArrayList<DataStorage> data, DataFactory factory) {
+    public DroneMenu(ArrayList<DataStorage> data) {
 
         super(new GridLayout(1, 0));
         this.data  = data;
@@ -90,7 +90,7 @@ public class DroneMenu extends JPanel implements ActionListener {
         return frame;
     }
 
-    private String formatCreatedDateTime(String created){
+    public static String formatCreatedDateTime(String created){
         try {
             OffsetDateTime dateTime = OffsetDateTime.parse(created);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
