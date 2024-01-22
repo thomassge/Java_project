@@ -21,9 +21,7 @@ import java.util.logging.Logger;
 public class Drone implements Saveable, Refreshable {
     private static final Logger logger = Logger.getLogger(Drone.class.getName());
 
-    /**
-     * INDIVIDUALDRONE DATA
-     */
+    //INDIVIDUAL DRONE DATA
     private int id;
     private String created;
     private int carriageWeight;
@@ -46,8 +44,7 @@ public class Drone implements Saveable, Refreshable {
      */
     private static final String URL = "https://dronesim.facets-labs.com/api/drones/";
 
-                                // CONSTRUCTORS
-
+    //CONSTRUCTORS
     /**
      * Default constructor for the Drone class.
      */
@@ -75,8 +72,7 @@ public class Drone implements Saveable, Refreshable {
         this.droneTypePointer = DroneTypePointer;
     }
 
-                                // GETTER-METHODS
-
+    //GETTER METHODS
     public int getId() {
         return this.id;
     }
@@ -118,8 +114,7 @@ public class Drone implements Saveable, Refreshable {
         return this.carriageType;
     }
 
-                                // STATIC GETTER-/SETTER METHODS
-
+   //STATIC GETTER AND SETTER METHODS
     public static int getLocalCount() {
         return localCount;
     }
@@ -137,8 +132,8 @@ public class Drone implements Saveable, Refreshable {
     public static int getMemoryCount() {
         return memoryCount;
     }
-    public static void setMemoryCount(int newValue) {
-        memoryCount = newValue;
+    public static void setMemoryCount(int memoryCount) {
+        Drone.memoryCount = memoryCount;
     }
 
     public static String getFilename() {
@@ -149,8 +144,7 @@ public class Drone implements Saveable, Refreshable {
         return URL;
     }
 
-                                // SETTER-METHODS
-
+    //ENUM METHOD
     public static CarriageType mapCarriageType(String carriageType) {
         return switch (carriageType) {
             case "ACT" -> CarriageType.ACT;
@@ -160,8 +154,7 @@ public class Drone implements Saveable, Refreshable {
         };
     }
 
-                                // OTHER METHODS
-
+    //OTHER METHODS
     public static LinkedList<Drone> initialize(String jsonString) {
         LinkedList<Drone> drones = new LinkedList<Drone>();
         JSONObject wholeHtml = new JSONObject(jsonString);
@@ -205,23 +198,19 @@ public class Drone implements Saveable, Refreshable {
         return false;
     }
 
-//    /**
-//     * Fetches drone data from a JSON file and converts it into Drone objects.
-//     *
-//     * @return A LinkedList of Drone objects.
-//     */
-//    public static LinkedList<Drone> initializeDrones() {
-//        checkForNewData(filename, URL, localCount, serverCount);
-//
-//        String myJson = Streamable.reader(filename);
-//
-//        LinkedList<Drone> drones = new LinkedList<Drone>();
-//        Drone.initialize(myJson, drones);
-//
-//        return drones;
-//    }
+    public void iterateThroughList(ArrayList<DroneDynamics> myList) {
+        for (int i = 0; i < myList.size(); i++) {
+            myList.get(i).printDroneDynamics();
+        }
+    }
 
+    private static void validateExtractedDroneTypeID(boolean boo) throws DroneTypeIdNotExtractableException {
+        if (!boo) {
+            throw new DroneTypeIdNotExtractableException();
+        }
+    }
 
+    //PRINT METHODS
     public void printDrone() {
         logger.log(Level.INFO,"Drone id: " + this.id);
         logger.log(Level.INFO,"Serialnumber: " + this.serialnumber);
@@ -238,17 +227,5 @@ public class Drone implements Saveable, Refreshable {
         this.printDrone();
         logger.log(Level.INFO,"DroneTypes Information: ");
         logger.log(Level.INFO,"DroneDynamics Information: ");
-    }
-
-    public void iterateThroughList(ArrayList<DroneDynamics> myList) {
-        for (int i = 0; i < myList.size(); i++) {
-            myList.get(i).printDroneDynamics();
-        }
-    }
-
-    private static void validateExtractedDroneTypeID(boolean boo) throws DroneTypeIdNotExtractableException {
-        if (!boo) {
-            throw new DroneTypeIdNotExtractableException();
-        }
     }
 }

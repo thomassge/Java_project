@@ -20,6 +20,13 @@ public class DataFactory extends Refresher {
     private ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
 
     // CONSTRUCTOR
+
+    /**
+     * The first time, the DataFactory constructor is called, it checks if our Files need a
+     * refresh, and refreshes if so. This happens, because it extends Refresher. It then fetches all data from the server.
+     * It then links the data and stores it in the dataStorage ArrayList.
+     * Every other time, it just refreshes the data in the Refresher constructor.
+     */
     public DataFactory() {
         if(isInitial) {
             LOGGER.log(Level.INFO,"Initial Fetch started");
