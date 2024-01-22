@@ -128,14 +128,12 @@ public class DroneMenu extends JPanel implements ActionListener {
         LOGGER.info("Menu Bar created.");
         return menuBar;
     }
-
     private void addItemToMenuWithActionCommand(JMenu menu, String itemName, String actionCmd){
         JMenuItem menuItem = new JMenuItem(itemName);
         menuItem.setActionCommand(actionCmd);
         menuItem.addActionListener(this);
         menu.add(menuItem);
     }
-
     private void initializeGuiData(ArrayList<DataStorage> data){
         droneMenuData = new Object[data.size()][columnNames.length];
 
