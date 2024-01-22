@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 public class DroneMenu extends JPanel implements ActionListener {
 
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
-    private DataFactory factory;
+    private ArrayList<DataStorage> data;
     private final String[] columnNames = {"Nr.", "ID", "DroneType", "Created", "Serialnr", "CarrWeight", "CarrType"};
     private Object[][] droneMenuData;
     private final int[] columnWidth = {-55, -55, 0, 0, 0, -55, -55};
@@ -36,7 +37,7 @@ public class DroneMenu extends JPanel implements ActionListener {
     public DroneMenu(ArrayList<DataStorage> data, DataFactory factory) {
 
         super(new GridLayout(1, 0));
-        this.factory  = factory;
+        this.data  = data;
         LOGGER.info("Initializing DroneMenu...");
 
         JFrame frame = createFrame();
@@ -151,18 +152,18 @@ public class DroneMenu extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         LOGGER.info("Action Performed: " + e.getActionCommand());
 
-            if ("dronet".equals(e.getActionCommand())) {
-                DroneTypeMenu dronet = new DroneTypeMenu(factory.getDataStorage());
-            } else if ("droned".equals(e.getActionCommand())) {
-                //DroneDynamicsMenu droned = new DroneDynamicsMenu(factory.getDroneDynamics().getFirst());
-                //DroneDynamicsMenu.createDroneDynamicsOverview(factory.getDroneDynamics().getFirst());
-            } else if ("refresh".equals(e.getActionCommand())) {
-                //Refresh refreshaction = new Refresh();
-            } else if ("credits".equals(e.getActionCommand())){
-                CreditsMenu cm = new CreditsMenu();
-            } else{
-                quit();
-            }
+        if ("dronet".equals(e.getActionCommand())) {
+            DroneTypeMenu dronet = new DroneTypeMenu(data);
+        } else if ("droned".equals(e.getActionCommand())) {
+            DroneDynamicsMenu droned = new DroneDynamicsMenu(data);
+        } else if ("refresh".equals(e.getActionCommand())) {
+            Refresher refreshaction = new DataFactory();
+            LOGGER.log(Level.INFO,"Refresh Button activated");
+        } else if ("credits".equals(e.getActionCommand())){
+            CreditsMenu cm = new CreditsMenu();
+        } else{
+            quit();
+        }
     }
 
     /**
