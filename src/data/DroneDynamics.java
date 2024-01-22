@@ -216,6 +216,23 @@ public class DroneDynamics implements Saveable{
         return false;
     }
 
+    public String printBatteryInformation(ArrayList<DataStorage> data, int drone, int counter) {
+        int i =0;
+        if(this.getBatteryStatus() == 0){
+            while(data.get(drone).getDroneDynamicsList().get(counter).getBatteryStatus() == 0) {
+                counter++;
+                i++;
+            }
+            return "battery is noch" + i + "minuten leer";
+        } else {
+            while(data.get(drone).getDroneDynamicsList().get(counter).getBatteryStatus() != 0) {
+                counter++;
+                i++;
+            }
+            return "battery geht in" + i + "minuten leer";
+        }
+    }
+
     //PRINT METHODS
     /**
      * Prints detailed drone dynamics information to the log.
@@ -231,22 +248,5 @@ public class DroneDynamics implements Saveable{
         logger.info("Latitude: " + this.getLatitude());
         logger.info("Battery Status: " + this.getBatteryStatus());
         logger.info("Last Seen: " + this.getLastSeen());
-    }
-
-    //OTHER METHODS
-    public String printBatteryInformation() {
-        int i =0;
-        if(this.getBatteryStatus() == 0){
-            while(this.getBatteryStatus() == 0) {
-                i++;
-            }
-            return "battery is noch" + i + "minuten leer";
-        } else {
-            while(this.getBatteryStatus() != 0) {
-                i++;
-            }
-            return "battery geht in" + i + "minuten leer";
-        }
-
     }
 }

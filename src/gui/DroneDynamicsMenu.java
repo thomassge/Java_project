@@ -282,7 +282,7 @@ public class DroneDynamicsMenu implements ActionListener {
                         "Alignment Pitch:",
                         "Alignment Roll:",
                         "Alignment Yaw:",
-                        //"Battery Info:"
+                        "Battery Info:"
                 };
 
                 String[] droneDynamicsValues = {
@@ -297,7 +297,7 @@ public class DroneDynamicsMenu implements ActionListener {
                         String.valueOf(data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).getAlignmentPitch()),
                         String.valueOf(data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).getAlignmentRoll()),
                         String.valueOf(data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).getAlignmentYaw()),
-                        //data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).printBatteryInformation()
+                        data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).printBatteryInformation(data, i,  selectedDroneTimeStamp)
                 };
                 StringBuilder text = new StringBuilder();
                 text.append("Details:\n");
