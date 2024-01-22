@@ -38,11 +38,11 @@ public class Main {
 
         factory.refresh();
 
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                DroneMenu droneM = new DroneMenu(data, factory);
-//            }
-//        });
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                DroneMenu droneM = new DroneMenu(data, factory);
+            }
+        });
 
         ThreadClass threadClass = new ThreadClass();
         threadClass.startDataUpdaterThread();
