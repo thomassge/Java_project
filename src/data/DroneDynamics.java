@@ -17,10 +17,10 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics {
-
+public class DroneDynamics implements Saveable{
     private static final Logger logger = Logger.getLogger(DroneDynamics.class.getName());
 
+    //DRONEDYNAMICS DATA
     private String dronePointer;
     private String timestamp;
     private int speed;
@@ -32,51 +32,26 @@ public class DroneDynamics {
     private int batteryStatus;
     private String lastSeen;
     private Status status;
-
+    /**
+     * The number of entries in file, on the server and in memory.
+     */
     private static int localCount;
     private static int serverCount;
-
-    public static int getLocalCount() {
-        return localCount;
-    }
-
-    public static void setLocalCount(int localCount) {
-        DroneDynamics.localCount = localCount;
-    }
-
-    public static int getServerCount() {
-        return serverCount;
-    }
-
-    public static void setServerCount(int serverCount) {
-        DroneDynamics.serverCount = serverCount;
-    }
-
-    /**
-     * The number of objects in memory
-     */
     private static int memoryCount;
-
     /**
      * The filename where we store downloaded data
      */
     private final static String filename = "dronedynamics.json";
-    public static String getFilename() {
-        return filename;
-    }
-
     /**
-     * Dronedynamics API Endpoint
+     * DroneDynamics API Endpoint
      */
     private static final String URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
 
-                                    //CONSTRUCTOR
-
+    //CONSTRUCTORS
     /**
      * Default constructor for creating an instance of DroneDynamics.
      */
-    public DroneDynamics() {
-    }
+    public DroneDynamics() {logger.log(Level.INFO, "DroneDynamics Object Created from empty constructor.");}
 
     /**
      * Parameterized constructor for creating an instance of DroneDynamics with specified attributes.
@@ -107,6 +82,7 @@ public class DroneDynamics {
         this.status = status;
     }
 
+    //GETTER METHODS
     public String getDronePointer() {
         return this.dronePointer;
     }
@@ -151,18 +127,37 @@ public class DroneDynamics {
         return this.status;
     }
 
+    //STATIC GETTER AND SETTER METHODS
+    public static int getLocalCount() {
+        return localCount;
+    }
+    public static void setLocalCount(int localCount) {
+        DroneDynamics.localCount = localCount;
+    }
+
+    public static int getServerCount() {
+        return serverCount;
+    }
+    public static void setServerCount(int serverCount) {
+        DroneDynamics.serverCount = serverCount;
+    }
+
     public static int getMemoryCount() {
         return memoryCount;
+    }
+    public static void setMemoryCount(int memoryCount) {
+        DroneDynamics.memoryCount = memoryCount;
+    }
+
+    public static String getFilename() {
+        return filename;
     }
 
     public static String getUrl() {
         return URL;
     }
 
-    public static void setMemoryCount(int memoryCount) {
-        DroneDynamics.memoryCount = memoryCount;
-    }
-
+    //ENUM METHOD
     public static Status mapStatus(String status) {
         return switch (status) {
             case "ON" -> Status.ON;
@@ -172,6 +167,7 @@ public class DroneDynamics {
         };
     }
 
+    //OTHER METHODS
     public static ArrayList<DroneDynamics> initialize(String jsonString) {
         ArrayList<DroneDynamics> droneDynamics = new ArrayList<DroneDynamics>();
         JSONObject wholeHtml = new JSONObject(jsonString);
@@ -220,6 +216,7 @@ public class DroneDynamics {
         return false;
     }
 
+    //PRINT METHODS
     /**
      * Prints detailed drone dynamics information to the log.
      */

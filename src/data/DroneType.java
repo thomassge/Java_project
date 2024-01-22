@@ -12,11 +12,10 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneType implements Refreshable {
-
+public class DroneType implements Refreshable, Saveable {
     private static final Logger logger = Logger.getLogger(DroneType.class.getName());
 
-    // DRONETYPE DATA
+    //DRONETYPE DATA
     private int droneTypeID;
     private String manufacturer;
     private String typename;
@@ -25,63 +24,26 @@ public class DroneType implements Refreshable {
     private int batteryCapacity;
     private int controlRange;
     private int maximumCarriage;
-
     /**
-     * The number of entries of drones in the last downloaded local json file
+     * The number of entries in file, on the server and in memory.
      */
     private static int localCount;
-
-    /**
-     * The number of entries of drones on the webserver
-     */
     private static int serverCount;
-
-    public static int getLocalCount() {
-        return localCount;
-    }
-
-    public static void setLocalCount(int localCount) {
-        DroneType.localCount = localCount;
-    }
-
-    public static int getServerCount() {
-        return serverCount;
-    }
-
-    public static void setServerCount(int serverCount) {
-        DroneType.serverCount = serverCount;
-    }
-
-    /**
-     * The number of objects in memory
-     */
     private static int memoryCount;
-
     /**
      * The filename where we store downloaded data
      */
     private final static String filename = "dronetypes.json";
-    public static String getFilename() {
-        return filename;
-    }
-
     /**
      * Dronetypes API Endpoint
      */
     private static final String URL = "https://dronesim.facets-labs.com/api/dronetypes/";
-    public static String getUrl() {
-        return URL;
-    }
 
-
-
-    // Constructor
-
+    //CONSTRUCTORS
     /**
      * Default constructor for creating a DroneType instance.
      */
-    public DroneType() {
-    }
+    public DroneType() {logger.log(Level.INFO, "DroneType Object Created from empty constructor.");}
 
     /**
      * Parameterized constructor for creating a DroneType instance with specified attributes.
@@ -107,8 +69,7 @@ public class DroneType implements Refreshable {
         this.maximumCarriage = maximumCarriage;
     }
 
-    // GETTER-methods
-
+    //GETTER METHODS
     public int getDroneTypeID() {
         return this.droneTypeID;
     }
@@ -141,16 +102,37 @@ public class DroneType implements Refreshable {
         return this.maximumCarriage;
     }
 
+    //STATIC GETTER AND SETTER METHODS
+    public static int getLocalCount() {
+        return localCount;
+    }
+    public static void setLocalCount(int localCount) {
+        DroneType.localCount = localCount;
+    }
+
+    public static int getServerCount() {
+        return serverCount;
+    }
+    public static void setServerCount(int serverCount) {
+        DroneType.serverCount = serverCount;
+    }
+
     public static int getMemoryCount() {
         return memoryCount;
     }
-
     public static void setMemoryCount(int memoryCount) {
         DroneType.memoryCount = memoryCount;
     }
 
-    // PRINT-methods to test without GETTER
+    public static String getFilename() {
+        return filename;
+    }
 
+    public static String getUrl() {
+        return URL;
+    }
+
+    //OTHER METHODS
     /**
      * Converts drone type data from JSON to DroneType objects.
      *
@@ -202,6 +184,7 @@ public class DroneType implements Refreshable {
         return false;
     }
 
+    //PRINT METHODS
     /**
      * Prints the drone type details to the log.
      */
