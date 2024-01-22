@@ -13,7 +13,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
@@ -21,7 +20,7 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 
 
-public class DroneMenu extends JPanel implements ActionListener {
+public class DroneMenu implements ActionListener {
 
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
     private ArrayList<DataStorage> data;
@@ -36,22 +35,67 @@ public class DroneMenu extends JPanel implements ActionListener {
      */
     public DroneMenu(ArrayList<DataStorage> data) {
 
-        super(new GridLayout(1, 0));
         this.data  = data;
         LOGGER.info("Initializing DroneMenu...");
+
+        initializeGuiData(data);
 
         JFrame frame = createFrame();
         JMenuBar menuBar = createMenuBar();
         frame.setJMenuBar(menuBar);
 
-        initializeGuiData(data);
         JTable table = createTable();
 
         JScrollPane scrollPane = new JScrollPane(table);
-        this.setLayout(new BorderLayout());
-        this.add(scrollPane, BorderLayout.CENTER);
+        frame.add(scrollPane);
 
         LOGGER.info("DroneMenu initialized.");
+    }
+
+    private void initializeGuiData(ArrayList<DataStorage> data){
+        droneMenuData = new Object[data.size()][columnNames.length];
+
+        for (int i = 0; i < data.size(); i++) {
+            droneMenuData[i][0] = i + 1;
+            droneMenuData[i][1] = data.get(i).getDrone().getId();
+            droneMenuData[i][2] = data.get(i).getDroneType().getTypename();
+            droneMenuData[i][3] = formatCreatedDateTime(data.get(i).getDrone().getCreated());
+            droneMenuData[i][4] = data.get(i).getDrone().getSerialnumber();
+            droneMenuData[i][5] = data.get(i).getDrone().getCarriageWeight();
+            droneMenuData[i][6] = data.get(i).getDrone().getCarriageType();
+        }
+    }
+
+    private JFrame createFrame(){
+        JFrame frame = new JFrame("Drones Overview");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setSize(800, 550);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        return frame;
+    }
+
+    /**
+     * Creates and returns the menu bar with different menu items.
+     *
+     * @return JMenuBar for the DroneMenu
+     */
+    private JMenuBar createMenuBar() {
+        LOGGER.info("Creating Menu Bar...");
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        menuBar.add(menu);
+
+        addItemToMenuWithActionCommand(menu, "Drone Types", "dronet");
+        addItemToMenuWithActionCommand(menu, "Drone Dynamics", "droned");
+        addItemToMenuWithActionCommand(menu, "Refresh", "refresh");
+        addItemToMenuWithActionCommand(menu, "Credits", "credits");
+
+        LOGGER.info("Menu Bar created.");
+        return menuBar;
     }
 
     private JTable createTable(){
@@ -78,70 +122,12 @@ public class DroneMenu extends JPanel implements ActionListener {
         return table;
     }
 
-    private JFrame createFrame(){
-        JFrame frame = new JFrame("Drones Overview");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(this);
-
-        frame.setSize(800, 550);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-        return frame;
-    }
-
-    public static String formatCreatedDateTime(String created){
-        try {
-            OffsetDateTime dateTime = OffsetDateTime.parse(created);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            return dateTime.format(formatter);
-        } catch (Exception e){
-            // Eyüp Logger
-            return created;
-        }
-    }
-    /**
-     * Creates and returns the menu bar with different menu items.
-     *
-     * @return JMenuBar for the DroneMenu
-     */
-    private JMenuBar createMenuBar() {
-        LOGGER.info("Creating Menu Bar...");
-
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Menu");
-        menuBar.add(menu);
-
-        addItemToMenuWithActionCommand(menu, "Drone Types", "dronet");
-        addItemToMenuWithActionCommand(menu, "Drone Dynamics", "droned");
-        addItemToMenuWithActionCommand(menu, "Refresh", "refresh");
-        addItemToMenuWithActionCommand(menu, "Credits", "credits");
-
-        LOGGER.info("Menu Bar created.");
-        return menuBar;
-    }
-
     private void addItemToMenuWithActionCommand(JMenu menu, String itemName, String actionCmd){
         JMenuItem menuItem = new JMenuItem(itemName);
         menuItem.setActionCommand(actionCmd);
         menuItem.addActionListener(this);
         menu.add(menuItem);
     }
-
-    private void initializeGuiData(ArrayList<DataStorage> data){
-        droneMenuData = new Object[data.size()][columnNames.length];
-
-        for (int i = 0; i < data.size(); i++) {
-            droneMenuData[i][0] = i + 1;
-            droneMenuData[i][1] = data.get(i).getDrone().getId();
-            droneMenuData[i][2] = data.get(i).getDroneType().getTypename();
-            droneMenuData[i][3] = formatCreatedDateTime(data.get(i).getDrone().getCreated());
-            droneMenuData[i][4] = data.get(i).getDrone().getSerialnumber();
-            droneMenuData[i][5] = data.get(i).getDrone().getCarriageWeight();
-            droneMenuData[i][6] = data.get(i).getDrone().getCarriageType();
-        }
-    }
-
 
     /**
      * Handles actions performed by the user, such as selecting menu items.
@@ -161,16 +147,17 @@ public class DroneMenu extends JPanel implements ActionListener {
             LOGGER.log(Level.INFO,"Refresh Button activated");
         } else if ("credits".equals(e.getActionCommand())){
             CreditsMenu cm = new CreditsMenu();
-        } else{
-            quit();
         }
     }
 
-    /**
-     * Quits the application
-     */
-    private static void quit() {
-        LOGGER.info("Exiting application.");
-        System.exit(0);
+    public static String formatCreatedDateTime(String created){
+        try {
+            OffsetDateTime dateTime = OffsetDateTime.parse(created);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            return dateTime.format(formatter);
+        } catch (Exception e){
+            LOGGER.log(Level.INFO, "Wrong Format:",e);
+            return created;
+        }
     }
 }
