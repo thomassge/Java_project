@@ -95,7 +95,6 @@ public class GoogleMaps {
  //   }
     public String createPicture(double latitude, double longitude) {
         String myKey = System.getenv("jsonDerulo");
-        JFrame mapFrame = new JFrame("Google Maps");
 
         try {
             googleEndpoint = googleEndpoint + markers  + latitude + "," + longitude;
@@ -106,7 +105,7 @@ public class GoogleMaps {
             InputStream is = url.openStream();
             OutputStream os = new FileOutputStream(destinationFile);
 
-            byte[] b = new byte[2048];
+            byte[] b = new byte[4096];
             int length;
 
             while ((length = is.read(b)) != -1) {
@@ -120,12 +119,6 @@ public class GoogleMaps {
             e.printStackTrace();
             System.exit(1);
         }
-
-        mapFrame.add(new JLabel(new ImageIcon((new ImageIcon("image.jpg")).getImage().getScaledInstance(630, 600,
-                java.awt.Image.SCALE_SMOOTH))));
-
-        mapFrame.setVisible(true);
-        mapFrame.pack();
         return "lol";
     }
 }

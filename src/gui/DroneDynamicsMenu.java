@@ -23,7 +23,8 @@ public class DroneDynamicsMenu implements ActionListener {
     private JTextArea droneDynamicsLabel;
     private JPanel dDPanel;
     private int selectedArrayListValue = 0;
-    private int selectedDroneGoogleMaps;
+    //private int selectedDroneGoogleMaps;
+    private int selectedDroneId;
 
 
     public DroneDynamicsMenu(ArrayList<DataStorage> data){
@@ -96,10 +97,7 @@ public class DroneDynamicsMenu implements ActionListener {
         googleMapsButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        GoogleMaps mapCreator = new GoogleMaps();
-                        openGoogleMaps(mapCreator.createPicture(   data.get(selectedDroneGoogleMaps).getDroneDynamicsList().get(selectedArrayListValue).getLatitude(),
-                                                    data.get(selectedDroneGoogleMaps).getDroneDynamicsList().get(selectedArrayListValue).getLongitude()));
-                        //openGoogleMaps(selectedDroneGoogleMaps);
+                        openGoogleMaps();
                     }
                 });
 
@@ -117,31 +115,21 @@ public class DroneDynamicsMenu implements ActionListener {
         droneIdDropdown.addActionListener(this);
     }
 
-    private void openGoogleMaps(String filename){
+    private void openGoogleMaps(){
+
+        int listIndex = selectedDroneId - 71;
+        GoogleMaps mapCreator = new GoogleMaps();
+        String filename = mapCreator.createPicture( data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLatitude(),
+                                                    data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLongitude());
 
         JFrame googleFrame = new JFrame();
         String imagePath = filename;
-        //ImageIcon icon = createImageIcon(imagePath, "Image not found!");
-
-        JLabel label = new JLabel(filename);
-
-        //JPEGImageReadParam googlePicture = new JPEGImageReadParam();
-        googleFrame.add(label);
+        googleFrame.add(new JLabel(new ImageIcon((new ImageIcon(filename)).getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH))));
 
         googleFrame.setSize(400, 400);
         googleFrame.setLocationRelativeTo(null);
         googleFrame.setVisible(true);
     }
-
-//    private ImageIcon createImageIcon(String path, String description){
-//        //java.net.URL imgURL = getClass().getResource(path);
-//        if(imgURL != null){
-//            return new ImageIcon(imgURL, description);
-//        } else {
-//            LOGGER.log(Level.SEVERE, "Picture not found!");
-//            return null;
-//        }
-//    }
 
     private void createDroneTypePanel(){
         dTPanel = new JPanel(new BorderLayout());
@@ -191,9 +179,8 @@ public class DroneDynamicsMenu implements ActionListener {
                         if (selectedArrayListValue >= data.getFirst().getDroneDynamicsList().toArray().length){
                             chegger();
                         } else {
-                            int selectedDroneId = (int) droneIdDropdown.getSelectedItem();
+                            selectedDroneId = (int) droneIdDropdown.getSelectedItem();
                             displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
-                            selectedDroneGoogleMaps = selectedArrayListValue;
                         }
                     }
                 });
@@ -206,9 +193,8 @@ public class DroneDynamicsMenu implements ActionListener {
                         if (selectedArrayListValue < 0){
                             chegger();
                         } else {
-                            int selectedDroneId = (int) droneIdDropdown.getSelectedItem();
+                            selectedDroneId = (int) droneIdDropdown.getSelectedItem();
                             displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
-                            selectedDroneGoogleMaps = selectedArrayListValue;
                         }
                     }
                 });
@@ -222,7 +208,6 @@ public class DroneDynamicsMenu implements ActionListener {
     private void chegger(){
         showMessageDialog(null, "TimeStamp out of Bound!\nFirst TimeStamp shown now!");
         selectedArrayListValue = 0;
-        selectedDroneGoogleMaps = 0;
         displayDroneDynamicsInformation(data, (int) droneIdDropdown.getSelectedItem(), selectedArrayListValue);
     }
 
@@ -230,7 +215,7 @@ public class DroneDynamicsMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == droneIdDropdown) {
 
-            int selectedDroneId = (int) droneIdDropdown.getSelectedItem();
+            selectedDroneId = (int) droneIdDropdown.getSelectedItem();
             LOGGER.info("Selected Drone-ID: " + selectedDroneId);
 
             displayDroneTypeInformation(data, selectedDroneId);
