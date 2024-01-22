@@ -36,16 +36,16 @@ public class Main {
         DataFactory factory = new DataFactory();
         ArrayList<DataStorage> data = factory.getDataStorage();
 
-        factory.refresh();
+        //factory.refresh();
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                DroneMenu droneM = new DroneMenu(data, factory);
+                DroneMenu droneM = new DroneMenu(data);
             }
         });
 
-        ThreadClass threadClass = new ThreadClass();
-        threadClass.startDataUpdaterThread();
+        //ThreadClass threadClass = new ThreadClass();
+        //threadClass.startDataUpdaterThread();
 
         LOGGER.info("Program execution completed.");
     }

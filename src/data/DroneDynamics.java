@@ -235,4 +235,21 @@ public class DroneDynamics {
         logger.info("Battery Status: " + this.getBatteryStatus());
         logger.info("Last Seen: " + this.getLastSeen());
     }
+
+    //OTHER METHODS
+    public String printBatteryInformation() {
+        int i =0;
+        if(this.getBatteryStatus() == 0){
+            while(this.getBatteryStatus() == 0) {
+                i++;
+            }
+            return "battery is noch" + i + "minuten leer";
+        } else {
+            while(this.getBatteryStatus() != 0) {
+                i++;
+            }
+            return "battery geht in" + i + "minuten leer";
+        }
+
+    }
 }
