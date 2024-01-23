@@ -6,10 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
 import services.GoogleMaps;
+import util.jsonCreator;
 
 
 public class DroneDynamicsMenu implements ActionListener {
@@ -25,9 +25,12 @@ public class DroneDynamicsMenu implements ActionListener {
     private int selectedArrayListValue = 0;
     //private int selectedDroneGoogleMaps;
     private int selectedDroneId;
+    JPanel buttonPanel;
+    JPanel userPanel;
 
 
     public DroneDynamicsMenu(ArrayList<DataStorage> data){
+        new jsonCreator();
         this.data = data;
 
         LOGGER.info("Initializing DroneDynamicsMenu...");
@@ -39,6 +42,11 @@ public class DroneDynamicsMenu implements ActionListener {
 
         JPanel gridPanel = createGridPanel(data);
         frame.add(gridPanel);
+
+        // Select the first drone from the dropdown list
+        if (droneIdDropdown.getItemCount() > 0) {
+            droneIdDropdown.setSelectedIndex(0);
+        }
 
         LOGGER.info("DroneDynamicsMenu initialized.");
     }
@@ -75,12 +83,31 @@ public class DroneDynamicsMenu implements ActionListener {
     }
 
     private JPanel createGridPanel(ArrayList<DataStorage> data){
-        gridPanel = new JPanel(new GridLayout(4,1));
+        gridPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
 
         createUserPanel(data);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 0.2;
+        constraints.fill = GridBagConstraints.BOTH;
+        gridPanel.add(userPanel, constraints);
+
         createDroneTypePanel();
+        constraints.gridy = 1;
+        constraints.weighty = 0.4;
+        gridPanel.add(dTPanel, constraints);
+
         createDroneDynamicsPanel();
+        constraints.gridy = 2;
+        constraints.weighty = 0.4;
+        gridPanel.add(dDPanel, constraints);
+
         createButtons();
+        constraints.gridy = 3;
+        constraints.weighty = 0;
+        gridPanel.add(buttonPanel, constraints);
 
         LOGGER.info("GridPanel created...");
 
@@ -88,7 +115,7 @@ public class DroneDynamicsMenu implements ActionListener {
     }
 
     private void createUserPanel(ArrayList<DataStorage> data){
-        JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        userPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         droneIdDropdown = new JComboBox();
 
         initializeDroneIdDropdown(data);
@@ -113,22 +140,25 @@ public class DroneDynamicsMenu implements ActionListener {
             droneIdDropdown.addItem(data.get(i).getDrone().getId());
         }
         droneIdDropdown.addActionListener(this);
+
     }
 
     private void openGoogleMaps(){
 
-        int listIndex = selectedDroneId - 71;
-        GoogleMaps mapCreator = new GoogleMaps();
-        String filename = mapCreator.createPicture( data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLatitude(),
-                                                    data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLongitude());
+        int listIndex = selectedDroneId - 71; // selectedDroneId - selectedDroneId.get(0) für dynamik
+        if((listIndex >= 0) && (listIndex <= data.size()) ) {
+            GoogleMaps mapCreator = new GoogleMaps();
+            String filename = mapCreator.createPicture( data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLatitude(),
+                    data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLongitude());
 
-        JFrame googleFrame = new JFrame();
-        String imagePath = filename;
-        googleFrame.add(new JLabel(new ImageIcon((new ImageIcon(filename)).getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH))));
+            JFrame googleFrame = new JFrame();
+            String imagePath = filename;
+            googleFrame.add(new JLabel(new ImageIcon((new ImageIcon(filename)).getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH))));
 
-        googleFrame.setSize(400, 400);
-        googleFrame.setLocationRelativeTo(null);
-        googleFrame.setVisible(true);
+            googleFrame.setSize(400, 400);
+            googleFrame.setLocationRelativeTo(null);
+            googleFrame.setVisible(true);
+        }
     }
 
     private void createDroneTypePanel(){
@@ -152,7 +182,7 @@ public class DroneDynamicsMenu implements ActionListener {
     }
 
     private void createButtons() {
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 12));
+        buttonPanel = new JPanel(new GridLayout(2, 12));
         JButton[] plusButtons = new JButton[3];
         JButton[] minusButtons = new JButton[3];
 

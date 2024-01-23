@@ -218,18 +218,21 @@ public class DroneDynamics implements Saveable{
 
     public String printBatteryInformation(ArrayList<DataStorage> data, int drone, int counter) {
         int i =0;
-        if(this.getBatteryStatus() == 0){
-            while(data.get(drone).getDroneDynamicsList().get(counter).getBatteryStatus() == 0) {
+        if(this.getStatus() == Status.OF){
+            while(data.get(drone).getDroneDynamicsList().get(counter).getStatus() == Status.OF) {
                 counter++;
                 i++;
             }
-            return "battery is noch" + i + "minuten leer";
-        } else {
-            while(data.get(drone).getDroneDynamicsList().get(counter).getBatteryStatus() != 0) {
+            return "Drone rests " + i + "more minutes until battery is recharged.";
+        } else if (this.getStatus() == Status.ON){
+            while(data.get(drone).getDroneDynamicsList().get(counter).getStatus() == Status.ON) {
                 counter++;
                 i++;
             }
-            return "battery geht in" + i + "minuten leer";
+            return "Drone flies " + i + "more minutes until battery is empty.";
+        }
+        else {
+            return "Drone has Issues. Please check the drone.";
         }
     }
 

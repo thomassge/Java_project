@@ -28,10 +28,7 @@ public class Main {
      * @throws IOException if an I/O error occurs during data fetchhing.
      */
     public static void main(String[] args) throws IOException {
-
-        LogMain lm = new LogMain();
         LOGGER.info("Starting the program...");
-
 
         DataFactory factory = new DataFactory();
         ArrayList<DataStorage> data = factory.getDataStorage();
@@ -40,12 +37,12 @@ public class Main {
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                DroneMenu droneM = new DroneMenu(data);
+                new DroneMenu(data);
             }
         });
 
-        //ThreadClass threadClass = new ThreadClass();
-        //threadClass.startDataUpdaterThread();
+        ThreadClass threadClass = new ThreadClass();
+        threadClass.startDataUpdaterThread();
 
         LOGGER.info("Program execution completed.");
     }

@@ -20,7 +20,6 @@ public class DataFactory extends Refresher {
     private ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
 
     // CONSTRUCTOR
-
     /**
      * The first time, the DataFactory constructor is called, it checks if our Files need a
      * refresh, and refreshes if so. This happens, because it extends Refresher. It then fetches all data from the server.
@@ -70,8 +69,7 @@ public class DataFactory extends Refresher {
     }
 
 
-                                    // METHODS
-
+    // METHODS
     /**
      * This method checks for a refresh by comparing the local and server count of every data type.
      * If any of them is different, all data is refreshed.
@@ -144,8 +142,7 @@ public class DataFactory extends Refresher {
         }
     }
 
-                                    // METHODS FOR LINKING DATA
-
+    // METHODS FOR LINKING DATA
     private ArrayList<DataStorage> linker () {
         ArrayList<DataStorage> list = new ArrayList<>();
 

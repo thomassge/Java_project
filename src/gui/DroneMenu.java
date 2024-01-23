@@ -6,11 +6,11 @@
 package gui;
 
 import data.*;
+import util.jsonCreator;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.OffsetDateTime;
@@ -31,10 +31,10 @@ public class DroneMenu implements ActionListener {
     /**
      * Constructs a new DroneMenu with the specified list of drones.
      *
-     * @param drones A LinkedList of Drone objects to be displayed in the table.
+     * @param data The ArrayList that holds all information that need to be displayed.
      */
     public DroneMenu(ArrayList<DataStorage> data) {
-
+        new jsonCreator();
         this.data  = data;
         LOGGER.info("Initializing DroneMenu...");
 
@@ -139,14 +139,14 @@ public class DroneMenu implements ActionListener {
         LOGGER.info("Action Performed: " + e.getActionCommand());
 
         if ("dronet".equals(e.getActionCommand())) {
-            DroneTypeMenu dronet = new DroneTypeMenu(data);
+            new DroneTypeMenu(data);
         } else if ("droned".equals(e.getActionCommand())) {
-            DroneDynamicsMenu droned = new DroneDynamicsMenu(data);
+            new DroneDynamicsMenu(data);
         } else if ("refresh".equals(e.getActionCommand())) {
-            Refresher refreshaction = new DataFactory();
+            new DataFactory();
             LOGGER.log(Level.INFO,"Refresh Button activated");
         } else if ("credits".equals(e.getActionCommand())){
-            CreditsMenu cm = new CreditsMenu();
+            new CreditsMenu();
         }
     }
 

@@ -7,13 +7,14 @@ import data.enums.CarriageType;
 import data.exceptions.DroneTypeIdNotExtractableException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  * This class holds all individual Drone data that can be retrieved from the webserver.
@@ -60,16 +61,16 @@ public class Drone implements Saveable, Refreshable {
      * @param created          Date and time when the entry was created.
      * @param carriageWeight   Additional weight the drone carries.
      * @param id               Index of the Drone on the webserver.
-     * @param DroneTypePointer Link to the DroneType information of this drone.
+     * @param droneTypePointer Link to the DroneType information of this drone.
      */
-    public Drone(CarriageType carriageType, String serialnumber, String created, int carriageWeight, int id, String DroneTypePointer) {
+    public Drone(CarriageType carriageType, String serialnumber, String created, int carriageWeight, int id, String droneTypePointer) {
         logger.log(Level.INFO, "Drone Object created.");
         this.carriageType = carriageType;
         this.serialnumber = serialnumber;
         this.created = created;
         this.carriageWeight = carriageWeight;
         this.id = id;
-        this.droneTypePointer = DroneTypePointer;
+        this.droneTypePointer = droneTypePointer;
     }
 
     //GETTER METHODS
