@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
 import services.GoogleMaps;
@@ -27,6 +28,7 @@ public class DroneDynamicsMenu implements ActionListener {
     private int selectedDroneId;
     JPanel buttonPanel;
     JPanel userPanel;
+
 
 
     public DroneDynamicsMenu(ArrayList<DataStorage> data){
@@ -58,6 +60,7 @@ public class DroneDynamicsMenu implements ActionListener {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
+        LOGGER.log(Level.INFO,"Frame created...");
         return frame;
     }
 
@@ -140,7 +143,7 @@ public class DroneDynamicsMenu implements ActionListener {
             droneIdDropdown.addItem(data.get(i).getDrone().getId());
         }
         droneIdDropdown.addActionListener(this);
-
+        LOGGER.log(Level.INFO,"Data intialized...");
     }
 
     private void openGoogleMaps(){
@@ -158,6 +161,7 @@ public class DroneDynamicsMenu implements ActionListener {
             googleFrame.setSize(400, 400);
             googleFrame.setLocationRelativeTo(null);
             googleFrame.setVisible(true);
+            LOGGER.log(Level.INFO,"GoogleMaps opened...");
         }
     }
 
@@ -211,6 +215,7 @@ public class DroneDynamicsMenu implements ActionListener {
                         } else {
                             selectedDroneId = (int) droneIdDropdown.getSelectedItem();
                             displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
+                            LOGGER.log(Level.INFO,"selectedArrayListValue successfully incremented...");
                         }
                     }
                 });
@@ -225,6 +230,7 @@ public class DroneDynamicsMenu implements ActionListener {
                         } else {
                             selectedDroneId = (int) droneIdDropdown.getSelectedItem();
                             displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
+                            LOGGER.log(Level.INFO,"selectedArrayListValue successfully decremented...");
                         }
                     }
                 });
@@ -239,6 +245,7 @@ public class DroneDynamicsMenu implements ActionListener {
         showMessageDialog(null, "TimeStamp out of Bound!\nFirst TimeStamp shown now!");
         selectedArrayListValue = 0;
         displayDroneDynamicsInformation(data, (int) droneIdDropdown.getSelectedItem(), selectedArrayListValue);
+        LOGGER.log(Level.SEVERE,"selectedArrayListValue out of Bound!");
     }
 
     @Override
@@ -332,7 +339,7 @@ public class DroneDynamicsMenu implements ActionListener {
 
                 droneDynamicsLabel.setText(text.toString());
                 dDPanel.add(droneDynamicsLabel);
-
+                LOGGER.log(Level.INFO,"Correct TimeStamp successfully created...");
                 break;
             }
         }

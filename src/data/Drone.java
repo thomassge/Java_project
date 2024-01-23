@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * This class holds all individual Drone data that can be retrieved from the webserver.
  */
 public class Drone implements Saveable, Refreshable {
-    private static final Logger logger = Logger.getLogger(Drone.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Drone.class.getName());
 
     //INDIVIDUAL DRONE DATA
     private int id;
@@ -50,7 +50,7 @@ public class Drone implements Saveable, Refreshable {
      * Default constructor for the Drone class.
      */
     public Drone() {
-        logger.log(Level.INFO, "Drone Object Created from empty constructor.");
+        LOGGER.log(Level.INFO, "Drone Object Created from empty constructor.");
     }
 
     /**
@@ -64,7 +64,7 @@ public class Drone implements Saveable, Refreshable {
      * @param droneTypePointer Link to the DroneType information of this drone.
      */
     public Drone(CarriageType carriageType, String serialnumber, String created, int carriageWeight, int id, String droneTypePointer) {
-        logger.log(Level.INFO, "Drone Object created.");
+        LOGGER.log(Level.INFO, "Drone Object created.");
         this.carriageType = carriageType;
         this.serialnumber = serialnumber;
         this.created = created;
@@ -105,7 +105,7 @@ public class Drone implements Saveable, Refreshable {
         try {
             validateExtractedDroneTypeID(matcher.find());
         } catch (DroneTypeIdNotExtractableException e) {
-            logger.log(Level.WARNING, "Error extracting the DroneTypeID", e);
+            LOGGER.log(Level.WARNING, "Error extracting the DroneTypeID", e);
             this.extractedDroneTypeID = 0;
         }
         return Integer.parseInt(matcher.group(0));
@@ -180,21 +180,21 @@ public class Drone implements Saveable, Refreshable {
         Saveable.createFile(filename);
 
         if(serverCount == 0) {
-            //logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
             //TODO: Own Exception
             return false;
         }
         else if (localCount == serverCount) {
-            //logger.log(Level.INFO, "local- and serverDroneCount identical.");
+            LOGGER.log(Level.INFO, "local- and serverDroneCount identical.");
             return false;
         }
         else if(localCount < serverCount) {
-            logger.info("Yes new data available");
+            LOGGER.log(Level.INFO,"Yes new data available");
             Saveable.saveAsFile(URL, serverCount, filename);
             return true;
         }
         else {
-            logger.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
+            LOGGER.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
         return false;
     }
@@ -213,20 +213,19 @@ public class Drone implements Saveable, Refreshable {
 
     //PRINT METHODS
     public void printDrone() {
-        logger.log(Level.INFO,"Drone id: " + this.id);
-        logger.log(Level.INFO,"Serialnumber: " + this.serialnumber);
-        logger.log(Level.INFO,"___________________________________________");
-        logger.log(Level.INFO,"Created: " + this.created);
-        logger.log(Level.INFO,"Carriage Type: " + this.carriageType);
-        logger.log(Level.INFO,"Carriage weight: " + this.carriageWeight);
-        logger.log(Level.INFO,"DroneTypePointer: " + this.droneTypePointer);
-        logger.log(Level.INFO,"\n");
+        LOGGER.log(Level.INFO,"Drone id: " + this.id);
+        LOGGER.log(Level.INFO,"Serialnumber: " + this.serialnumber);
+        LOGGER.log(Level.INFO,"Created: " + this.created);
+        LOGGER.log(Level.INFO,"Carriage Type: " + this.carriageType);
+        LOGGER.log(Level.INFO,"Carriage weight: " + this.carriageWeight);
+        LOGGER.log(Level.INFO,"DroneTypePointer: " + this.droneTypePointer);
+        LOGGER.log(Level.INFO,"\n");
     }
 
     public void printAllDroneInformation() {
-        logger.log(Level.INFO,"Individual Drone Information: ");
+        LOGGER.log(Level.INFO,"Individual Drone Information: ");
         this.printDrone();
-        logger.log(Level.INFO,"DroneTypes Information: ");
-        logger.log(Level.INFO,"DroneDynamics Information: ");
+        LOGGER.log(Level.INFO,"DroneTypes Information: ");
+        LOGGER.log(Level.INFO,"DroneDynamics Information: ");
     }
 }

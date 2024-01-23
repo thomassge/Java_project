@@ -10,9 +10,6 @@ import java.util.logging.Logger;
 
 public class ThreadClass {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
-//    private boolean newDronesAvailable;
-//    private boolean newDroneTypesAvailable;
-//    private boolean newDroneDynamicsAvailable;
 
     /**
      * Constructs a new Backend instance with initial states set to indicate no new data is available.

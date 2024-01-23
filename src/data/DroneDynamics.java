@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DroneDynamics implements Saveable{
-    private static final Logger logger = Logger.getLogger(DroneDynamics.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
 
     //DRONEDYNAMICS DATA
     private String dronePointer;
@@ -51,7 +51,7 @@ public class DroneDynamics implements Saveable{
     /**
      * Default constructor for creating an instance of DroneDynamics.
      */
-    public DroneDynamics() {logger.log(Level.INFO, "DroneDynamics Object Created from empty constructor.");}
+    public DroneDynamics() {LOGGER.log(Level.INFO, "DroneDynamics Object Created from empty constructor.");}
 
     /**
      * Parameterized constructor for creating an instance of DroneDynamics with specified attributes.
@@ -80,6 +80,7 @@ public class DroneDynamics implements Saveable{
         this.batteryStatus = batteryStatus;
         this.lastSeen = lastSeen;
         this.status = status;
+        LOGGER.log(Level.INFO, "DroneDynamics created...");
     }
 
     //GETTER METHODS
@@ -197,21 +198,21 @@ public class DroneDynamics implements Saveable{
         Saveable.createFile(filename);
 
         if(serverCount == 0) {
-            //logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
             //TODO: Own Exception
             return false;
         }
         else if (localCount == serverCount) {
-            //logger.log(Level.INFO, "local- and serverDroneCount identical.");
+            LOGGER.log(Level.INFO, "local- and serverDroneCount identical.");
             return false;
         }
         else if(localCount < serverCount) {
-            logger.info("Yes new data available");
+            LOGGER.info("Yes new data available");
             Saveable.saveAsFile(URL, serverCount, filename);
             return true;
         }
         else {
-            logger.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
+            LOGGER.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
         }
         return false;
     }
@@ -229,7 +230,7 @@ public class DroneDynamics implements Saveable{
                 counter++;
                 i++;
             }
-            return "Drone flies " + i + "more minutes until battery is empty.";
+            return "Drone flies " + i + " more minutes until battery is empty.";
         }
         else {
             return "Drone has Issues. Please check the drone.";
@@ -241,15 +242,15 @@ public class DroneDynamics implements Saveable{
      * Prints detailed drone dynamics information to the log.
      */
     public void printDroneDynamics() {
-        logger.info("DronePointer: " + this.getDronePointer());
-        logger.info("Timestamp: " + this.getTimestamp());
-        logger.info("Speed: " + this.getSpeed());
-        logger.info("Alignment Roll: " + this.getAlignmentRoll());
-        logger.info("Alignment Pitch: " + this.getAlignmentPitch());
-        logger.info("Alignment Yaw: " + this.getAlignmentYaw());
-        logger.info("Longitude: " + this.getLongitude());
-        logger.info("Latitude: " + this.getLatitude());
-        logger.info("Battery Status: " + this.getBatteryStatus());
-        logger.info("Last Seen: " + this.getLastSeen());
+        LOGGER.info("DronePointer: " + this.getDronePointer());
+        LOGGER.info("Timestamp: " + this.getTimestamp());
+        LOGGER.info("Speed: " + this.getSpeed());
+        LOGGER.info("Alignment Roll: " + this.getAlignmentRoll());
+        LOGGER.info("Alignment Pitch: " + this.getAlignmentPitch());
+        LOGGER.info("Alignment Yaw: " + this.getAlignmentYaw());
+        LOGGER.info("Longitude: " + this.getLongitude());
+        LOGGER.info("Latitude: " + this.getLatitude());
+        LOGGER.info("Battery Status: " + this.getBatteryStatus());
+        LOGGER.info("Last Seen: " + this.getLastSeen());
     }
 }

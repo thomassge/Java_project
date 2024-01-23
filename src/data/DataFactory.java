@@ -93,13 +93,13 @@ public class DataFactory extends Refresher {
     }
 
     private void fetchAll() {
-        System.out.println("File Drone Fetch");
+        LOGGER.log(Level.INFO,"File Drone Fetch");
         fileFetch(Drone.getFilename());
 
-        System.out.println("File DroneType Fetch");
+        LOGGER.log(Level.INFO,"File DroneType Fetch");
         fileFetch(DroneType.getFilename());
 
-        System.out.println("File DroneDynamics Fetch");
+        LOGGER.log(Level.INFO,"File DroneDynamics Fetch");
         fileFetch(DroneDynamics.getFilename());
 
         //this.dataStorage = linker();

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 
 public class JSONDeruloHelper implements Streamable {
-    private static final Logger logger = Logger.getLogger(JSONDeruloHelper.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JSONDeruloHelper.class.getName());
 
 
     protected Drone droneObject = new Drone();

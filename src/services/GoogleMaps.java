@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -20,7 +21,7 @@ import javax.swing.JLabel;
 
 
 public class GoogleMaps {
-    private static final Logger logger = Logger.getLogger(GoogleMaps.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GoogleMaps.class.getName());
 
     private final String myKey = System.getenv("jsonDerulo");
 
@@ -36,7 +37,7 @@ public class GoogleMaps {
      * @throws IOException if there is an error in processing the map or drone data.
      */
 //    public static void main(String[] args) throws IOException {
-//        logger.info("Starting Google Maps main...");
+//        LOGGER.info("Starting Google Maps main...");
 //
 //        DataFactory factory = new DataFactory();
 //        ArrayList<DataStorage> data = factory.getDataStorage();
@@ -114,6 +115,7 @@ public class GoogleMaps {
 
             is.close();
             os.close();
+            LOGGER.log(Level.INFO,"Picture created...");
             return destinationFile;
         } catch (IOException e) {
             e.printStackTrace();

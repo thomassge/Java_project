@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DroneType implements Refreshable, Saveable {
-    private static final Logger logger = Logger.getLogger(DroneType.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
     //DRONETYPE DATA
     private int droneTypeID;
@@ -43,7 +43,7 @@ public class DroneType implements Refreshable, Saveable {
     /**
      * Default constructor for creating a DroneType instance.
      */
-    public DroneType() {logger.log(Level.INFO, "DroneType Object Created from empty constructor.");}
+    public DroneType() {LOGGER.log(Level.INFO, "DroneType Object Created from empty constructor.");}
 
     /**
      * Parameterized constructor for creating a DroneType instance with specified attributes.
@@ -58,7 +58,7 @@ public class DroneType implements Refreshable, Saveable {
      * @param maximumCarriage    Maximum carriage capacity of the drone.
      */
     public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed, int batteryCapacity, int controlRange, int maximumCarriage) {
-        logger.info("DroneType Object created");
+        LOGGER.info("DroneType Object created");
         this.droneTypeID = droneTypeID;
         this.manufacturer = manufacturer;
         this.typename = typename;
@@ -174,12 +174,12 @@ public class DroneType implements Refreshable, Saveable {
             return false;
         }
         else if(localCount < serverCount) {
-            logger.info("Yes new data available");
+            LOGGER.info("Yes new data available");
             Saveable.saveAsFile(URL, serverCount, filename);
             return true;
         }
         else {
-            logger.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
+            LOGGER.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
         }
         return false;
     }
@@ -189,13 +189,13 @@ public class DroneType implements Refreshable, Saveable {
      * Prints the drone type details to the log.
      */
     public void printDroneType() {
-        logger.info("DroneType id: " + this.droneTypeID);
-        logger.info("Manufacturer: " + this.manufacturer);
-        logger.info("TypeName: " + this.typename);
-        logger.info("Weight: " + this.weight);
-        logger.info("Maximum Speed: " + this.maximumSpeed);
-        logger.info("BatteryCapacity: " + this.batteryCapacity);
-        logger.info("Control Range (int): " + this.controlRange);
-        logger.info("Maximum Carriage: " + this.maximumCarriage);
+        LOGGER.info("DroneType id: " + this.droneTypeID);
+        LOGGER.info("Manufacturer: " + this.manufacturer);
+        LOGGER.info("TypeName: " + this.typename);
+        LOGGER.info("Weight: " + this.weight);
+        LOGGER.info("Maximum Speed: " + this.maximumSpeed);
+        LOGGER.info("BatteryCapacity: " + this.batteryCapacity);
+        LOGGER.info("Control Range (int): " + this.controlRange);
+        LOGGER.info("Maximum Carriage: " + this.maximumCarriage);
     }
 }
