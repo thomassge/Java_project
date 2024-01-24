@@ -224,7 +224,6 @@ public class DroneDynamicsMenu implements ActionListener {
         }
 
         for(int k = 0; k < 3; k++){
-
             int valuePlus = (int) Math.pow(10, k);
             int valueMinus = (int) Math.pow(10, k);
 
@@ -254,7 +253,11 @@ public class DroneDynamicsMenu implements ActionListener {
                         } else {
                             selectedDroneId = (int) droneIdDropdown.getSelectedItem();
 
-                            displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
+                            if (selectedArrayListValue ==0) {
+                                int betterArrayListValue = selectedArrayListValue;
+                                displayDroneDynamicsInformation(data, selectedDroneId, betterArrayListValue);
+                            } else { chegger(); }
+
                             LOGGER.log(Level.INFO,"selectedArrayListValue successfully decremented...");
                         }
                     }
