@@ -6,13 +6,14 @@ package data;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import processing.Streamable;
+import processing.Initializable;
+import util.Streamer;
 
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneType implements Refreshable, Saveable {
+public class DroneType implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
     //DRONETYPE DATA
@@ -139,8 +140,54 @@ public class DroneType implements Refreshable, Saveable {
      * @param jsonString The JSON string containing drone type data.
      * @param droneTypes The list where DroneType objects will be added.
      */
-    public static LinkedList<DroneType> initialize(String jsonString) {
+//    public static LinkedList<DroneType> initialize(String jsonString) {
+//        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
+//        JSONObject wholeHtml = new JSONObject(jsonString);
+//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+//
+//        for (int i = 0; i < jsonArray.length(); i++) {
+//            JSONObject o = jsonArray.getJSONObject(i);
+//            droneTypes.add(new DroneType(
+//                    o.getInt("id"),
+//                    o.getString("manufacturer"),
+//                    o.getString("typename"),
+//                    o.getInt("weight"),
+//                    o.getInt("max_speed"),
+//                    o.getInt("battery_capacity"),
+//                    o.getInt("control_range"),
+//                    o.getInt("max_carriage")
+//            ));
+//        }
+//        setMemoryCount(getMemoryCount() + jsonArray.length());
+//        return droneTypes;
+//    }
+
+
+
+    //PRINT METHODS
+    /**
+     * Prints the drone type details to the log.
+     */
+    public void printDroneType() {
+        LOGGER.info("DroneType id: " + this.droneTypeID);
+        LOGGER.info("Manufacturer: " + this.manufacturer);
+        LOGGER.info("TypeName: " + this.typename);
+        LOGGER.info("Weight: " + this.weight);
+        LOGGER.info("Maximum Speed: " + this.maximumSpeed);
+        LOGGER.info("BatteryCapacity: " + this.batteryCapacity);
+        LOGGER.info("Control Range (int): " + this.controlRange);
+        LOGGER.info("Maximum Carriage: " + this.maximumCarriage);
+    }
+
+    public static LinkedList<DroneType> create() {
+        return new DroneType().initialise();
+    };
+
+    @Override
+    public LinkedList<DroneType> initialise() {
         LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
+
+        String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
 
@@ -161,8 +208,8 @@ public class DroneType implements Refreshable, Saveable {
         return droneTypes;
     }
 
-    public static boolean isNewDataAvailable() {
-        Saveable.createFile(filename);
+    public boolean isNewDataAvailable() {
+        this.createFile(filename);
 
         if(serverCount == 0) {
             //logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
@@ -175,27 +222,12 @@ public class DroneType implements Refreshable, Saveable {
         }
         else if(localCount < serverCount) {
             LOGGER.info("Yes new data available");
-            Saveable.saveAsFile(URL, serverCount, filename);
+            this.saveAsFile(URL, serverCount, filename);
             return true;
         }
         else {
             LOGGER.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
         }
         return false;
-    }
-
-    //PRINT METHODS
-    /**
-     * Prints the drone type details to the log.
-     */
-    public void printDroneType() {
-        LOGGER.info("DroneType id: " + this.droneTypeID);
-        LOGGER.info("Manufacturer: " + this.manufacturer);
-        LOGGER.info("TypeName: " + this.typename);
-        LOGGER.info("Weight: " + this.weight);
-        LOGGER.info("Maximum Speed: " + this.maximumSpeed);
-        LOGGER.info("BatteryCapacity: " + this.batteryCapacity);
-        LOGGER.info("Control Range (int): " + this.controlRange);
-        LOGGER.info("Maximum Carriage: " + this.maximumCarriage);
     }
 }

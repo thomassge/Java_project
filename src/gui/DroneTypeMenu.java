@@ -5,7 +5,7 @@
 package gui;
 
 import data.DataStorage;
-import util.jsonCreator;
+import util.JsonCreator;
 
 import java.util.ArrayList;
 import javax.swing.*;
@@ -27,7 +27,7 @@ public class DroneTypeMenu {
      * @param droneTypes A LinkedList of DroneType objects to be displayed.
      */
     public DroneTypeMenu(ArrayList<DataStorage> data) {
-        new jsonCreator();
+        new JsonCreator();
         LOGGER.info("Initializing DroneTypeMenu...");
 
         initializeGuiData(data);

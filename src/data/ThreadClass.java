@@ -53,7 +53,8 @@ public class ThreadClass {
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-                    Refresher.checkForRefresh();
+                    DataFactory factory = new DataFactory();
+                    factory.refresh();
 
                     if (Refresher.isRefreshNeeded) {
                         //showNotification("Restart GUI");

@@ -1,9 +1,6 @@
 package data;
 
 import gui.DroneMenu;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import processing.Streamable;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,7 +26,7 @@ public class DataFactory extends Refresher {
     public DataFactory() {
         if(isInitial) {
             LOGGER.log(Level.INFO,"Initial Fetch started");
-            fetchAll();
+            generateAll();
             setDataStorage(linker());
             isInitial = false;
         }
@@ -80,7 +77,7 @@ public class DataFactory extends Refresher {
         checkForRefresh();
         if(isRefreshNeeded) {
             deleteData();
-            fetchAll();
+            generateAll();
             setDataStorage(linker());
         }
     }
@@ -92,54 +89,15 @@ public class DataFactory extends Refresher {
         setDataStorage(null);
     }
 
-    private void fetchAll() {
-        LOGGER.log(Level.INFO,"File Drone Fetch");
-        fileFetch(Drone.getFilename());
+    private void generateAll() {
+        LOGGER.log(Level.INFO,"File Drone Creation");
+        setDrones(Drone.create());
 
-        LOGGER.log(Level.INFO,"File DroneType Fetch");
-        fileFetch(DroneType.getFilename());
+        LOGGER.log(Level.INFO,"File DroneType Creation");
+        setDroneTypes(DroneType.create());
 
-        LOGGER.log(Level.INFO,"File DroneDynamics Fetch");
-        fileFetch(DroneDynamics.getFilename());
-
-        //this.dataStorage = linker();
-    }
-
-    private void fileFetch(String filename) {
-        String jsonString = Streamable.reader(filename);
-        switch(checkObject(jsonString)) {
-            case "Drone":
-                setDrones(Drone.initialize(jsonString));
-                break;
-            case "DroneType":
-                setDroneTypes(DroneType.initialize(jsonString));
-                break;
-            case "DroneDynamics":
-                setDroneDynamics(DroneDynamics.initialize(jsonString));
-                break;
-            default:
-                LOGGER.info(jsonString);
-                break;
-        }
-    }
-
-    private String checkObject(String jsonString) {
-        JSONObject wholeHtml = new JSONObject(jsonString);
-        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-        JSONObject o = jsonArray.getJSONObject(0);
-
-        if(o.has("carriage_type")) {
-            return "Drone";
-        }
-        else if(o.has("max_speed")) {
-            return "DroneType";
-        }
-        else if(o.has("timestamp")) {
-            return "DroneDynamics";
-        }
-        else {
-            return "Error";
-        }
+        LOGGER.log(Level.INFO,"File DroneDynamics Creation");
+        setDroneDynamics(DroneDynamics.create());
     }
 
     // METHODS FOR LINKING DATA

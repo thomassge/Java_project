@@ -7,6 +7,9 @@ import data.enums.CarriageType;
 import data.exceptions.DroneTypeIdNotExtractableException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import processing.Initializable;
+import util.Streamer;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * This class holds all individual Drone data that can be retrieved from the webserver.
  */
-public class Drone implements Saveable, Refreshable {
+public class Drone implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(Drone.class.getName());
 
     //INDIVIDUAL DRONE DATA
@@ -146,7 +149,7 @@ public class Drone implements Saveable, Refreshable {
     }
 
     //ENUM METHOD
-    public static CarriageType mapCarriageType(String carriageType) {
+    private CarriageType mapCarriageType(String carriageType) {
         return switch (carriageType) {
             case "ACT" -> CarriageType.ACT;
             case "SEN" -> CarriageType.SEN;
@@ -156,28 +159,28 @@ public class Drone implements Saveable, Refreshable {
     }
 
     //OTHER METHODS
-    public static LinkedList<Drone> initialize(String jsonString) {
-        LinkedList<Drone> drones = new LinkedList<Drone>();
-        JSONObject wholeHtml = new JSONObject(jsonString);
-        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+//    public static LinkedList<Drone> initialize(String jsonString) {
+//        LinkedList<Drone> drones = new LinkedList<Drone>();
+//        JSONObject wholeHtml = new JSONObject(jsonString);
+//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+//
+//        for (int i = 0; i < jsonArray.length(); i++) {
+//            JSONObject o = jsonArray.getJSONObject(i);
+//            drones.add(new Drone(
+//                    Drone.mapCarriageType(o.getString("carriage_type")),
+//                    o.getString("serialnumber"),
+//                    o.getString("created"),
+//                    o.getInt("carriage_weight"),
+//                    o.getInt("id"),
+//                    o.getString("dronetype")
+//            ));
+//        }
+//        setMemoryCount(getMemoryCount() + jsonArray.length());
+//        return drones;
+//    }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject o = jsonArray.getJSONObject(i);
-            drones.add(new Drone(
-                    Drone.mapCarriageType(o.getString("carriage_type")),
-                    o.getString("serialnumber"),
-                    o.getString("created"),
-                    o.getInt("carriage_weight"),
-                    o.getInt("id"),
-                    o.getString("dronetype")
-            ));
-        }
-        setMemoryCount(getMemoryCount() + jsonArray.length());
-        return drones;
-    }
-
-    public static boolean isNewDataAvailable() {
-        Saveable.createFile(filename);
+    public boolean isNewDataAvailable() {
+        createFile(filename);
 
         if(serverCount == 0) {
             LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
@@ -190,7 +193,7 @@ public class Drone implements Saveable, Refreshable {
         }
         else if(localCount < serverCount) {
             LOGGER.log(Level.INFO,"Yes new data available");
-            Saveable.saveAsFile(URL, serverCount, filename);
+            saveAsFile(URL, serverCount, filename);
             return true;
         }
         else {
@@ -227,5 +230,32 @@ public class Drone implements Saveable, Refreshable {
         this.printDrone();
         LOGGER.log(Level.INFO,"DroneTypes Information: ");
         LOGGER.log(Level.INFO,"DroneDynamics Information: ");
+    }
+
+    public static LinkedList<Drone> create() {
+        return new Drone().initialise();
+    }
+
+    @Override
+    public LinkedList<Drone> initialise() {
+        LinkedList<Drone> drones = new LinkedList<Drone>();
+
+        String jsonString = new Streamer().reader(filename);
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            drones.add(new Drone(
+                    this.mapCarriageType(o.getString("carriage_type")),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
+        setMemoryCount(getMemoryCount() + jsonArray.length());
+        return drones;
     }
 }

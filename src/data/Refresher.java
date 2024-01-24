@@ -7,7 +7,7 @@ import util.WebserverDataFetcher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class Refresher implements Saveable {
+public abstract class Refresher {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
 
     private static boolean isDronesNew;
@@ -21,26 +21,26 @@ public abstract class Refresher implements Saveable {
         checkForRefresh();
     }
 
-    public static void checkForRefresh() {
+    public void checkForRefresh() {
         updateCount();
-        isDronesNew = Drone.isNewDataAvailable();
-        isDroneTypesNew = DroneType.isNewDataAvailable();
-        isDroneDynamicsNew = DroneDynamics.isNewDataAvailable();
+        isDronesNew = new Drone().isNewDataAvailable();
+        isDroneTypesNew = new DroneType().isNewDataAvailable();
+        isDroneDynamicsNew = new DroneDynamics().isNewDataAvailable();
         isRefreshNeeded = isDronesNew || isDroneTypesNew || isDroneDynamicsNew;
     }
 
-    private static void updateCount() {
-        Drone.setLocalCount(Saveable.checkLocalCount(Drone.getFilename()));
+    private void updateCount() {
+        Drone.setLocalCount(new Drone().checkLocalCount(Drone.getFilename()));
         Drone.setServerCount(checkServerCount(Drone.getUrl()));
 
-        DroneType.setLocalCount(Saveable.checkLocalCount(DroneType.getFilename()));
+        DroneType.setLocalCount(new DroneType().checkLocalCount(DroneType.getFilename()));
         DroneType.setServerCount(checkServerCount(DroneType.getUrl()));
 
-        DroneDynamics.setLocalCount(Saveable.checkLocalCount(DroneDynamics.getFilename()));
+        DroneDynamics.setLocalCount(new DroneDynamics().checkLocalCount(DroneDynamics.getFilename()));
         DroneDynamics.setServerCount(checkServerCount(DroneDynamics.getUrl()));
     }
 
-    private static int checkServerCount(String url) { // static or nah?
+    private int checkServerCount(String url) { // static or nah?
         String jsonString = WebserverDataFetcher.jsonCreator(url + "?limit=1");
         JSONObject obj = new JSONObject(jsonString);
         return obj.getInt("count");

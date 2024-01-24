@@ -8,16 +8,14 @@ package data;
 import data.enums.Status;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import processing.Streamable;
+import processing.Initializable;
+import util.Streamer;
 
-import java.io.IOException;
-import java.sql.Ref;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics implements Saveable{
+public class DroneDynamics implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
 
     //DRONEDYNAMICS DATA
@@ -80,7 +78,6 @@ public class DroneDynamics implements Saveable{
         this.batteryStatus = batteryStatus;
         this.lastSeen = lastSeen;
         this.status = status;
-        LOGGER.log(Level.INFO, "DroneDynamics created...");
     }
 
     //GETTER METHODS
@@ -146,7 +143,7 @@ public class DroneDynamics implements Saveable{
     public static int getMemoryCount() {
         return memoryCount;
     }
-    public static void setMemoryCount(int memoryCount) {
+    private static void setMemoryCount(int memoryCount) {
         DroneDynamics.memoryCount = memoryCount;
     }
 
@@ -159,7 +156,7 @@ public class DroneDynamics implements Saveable{
     }
 
     //ENUM METHOD
-    public static Status mapStatus(String status) {
+    private Status mapStatus(String status) {
         return switch (status) {
             case "ON" -> Status.ON;
             case "OF" -> Status.OF;
@@ -169,33 +166,33 @@ public class DroneDynamics implements Saveable{
     }
 
     //OTHER METHODS
-    public static ArrayList<DroneDynamics> initialize(String jsonString) {
-        ArrayList<DroneDynamics> droneDynamics = new ArrayList<DroneDynamics>();
-        JSONObject wholeHtml = new JSONObject(jsonString);
-        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+//    public static ArrayList<DroneDynamics> initialize(String jsonString) {
+//        ArrayList<DroneDynamics> droneDynamics = new ArrayList<DroneDynamics>();
+//        JSONObject wholeHtml = new JSONObject(jsonString);
+//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+//
+//        for (int i = 0; i < jsonArray.length(); i++) {
+//            JSONObject o = jsonArray.getJSONObject(i);
+//            droneDynamics.add(new DroneDynamics(
+//                    o.getString("drone"),
+//                            o.getString("timestamp"),
+//                            o.getInt("speed"),
+//                            o.getFloat("align_roll"),
+//                            o.getFloat("align_pitch"),
+//                            o.getFloat("align_yaw"),
+//                            o.getDouble("longitude"),
+//                            o.getDouble("latitude"),
+//                            o.getInt("battery_status"),
+//                            o.getString("last_seen"),
+//                            DroneDynamics.mapStatus(o.getString("status"))
+//            ));
+//        }
+//        setMemoryCount(getMemoryCount() + jsonArray.length());
+//        return droneDynamics;
+//    }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject o = jsonArray.getJSONObject(i);
-            droneDynamics.add(new DroneDynamics(
-                    o.getString("drone"),
-                            o.getString("timestamp"),
-                            o.getInt("speed"),
-                            o.getFloat("align_roll"),
-                            o.getFloat("align_pitch"),
-                            o.getFloat("align_yaw"),
-                            o.getDouble("longitude"),
-                            o.getDouble("latitude"),
-                            o.getInt("battery_status"),
-                            o.getString("last_seen"),
-                            DroneDynamics.mapStatus(o.getString("status"))
-            ));
-        }
-        setMemoryCount(getMemoryCount() + jsonArray.length());
-        return droneDynamics;
-    }
-
-    public static boolean isNewDataAvailable() {
-        Saveable.createFile(filename);
+    public boolean isNewDataAvailable() {
+        createFile(filename);
 
         if(serverCount == 0) {
             LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
@@ -208,7 +205,7 @@ public class DroneDynamics implements Saveable{
         }
         else if(localCount < serverCount) {
             LOGGER.info("Yes new data available");
-            Saveable.saveAsFile(URL, serverCount, filename);
+            saveAsFile(URL, serverCount, filename);
             return true;
         }
         else {
@@ -252,5 +249,38 @@ public class DroneDynamics implements Saveable{
         LOGGER.info("Latitude: " + this.getLatitude());
         LOGGER.info("Battery Status: " + this.getBatteryStatus());
         LOGGER.info("Last Seen: " + this.getLastSeen());
+    }
+
+
+    public static ArrayList<DroneDynamics> create() {
+        return new DroneDynamics().initialise();
+    }
+
+    @Override
+    public ArrayList<DroneDynamics> initialise() {
+        ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
+
+        String jsonString = new Streamer().reader(filename);
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneDynamics.add(new DroneDynamics(
+                    o.getString("drone"),
+                    o.getString("timestamp"),
+                    o.getInt("speed"),
+                    o.getFloat("align_roll"),
+                    o.getFloat("align_pitch"),
+                    o.getFloat("align_yaw"),
+                    o.getDouble("longitude"),
+                    o.getDouble("latitude"),
+                    o.getInt("battery_status"),
+                    o.getString("last_seen"),
+                    this.mapStatus(o.getString("status"))
+            ));
+        }
+        setMemoryCount(getMemoryCount() + jsonArray.length());
+        return droneDynamics;
     }
 }

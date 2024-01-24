@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
 import services.GoogleMaps;
-import util.jsonCreator;
+import util.JsonCreator;
 
 
 public class DroneDynamicsMenu implements ActionListener {
@@ -32,7 +32,7 @@ public class DroneDynamicsMenu implements ActionListener {
 
 
     public DroneDynamicsMenu(ArrayList<DataStorage> data){
-        new jsonCreator();
+        new JsonCreator();
         this.data = data;
 
         LOGGER.info("Initializing DroneDynamicsMenu...");
