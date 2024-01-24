@@ -5,25 +5,20 @@
 package gui;
 
 import util.jsonCreator;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Logger;
 
 public class CreditsMenu {
 
-
     private static final Logger LOGGER = Logger.getLogger(CreditsMenu.class.getName());
-
-
     /**
      * Creates and displays the credits menu. This method sets up the GUI components
      * and populates them with the credits information.
      */
-
-
     public Color[] colors = {Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA};
     private int colorIndex = 0;
 
@@ -42,7 +37,6 @@ public class CreditsMenu {
         // Set the label's bounds to cover the entire frame
         backgroundLabel.setBounds(0, 0, 300, 300);
 
-        // Set the layout of the label
         backgroundLabel.setLayout(new GridBagLayout());
 
         addtoPanel(backgroundLabel, "FRA UAS - OOP Java", 0, 0);
@@ -54,14 +48,10 @@ public class CreditsMenu {
         addtoPanel(backgroundLabel, "Robin Remines - matr.no. 1459883", 0, 6);
         addtoPanel(backgroundLabel, "Thomas Levantis – matr.no. 1429473", 0, 7);
 
-        // Add the label to the frame
         droneFrame.getContentPane().add(backgroundLabel);
-
         droneFrame.setSize(300, 300);
         droneFrame.setLocationRelativeTo(null);
         droneFrame.setVisible(true);
-
-
 
         LOGGER.info("Credits menu created.");
     }
@@ -95,7 +85,6 @@ public class CreditsMenu {
                 label.setForeground(colors[colorIndex]);
             }
         });
-
         // Start the timer
         timer.start();
 

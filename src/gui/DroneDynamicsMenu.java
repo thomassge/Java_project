@@ -1,6 +1,8 @@
 package gui;
 
 import data.DataStorage;
+import services.GoogleMaps;
+import util.jsonCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,27 +11,23 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
-import services.GoogleMaps;
-import util.jsonCreator;
-
 
 public class DroneDynamicsMenu implements ActionListener {
+
     private static final Logger LOGGER = Logger.getLogger(DroneDynamicsMenu.class.getName());
     private ArrayList<DataStorage> data;
-    private JFrame frame;
-    private JPanel gridPanel;
+    private JFrame droneDynamicsFrame;
+    private JMenuBar droneDynamicsMenuBar;
+    private JPanel droneDynamicsgridPanel;
     private JComboBox<Integer> droneIdDropdown;
     private JTextArea droneTypeLabel;
-    private JPanel dTPanel;
+    private JPanel droneTypePanel;
     private JTextArea droneDynamicsLabel;
-    private JPanel dDPanel;
+    private JPanel droneDynamicsPanel;
     private int selectedArrayListValue = 0;
-    //private int selectedDroneGoogleMaps;
     private int selectedDroneId;
-    JPanel buttonPanel;
-    JPanel userPanel;
-
-
+    private JPanel droneDynamicsButtonPanel;
+    private JPanel droneDynamicsUserPanel;
 
     public DroneDynamicsMenu(ArrayList<DataStorage> data){
         new jsonCreator();
@@ -37,56 +35,49 @@ public class DroneDynamicsMenu implements ActionListener {
 
         LOGGER.info("Initializing DroneDynamicsMenu...");
 
-        JFrame  frame = createFrame();
+        createFrame();
+        createMenuBar();
+        createGridPanel(data);
 
-        JMenuBar menuBar = createMenuBar();
-        frame.setJMenuBar(menuBar);
+        droneDynamicsFrame.setJMenuBar(droneDynamicsMenuBar);
+        droneDynamicsFrame.add(droneDynamicsgridPanel);
 
-        JPanel gridPanel = createGridPanel(data);
-        frame.add(gridPanel);
-
-        // Select the first drone from the dropdown list
         if (droneIdDropdown.getItemCount() > 0) {
             droneIdDropdown.setSelectedIndex(0);
         }
-
         LOGGER.info("DroneDynamicsMenu initialized.");
     }
 
-    private JFrame createFrame(){
-        frame = new JFrame("Drone Dynamics");
+    private void createFrame(){
+        droneDynamicsFrame = new JFrame("Drone Dynamics");
 
-        frame.setSize(800, 550);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        droneDynamicsFrame.setSize(800, 550);
+        droneDynamicsFrame.setLocationRelativeTo(null);
+        droneDynamicsFrame.setVisible(true);
 
         LOGGER.log(Level.INFO,"Frame created...");
-        return frame;
     }
 
-    private JMenuBar createMenuBar() {
+    private void createMenuBar() {
         LOGGER.info("Creating Menu Bar...");
 
-        JMenuBar menuBar = new JMenuBar();
+        droneDynamicsMenuBar = new JMenuBar();
         JMenu menu = new JMenu("Menu");
         JMenuItem exitItem = new JMenuItem("Back");
 
-        menuBar.add(menu);
+        droneDynamicsMenuBar.add(menu);
         menu.add(exitItem);
 
         exitItem.addActionListener(e -> {
-            if (frame != null) {
-                frame.dispose();
+            if (droneDynamicsFrame != null) {
+                droneDynamicsFrame.dispose();
             }
         });
-
         LOGGER.info("Menu Bar created.");
-
-        return menuBar;
     }
 
-    private JPanel createGridPanel(ArrayList<DataStorage> data){
-        gridPanel = new JPanel(new GridBagLayout());
+    private void createGridPanel(ArrayList<DataStorage> data){
+        droneDynamicsgridPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
 
         createUserPanel(data);
@@ -95,30 +86,28 @@ public class DroneDynamicsMenu implements ActionListener {
         constraints.weightx = 1;
         constraints.weighty = 0.2;
         constraints.fill = GridBagConstraints.BOTH;
-        gridPanel.add(userPanel, constraints);
+        droneDynamicsgridPanel.add(droneDynamicsUserPanel, constraints);
 
         createDroneTypePanel();
         constraints.gridy = 1;
         constraints.weighty = 0.4;
-        gridPanel.add(dTPanel, constraints);
+        droneDynamicsgridPanel.add(droneTypePanel, constraints);
 
         createDroneDynamicsPanel();
         constraints.gridy = 2;
         constraints.weighty = 0.4;
-        gridPanel.add(dDPanel, constraints);
+        droneDynamicsgridPanel.add(droneDynamicsPanel, constraints);
 
         createButtons();
         constraints.gridy = 3;
         constraints.weighty = 0;
-        gridPanel.add(buttonPanel, constraints);
+        droneDynamicsgridPanel.add(droneDynamicsButtonPanel, constraints);
 
         LOGGER.info("GridPanel created...");
-
-        return gridPanel;
     }
 
     private void createUserPanel(ArrayList<DataStorage> data){
-        userPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        droneDynamicsUserPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         droneIdDropdown = new JComboBox();
 
         initializeDroneIdDropdown(data);
@@ -131,9 +120,20 @@ public class DroneDynamicsMenu implements ActionListener {
                     }
                 });
 
-        userPanel.add(droneIdDropdown);
-        userPanel.add(googleMapsButton);
-        gridPanel.add(userPanel);
+        /*
+        JButton Leonskomischefunktion = new JButton("Leonskomischefunktion");
+        Leonskomischefunktion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Leonskomischefunkion();
+            }
+        });
+        */
+
+        droneDynamicsUserPanel.add(droneIdDropdown);
+        droneDynamicsUserPanel.add(googleMapsButton);
+//        droneDynamicsUserPanel.add(Leonskomischefunktion);
+        droneDynamicsgridPanel.add(droneDynamicsUserPanel);
 
         LOGGER.info("User-Panel created...");
     }
@@ -149,55 +149,78 @@ public class DroneDynamicsMenu implements ActionListener {
     private void openGoogleMaps(){
 
         int listIndex = selectedDroneId - 71; // selectedDroneId - selectedDroneId.get(0) für dynamik
+
         if((listIndex >= 0) && (listIndex <= data.size()) ) {
             GoogleMaps mapCreator = new GoogleMaps();
             String filename = mapCreator.createPicture( data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLatitude(),
                     data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLongitude());
 
-            JFrame googleFrame = new JFrame();
+            JFrame droneDynamicsGoogleMapsFrame = new JFrame();
             String imagePath = filename;
-            googleFrame.add(new JLabel(new ImageIcon((new ImageIcon(filename)).getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH))));
 
-            googleFrame.setSize(400, 400);
-            googleFrame.setLocationRelativeTo(null);
-            googleFrame.setVisible(true);
+            droneDynamicsGoogleMapsFrame.add(new JLabel(new ImageIcon((new ImageIcon(filename)).getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH))));
+            droneDynamicsGoogleMapsFrame.setSize(400, 400);
+            droneDynamicsGoogleMapsFrame.setLocationRelativeTo(null);
+            droneDynamicsGoogleMapsFrame.setVisible(true);
             LOGGER.log(Level.INFO,"GoogleMaps opened...");
         }
     }
 
+    /*
+    private void Leonskomischefunkion(){
+        int listIndex = selectedDroneId - 71; // selectedDroneId - selectedDroneId.get(0) für dynamik
+
+        if((listIndex >= 0) && (listIndex <= data.size()) ) {
+            GoogleMaps mapCreator = new GoogleMaps();
+            String filename = mapCreator.createPicture( data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLatitude(),
+                    data.get(listIndex).getDroneDynamicsList().get(selectedArrayListValue).getLongitude());
+
+            JFrame LeonskomischefunkionFrame = new JFrame();
+            String imagePath = filename;
+
+            LeonskomischefunkionFrame.add(new JLabel(new ImageIcon((new ImageIcon(filename)).getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH))));
+            LeonskomischefunkionFrame.setSize(400, 400);
+            LeonskomischefunkionFrame.setLocationRelativeTo(null);
+            LeonskomischefunkionFrame.setVisible(true);
+            LOGGER.log(Level.INFO,"GoogleMaps opened...");
+    }
+     */
+
     private void createDroneTypePanel(){
-        dTPanel = new JPanel(new BorderLayout());
+        droneTypePanel = new JPanel(new BorderLayout());
         droneTypeLabel = new JTextArea("Select Drone-ID for DroneType information!");
+
         droneTypeLabel.setEditable(false);
-        dTPanel.add(droneTypeLabel, BorderLayout.CENTER);
-        gridPanel.add(dTPanel);
+        droneTypePanel.add(droneTypeLabel, BorderLayout.CENTER);
+        droneDynamicsgridPanel.add(droneTypePanel);
 
         LOGGER.info("DroneType Panel created...");
     }
 
     private void createDroneDynamicsPanel(){
-        dDPanel = new JPanel(new BorderLayout());
+        droneDynamicsPanel = new JPanel(new BorderLayout());
         droneDynamicsLabel = new JTextArea("Select Drone-ID for DroneDynamics information!");
+
         droneTypeLabel.setEditable(false);
-        dDPanel.add(droneDynamicsLabel, BorderLayout.CENTER);
-        gridPanel.add(dDPanel);
+        droneDynamicsPanel.add(droneDynamicsLabel, BorderLayout.CENTER);
+        droneDynamicsgridPanel.add(droneDynamicsPanel);
 
         LOGGER.info("DroneDynamics Panel created...");
     }
 
     private void createButtons() {
-        buttonPanel = new JPanel(new GridLayout(2, 12));
+        droneDynamicsButtonPanel = new JPanel(new GridLayout(2, 12));
         JButton[] plusButtons = new JButton[3];
         JButton[] minusButtons = new JButton[3];
 
         for(int j = 0; j<3; j++ ){
             minusButtons[j] = new JButton("-" + (int) Math.pow(10, j));
-            buttonPanel.add(minusButtons[j]);
+            droneDynamicsButtonPanel.add(minusButtons[j]);
         }
 
         for(int i = 0; i<3; i++){
             plusButtons[i] = new JButton("+" + (int) Math.pow(10, i) );
-            buttonPanel.add(plusButtons[i]);
+            droneDynamicsButtonPanel.add(plusButtons[i]);
         }
 
         for(int k = 0; k < 3; k++){
@@ -214,6 +237,7 @@ public class DroneDynamicsMenu implements ActionListener {
                             chegger();
                         } else {
                             selectedDroneId = (int) droneIdDropdown.getSelectedItem();
+
                             displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
                             LOGGER.log(Level.INFO,"selectedArrayListValue successfully incremented...");
                         }
@@ -229,22 +253,24 @@ public class DroneDynamicsMenu implements ActionListener {
                             chegger();
                         } else {
                             selectedDroneId = (int) droneIdDropdown.getSelectedItem();
+
                             displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
                             LOGGER.log(Level.INFO,"selectedArrayListValue successfully decremented...");
                         }
                     }
                 });
         }
-
-        gridPanel.add(buttonPanel);
+        droneDynamicsgridPanel.add(droneDynamicsButtonPanel);
 
         LOGGER.info("Buttons created...");
     }
 
     private void chegger(){
         showMessageDialog(null, "TimeStamp out of Bound!\nFirst TimeStamp shown now!");
+
         selectedArrayListValue = 0;
         displayDroneDynamicsInformation(data, (int) droneIdDropdown.getSelectedItem(), selectedArrayListValue);
+
         LOGGER.log(Level.SEVERE,"selectedArrayListValue out of Bound!");
     }
 
@@ -263,18 +289,21 @@ public class DroneDynamicsMenu implements ActionListener {
         for (int i = 0; i< data.size(); i++) {
             if (data.get(i).getDrone().getId() == selectedDroneId) {
 
-                String[] droneTypeAttributes = {"ID: ",
+                String[] droneTypeAttributes = {
+                        "ID: ",
                         "Serialno: ",
                         "Drone Type: ",
                         "Carriage Weight: ",
-                        "Carriage Type:"};
+                        "Carriage Type:"
+                };
 
                 String[] droneTypeValues = {
                         Integer.toString(selectedDroneId),
                         data.get(i).getDrone().getSerialnumber(),
                         data.get(i).getDroneType().getTypename(),
                         Double.toString(data.get(i).getDrone().getCarriageWeight()),
-                        String.valueOf(data.get(i).getDrone().getCarriageType())};
+                        String.valueOf(data.get(i).getDrone().getCarriageType())
+                };
 
                 StringBuilder text = new StringBuilder();
                 text.append("Drone information:\n");
@@ -284,12 +313,11 @@ public class DroneDynamicsMenu implements ActionListener {
                 }
 
                 droneTypeLabel.setText(text.toString());
-                dTPanel.add(droneTypeLabel);
+                droneTypePanel.add(droneTypeLabel);
 
                 LOGGER.info("Drone information created for Drone ID: " + selectedDroneId);
 
                 int selectedDroneTimeStamp = 0;
-
                 displayDroneDynamicsInformation(data, selectedDroneId, selectedDroneTimeStamp);
 
                 break;
@@ -330,6 +358,7 @@ public class DroneDynamicsMenu implements ActionListener {
                         String.valueOf(data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).getAlignmentYaw()),
                         data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).printBatteryInformation(data, i,  selectedDroneTimeStamp)
                 };
+
                 StringBuilder text = new StringBuilder();
                 text.append("DroneDynamics information:\n");
 
@@ -338,10 +367,12 @@ public class DroneDynamicsMenu implements ActionListener {
                 }
 
                 droneDynamicsLabel.setText(text.toString());
-                dDPanel.add(droneDynamicsLabel);
+                droneDynamicsPanel.add(droneDynamicsLabel);
+
                 LOGGER.log(Level.INFO,"Correct TimeStamp successfully created...");
                 break;
             }
         }
     }
 }
+

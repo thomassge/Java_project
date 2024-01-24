@@ -7,6 +7,8 @@ package gui;
 
 import data.*;
 import util.jsonCreator;
+import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -16,16 +18,16 @@ import java.awt.event.ActionListener;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.ArrayList;
-
 
 public class DroneMenu implements ActionListener {
 
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
     private ArrayList<DataStorage> data;
-    private final String[] columnNames = {"Nr.", "ID", "DroneType", "Created", "Serialnr", "CarrWeight", "CarrType"};
     private Object[][] droneMenuData;
+    private JFrame droneMenuFrame;
+    private JMenuBar droneMenuMenuBar;
+    private JTable droneMenuTable;
+    private final String[] columnNames = {"Nr.", "ID", "DroneType", "Created", "Serialnr", "CarrWeight", "CarrType"};
     private final int[] columnWidth = {-55, -55, 0, 0, 0, -55, -55};
 
     /**
@@ -40,14 +42,13 @@ public class DroneMenu implements ActionListener {
 
         initializeGuiData(data);
 
-        JFrame frame = createFrame();
-        JMenuBar menuBar = createMenuBar();
-        frame.setJMenuBar(menuBar);
+        createFrame();
+        createMenuBar();
+        createTable();
 
-        JTable table = createTable();
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        frame.add(scrollPane);
+        JScrollPane droneMenuScrollPane = new JScrollPane(droneMenuTable);
+        droneMenuFrame.setJMenuBar(droneMenuMenuBar);
+        droneMenuFrame.add(droneMenuScrollPane);
 
         LOGGER.info("DroneMenu initialized.");
     }
@@ -66,15 +67,13 @@ public class DroneMenu implements ActionListener {
         }
     }
 
-    private JFrame createFrame(){
-        JFrame frame = new JFrame("Drones Overview");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private void createFrame(){
+        droneMenuFrame = new JFrame("Drones Overview");
+        droneMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        frame.setSize(800, 550);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-        return frame;
+        droneMenuFrame.setSize(800, 550);
+        droneMenuFrame.setLocationRelativeTo(null);
+        droneMenuFrame.setVisible(true);
     }
 
     /**
@@ -82,12 +81,12 @@ public class DroneMenu implements ActionListener {
      *
      * @return JMenuBar for the DroneMenu
      */
-    private JMenuBar createMenuBar() {
+    private void createMenuBar() {
         LOGGER.info("Creating Menu Bar...");
 
-        JMenuBar menuBar = new JMenuBar();
+        droneMenuMenuBar = new JMenuBar();
         JMenu menu = new JMenu("Menu");
-        menuBar.add(menu);
+        droneMenuMenuBar.add(menu);
 
         addItemToMenuWithActionCommand(menu, "Drone Types", "dronet");
         addItemToMenuWithActionCommand(menu, "Drone Dynamics", "droned");
@@ -95,11 +94,17 @@ public class DroneMenu implements ActionListener {
         addItemToMenuWithActionCommand(menu, "Credits", "credits");
 
         LOGGER.info("Menu Bar created.");
-        return menuBar;
     }
 
-    private JTable createTable(){
-        JTable table = new JTable(droneMenuData, columnNames) {
+    private void addItemToMenuWithActionCommand(JMenu menu, String itemName, String actionCmd){
+        JMenuItem droneMenuItem = new JMenuItem(itemName);
+        droneMenuItem.setActionCommand(actionCmd);
+        droneMenuItem.addActionListener(this);
+        menu.add(droneMenuItem);
+    }
+
+    private void createTable(){
+        droneMenuTable = new JTable(droneMenuData, columnNames) {
             /**
              * Determines whether a cell in the table is editable. This implementation makes all
              * cells in the tabe non-editable.
@@ -113,20 +118,12 @@ public class DroneMenu implements ActionListener {
             return false;
         }
     };
-        TableColumnModel columnModel = table.getColumnModel();
+        TableColumnModel columnModel = droneMenuTable.getColumnModel();
 
-        for(int i=0; i<columnWidth.length; i++){
+        for(int i=0; i<columnWidth.length; i++) {
             TableColumn column = columnModel.getColumn(i);
             column.setPreferredWidth((column.getPreferredWidth() + columnWidth[i]));
         }
-        return table;
-    }
-
-    private void addItemToMenuWithActionCommand(JMenu menu, String itemName, String actionCmd){
-        JMenuItem menuItem = new JMenuItem(itemName);
-        menuItem.setActionCommand(actionCmd);
-        menuItem.addActionListener(this);
-        menu.add(menuItem);
     }
 
     /**
