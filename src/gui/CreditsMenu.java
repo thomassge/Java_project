@@ -35,7 +35,7 @@ public class CreditsMenu {
         JLabel backgroundLabel = new JLabel(imageIcon);
 
         // Set the label's bounds to cover the entire frame
-        backgroundLabel.setBounds(0, 0, 300, 300);
+        backgroundLabel.setBounds(0, 0, 1365, 905);
 
         backgroundLabel.setLayout(new GridBagLayout());
 
@@ -49,7 +49,7 @@ public class CreditsMenu {
         addtoPanel(backgroundLabel, "Thomas Levantis – matr.no. 1429473", 0, 7);
 
         droneFrame.getContentPane().add(backgroundLabel);
-        droneFrame.setSize(300, 300);
+        droneFrame.setSize(1365, 905);
         droneFrame.setLocationRelativeTo(null);
         droneFrame.setVisible(true);
 
@@ -69,6 +69,8 @@ public class CreditsMenu {
 
         JLabel label = new JLabel(labelText);
         label.setForeground(colors[colorIndex]); // Set the text color to white
+        label.setFont(new Font(label.getFont().getName(), label.getFont().getStyle(), 40));
+
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.gridx = gridx;
