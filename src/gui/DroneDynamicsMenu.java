@@ -2,7 +2,7 @@ package gui;
 
 import data.DataStorage;
 import services.GoogleMaps;
-import util.jsonCreator;
+import util.JsonCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,7 @@ public class DroneDynamicsMenu implements ActionListener {
     private JPanel droneDynamicsUserPanel;
 
     public DroneDynamicsMenu(ArrayList<DataStorage> data){
-        new jsonCreator();
+        new JsonCreator();
         this.data = data;
 
         LOGGER.info("Initializing DroneDynamicsMenu...");

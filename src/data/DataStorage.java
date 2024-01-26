@@ -1,7 +1,5 @@
 package data;
 
-import gui.DroneMenu;
-
 import java.util.ArrayList;
 import java.util.logging.Logger;
 

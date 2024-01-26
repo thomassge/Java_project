@@ -1,11 +1,11 @@
-package processing;
+package util;
 
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public interface Streamable {
-    public static String reader(String filename) {
+public class Streamer {
+    public String reader(String filename) {
         StringBuilder responseContent;
         try {
             String data;
@@ -25,7 +25,7 @@ public interface Streamable {
         return responseContent.toString();
     }
 
-    public static void writer(String data, String filename) {
+    public void writer(String data, String filename) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
             writer.write(data);

@@ -4,7 +4,7 @@
  */
 package gui;
 
-import util.jsonCreator;
+import util.JsonCreator;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -23,7 +23,7 @@ public class CreditsMenu {
     private int colorIndex = 0;
 
     public CreditsMenu() {
-        new jsonCreator(".idea/libraries/group4special/09.wav");
+        new JsonCreator(".idea/libraries/group4special/09.wav");
 
         LOGGER.info("Creating Credits menu...");
 

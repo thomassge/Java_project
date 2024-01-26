@@ -6,7 +6,7 @@
 package gui;
 
 import data.*;
-import util.jsonCreator;
+import util.JsonCreator;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -36,7 +36,7 @@ public class DroneMenu implements ActionListener {
      * @param data The ArrayList that holds all information that need to be displayed.
      */
     public DroneMenu(ArrayList<DataStorage> data) {
-        new jsonCreator();
+        new JsonCreator();
         this.data  = data;
         LOGGER.info("Initializing DroneMenu...");
 

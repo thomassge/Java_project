@@ -1,7 +1,5 @@
 package util;
 
-import gui.DroneMenu;
-import logging.LogMain;
 import java.util.logging.Level;
 
 import java.io.BufferedReader;

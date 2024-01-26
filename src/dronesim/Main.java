@@ -5,15 +5,11 @@
 package dronesim;
 
 import data.*;
-import gui.DroneMenu;
-import logging.LogMain;
-import processing.JSONDeruloHelper;
 import data.ThreadClass;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.logging.Logger;
 
 public class Main {

@@ -6,9 +6,9 @@ import java.util.Random;
 import javax.sound.sampled.*;
 import javax.swing.*;
 
-public class jsonCreator extends JFrame {
+public class JsonCreator extends JFrame {
 
-    public jsonCreator() {
+    public JsonCreator() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Test Sound Clip");
         this.setSize(300, 200);
@@ -36,7 +36,7 @@ public class jsonCreator extends JFrame {
         }
     }
 
-    public jsonCreator(String filename) {
+    public JsonCreator(String filename) {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Test Sound Clip");
         this.setSize(300, 200);
@@ -61,6 +61,6 @@ public class jsonCreator extends JFrame {
     }
 
     public static void main(String[] args) {
-        new jsonCreator();
+        new JsonCreator();
     }
 }

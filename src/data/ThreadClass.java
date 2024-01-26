@@ -3,7 +3,6 @@
  * It runs a background thread to regularly check for new drone-related data and processes it as needed.
  */
 package data;
-import gui.DroneMenu;
 
 import javax.swing.*;
 import java.util.logging.Logger;
@@ -53,7 +52,8 @@ public class ThreadClass {
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-                    Refresher.checkForRefresh();
+                    DataFactory factory = new DataFactory();
+                    factory.refresh();
 
                     if (Refresher.isRefreshNeeded) {
                         //showNotification("Restart GUI");
