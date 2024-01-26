@@ -1,12 +1,13 @@
 package data;
 
+import gui.DroneMenu;
 import org.json.JSONObject;
 import util.WebserverDataFetcher;
 
 import java.util.logging.Logger;
 
 public abstract class Refresher {
-    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Refresher.class.getName());
 
     private static boolean isDronesNew;
     private static boolean isDroneTypesNew;

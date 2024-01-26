@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class DataStorage {
-    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DataStorage.class.getName());
 
     private Drone drone;
     private DroneType droneType;

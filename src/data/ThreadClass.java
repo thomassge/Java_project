@@ -8,7 +8,8 @@ import javax.swing.*;
 import java.util.logging.Logger;
 
 public class ThreadClass {
-    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ThreadClass.class.getName());
+    DataFactory factory = new DataFactory();
 
     /**
      * Constructs a new Backend instance with initial states set to indicate no new data is available.
@@ -52,7 +53,6 @@ public class ThreadClass {
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-                    DataFactory factory = new DataFactory();
                     factory.refresh();
 
                     if (Refresher.isRefreshNeeded) {

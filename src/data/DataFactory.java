@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DataFactory extends Refresher {
-    private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DataFactory.class.getName());
 
     // FIELDS
     private ArrayList<DataStorage> dataStorage;

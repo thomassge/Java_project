@@ -95,8 +95,6 @@ public class GoogleMaps {
 
  //   }
     public String createPicture(double latitude, double longitude) {
-        String myKey = System.getenv("jsonDerulo");
-
         try {
             googleEndpoint = googleEndpoint + markers  + latitude + "," + longitude;
             System.out.println("imageURL: " + googleEndpoint);
