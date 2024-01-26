@@ -7,10 +7,8 @@ package services;
 import data.*;
 import processing.*;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,14 +95,13 @@ public class GoogleMaps {
     public String createPicture(double latitude, double longitude) {
         try {
             googleEndpoint = googleEndpoint + markers  + latitude + "," + longitude;
-            System.out.println("imageURL: " + googleEndpoint);
             String destinationFile = "image.jpg";
             URL url = new URL(googleEndpoint);
 
             InputStream is = url.openStream();
             OutputStream os = new FileOutputStream(destinationFile);
 
-            byte[] b = new byte[4096];
+            byte[] b = new byte[2048];
             int length;
 
             while ((length = is.read(b)) != -1) {
@@ -115,10 +112,14 @@ public class GoogleMaps {
             os.close();
             LOGGER.log(Level.INFO,"Picture created...");
             return destinationFile;
+        } catch (MalformedURLException e) {
+            LOGGER.info("Wrong URL");
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
+            LOGGER.info("File not found");
+            throw new RuntimeException(e);
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException(e);
         }
-        return "lol";
     }
 }

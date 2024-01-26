@@ -6,8 +6,10 @@
 package gui;
 
 import data.*;
+import dronesim.Main;
 import util.JsonCreator;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -22,7 +24,9 @@ import java.util.logging.Level;
 public class DroneMenu implements ActionListener {
 
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
+    private DataFactory factory;
     private ArrayList<DataStorage> data;
+    private LinkedList<DroneType> droneTypes;
     private Object[][] droneMenuData;
     private JFrame droneMenuFrame;
     private JMenuBar droneMenuMenuBar;
@@ -35,9 +39,14 @@ public class DroneMenu implements ActionListener {
      *
      * @param data The ArrayList that holds all information that need to be displayed.
      */
-    public DroneMenu(ArrayList<DataStorage> data) {
+    public DroneMenu() {
+        factory = new DataFactory();
+        this.factory = factory;
+
+        data = factory.getDataStorage();
+        droneTypes = factory.getDroneTypes();
+
         new JsonCreator();
-        this.data  = data;
         LOGGER.info("Initializing DroneMenu...");
 
         initializeGuiData(data);
@@ -136,12 +145,15 @@ public class DroneMenu implements ActionListener {
         LOGGER.info("Action Performed: " + e.getActionCommand());
 
         if ("dronet".equals(e.getActionCommand())) {
-            new DroneTypeMenu(data);
+            new DroneTypeMenu(droneTypes);
         } else if ("droned".equals(e.getActionCommand())) {
             new DroneDynamicsMenu(data);
         } else if ("refresh".equals(e.getActionCommand())) {
-            new DataFactory();
             LOGGER.log(Level.INFO,"Refresh Button activated");
+            //if(factory.checkForRefresh()) {}
+                droneMenuFrame.dispose();
+                new DroneMenu();
+
         } else if ("credits".equals(e.getActionCommand())){
             new CreditsMenu();
         }
