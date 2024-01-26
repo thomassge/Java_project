@@ -27,19 +27,15 @@ public class Main {
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
 
-        DataFactory factory = new DataFactory();
-        ArrayList<DataStorage> data = factory.getDataStorage();
-
-        //factory.refresh();
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new DroneMenu(data);
+                new DroneMenu();
             }
         });
 
-        ThreadClass threadClass = new ThreadClass();
-        threadClass.startDataUpdaterThread();
+//        ThreadClass threadClass = new ThreadClass();
+//        threadClass.startDataUpdaterThread();
 
         LOGGER.info("Program execution completed.");
     }

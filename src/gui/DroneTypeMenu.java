@@ -5,7 +5,11 @@
 package gui;
 
 import data.DataStorage;
+import data.DroneType;
 import util.JsonCreator;
+
+import java.lang.reflect.Array;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import java.util.ArrayList;
@@ -28,7 +32,7 @@ public class DroneTypeMenu {
      *
      * @param droneTypes A LinkedList of DroneType objects to be displayed.
      */
-    public DroneTypeMenu(ArrayList<DataStorage> data) {
+    public DroneTypeMenu(LinkedList<DroneType> data) {
         new JsonCreator();
         LOGGER.info("Initializing DroneTypeMenu...");
 
@@ -45,18 +49,18 @@ public class DroneTypeMenu {
         LOGGER.info("DroneTypeMenu initialized.");
     }
 
-    private void initializeGuiData(ArrayList<DataStorage> data){
+    private void initializeGuiData(LinkedList<DroneType> data){
         droneTypeMenuData = new Object[data.size()][columnNames.length];
 
         for (int i = 0; i < data.size(); i++) {
-            droneTypeMenuData[i][0] = data.get(i).getDroneType().getDroneTypeID();
-            droneTypeMenuData[i][1] = data.get(i).getDroneType().getManufacturer();
-            droneTypeMenuData[i][2] = data.get(i).getDroneType().getTypename();
-            droneTypeMenuData[i][3] = data.get(i).getDroneType().getWeight();
-            droneTypeMenuData[i][4] = data.get(i).getDroneType().getMaximumSpeed();
-            droneTypeMenuData[i][5] = data.get(i).getDroneType().getBatteryCapacity();
-            droneTypeMenuData[i][6] = data.get(i).getDroneType().getControlRange();
-            droneTypeMenuData[i][7] = data.get(i).getDroneType().getMaximumCarriage();
+                droneTypeMenuData[i][0] = data.get(i).getDroneTypeID();
+                droneTypeMenuData[i][1] = data.get(i).getManufacturer();
+                droneTypeMenuData[i][2] = data.get(i).getTypename();
+                droneTypeMenuData[i][3] = data.get(i).getWeight();
+                droneTypeMenuData[i][4] = data.get(i).getMaximumSpeed();
+                droneTypeMenuData[i][5] = data.get(i).getBatteryCapacity();
+                droneTypeMenuData[i][6] = data.get(i).getControlRange();
+                droneTypeMenuData[i][7] = data.get(i).getMaximumCarriage();
         }
     }
 

@@ -22,12 +22,9 @@ public class DataFactory extends Refresher {
      * Every other time, it just refreshes the data in the Refresher constructor.
      */
     public DataFactory() {
-        if(isInitial) {
             LOGGER.log(Level.INFO,"Initial Fetch started");
-            generateAll();
-            setDataStorage(linker());
-            isInitial = false;
-        }
+            refresh();
+            //isInitial = false;
     }
 
     // GETTER AND SETTER
@@ -65,21 +62,6 @@ public class DataFactory extends Refresher {
 
 
     // METHODS
-    /**
-     * This method checks for a refresh by comparing the local and server count of every data type.
-     * If any of them is different, all data is refreshed.
-     * It's refreshed by deleting the old data and fetching the new one.
-     * The new data is then linked.
-     */
-    public void refresh() {
-        checkForRefresh();
-        if(isRefreshNeeded) {
-            deleteData();
-            generateAll();
-            setDataStorage(linker());
-        }
-    }
-
     private void deleteData() {
         setDrones(null);
         setDroneTypes(null);
@@ -147,5 +129,19 @@ public class DataFactory extends Refresher {
         }
 
         return list;
+    }
+
+    /**
+     * This method checks for a refresh by comparing the local and server count of every data type.
+     * If any of them is different, all data is refreshed.
+     * It's refreshed by deleting the old data and fetching the new one.
+     * The new data is then linked.
+     */
+    @Override
+    public void refresh() {
+        //checkForRefresh();
+            deleteData();
+            generateAll();
+            setDataStorage(linker());
     }
 }

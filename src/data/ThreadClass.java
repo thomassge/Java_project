@@ -53,9 +53,8 @@ public class ThreadClass {
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-                    factory.refresh();
-
-                    if (Refresher.isRefreshNeeded) {
+                    if (factory.checkForRefresh()) {
+                        factory.refresh();
                         //showNotification("Restart GUI");
                         //restartGUI();
                         //one of these two methods makes the thread stop

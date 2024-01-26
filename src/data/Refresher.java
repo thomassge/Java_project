@@ -12,7 +12,7 @@ public abstract class Refresher {
     private static boolean isDronesNew;
     private static boolean isDroneTypesNew;
     private static boolean isDroneDynamicsNew;
-    static boolean isRefreshNeeded;
+    static boolean isRefreshNeeded = false;
     static boolean isInitial = true;
 
     public Refresher() {
@@ -20,12 +20,13 @@ public abstract class Refresher {
         checkForRefresh();
     }
 
-    public void checkForRefresh() {
+    public boolean checkForRefresh() {
         updateCount();
         isDronesNew = new Drone().isNewDataAvailable();
         isDroneTypesNew = new DroneType().isNewDataAvailable();
         isDroneDynamicsNew = new DroneDynamics().isNewDataAvailable();
         isRefreshNeeded = isDronesNew || isDroneTypesNew || isDroneDynamicsNew;
+        return isRefreshNeeded;
     }
 
     private void updateCount() {
@@ -45,4 +46,5 @@ public abstract class Refresher {
         return obj.getInt("count");
     }
 
+    public abstract void refresh();
 }
