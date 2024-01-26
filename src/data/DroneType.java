@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneType implements Initializable {
+public class DroneType implements Initializable<LinkedList<DroneType>> {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
     //DRONETYPE DATA

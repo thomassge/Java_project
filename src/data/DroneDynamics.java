@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics implements Initializable {
+public class DroneDynamics implements Initializable<ArrayList<DroneDynamics>> {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
 
     //DRONEDYNAMICS DATA
@@ -166,31 +166,6 @@ public class DroneDynamics implements Initializable {
     }
 
     //OTHER METHODS
-//    public static ArrayList<DroneDynamics> initialize(String jsonString) {
-//        ArrayList<DroneDynamics> droneDynamics = new ArrayList<DroneDynamics>();
-//        JSONObject wholeHtml = new JSONObject(jsonString);
-//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-//
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            JSONObject o = jsonArray.getJSONObject(i);
-//            droneDynamics.add(new DroneDynamics(
-//                    o.getString("drone"),
-//                            o.getString("timestamp"),
-//                            o.getInt("speed"),
-//                            o.getFloat("align_roll"),
-//                            o.getFloat("align_pitch"),
-//                            o.getFloat("align_yaw"),
-//                            o.getDouble("longitude"),
-//                            o.getDouble("latitude"),
-//                            o.getInt("battery_status"),
-//                            o.getString("last_seen"),
-//                            DroneDynamics.mapStatus(o.getString("status"))
-//            ));
-//        }
-//        setMemoryCount(getMemoryCount() + jsonArray.length());
-//        return droneDynamics;
-//    }
-
     public boolean isNewDataAvailable() {
         createFile(filename);
 
@@ -250,7 +225,6 @@ public class DroneDynamics implements Initializable {
         LOGGER.info("Battery Status: " + this.getBatteryStatus());
         LOGGER.info("Last Seen: " + this.getLastSeen());
     }
-
 
     public static ArrayList<DroneDynamics> create() {
         return new DroneDynamics().initialise();

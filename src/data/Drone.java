@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * This class holds all individual Drone data that can be retrieved from the webserver.
  */
-public class Drone implements Initializable {
+public class Drone implements Initializable<LinkedList<Drone>> {
     private static final Logger LOGGER = Logger.getLogger(Drone.class.getName());
 
     //INDIVIDUAL DRONE DATA
