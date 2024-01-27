@@ -34,8 +34,8 @@ public class Main {
             }
         });
 
-//        ThreadClass threadClass = new ThreadClass();
-//        threadClass.startDataUpdaterThread();
+        ThreadClass threadClass = new ThreadClass();
+        threadClass.startDataUpdaterThread();
 
         LOGGER.info("Program execution completed.");
     }

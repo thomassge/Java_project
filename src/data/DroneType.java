@@ -223,6 +223,7 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         else if(localCount < serverCount) {
             LOGGER.info("Yes new data available");
             this.saveAsFile(URL, serverCount, filename);
+
             return true;
         }
         else {
