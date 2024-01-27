@@ -16,30 +16,25 @@ public class DataFactory extends Refresher {
 
     // CONSTRUCTOR
     /**
-     * The first time, the DataFactory constructor is called, it checks if our Files need a
-     * refresh, and refreshes if so. This happens, because it extends Refresher. It then fetches all data from the server.
+     * A new DataFactory object should only be created once at the start of the program.
+     * <p>
+     * When it is created, it refreshes by deleting data, regenerating it from Files and linking it to our dataStorage object.
+     * <p>
+     * Because it extends Refresher, the Refresher constructor is called first.
+     * This makes sure the files are up-to-date by updating the local- and serverCounts and comparing them.
+     * This ensures that the data is always up-to-date before it is saved in memory.
+     * <p>
      * It then links the data and stores it in the dataStorage ArrayList.
-     * Every other time, it just refreshes the data in the Refresher constructor.
      */
     public DataFactory() {
             LOGGER.log(Level.INFO,"Initial Fetch started");
             refresh();
-            //isInitial = false;
     }
 
     // GETTER AND SETTER
-    public ArrayList<DataStorage> getDataStorage() {
-        return dataStorage;
-    }
-
-    public void setDataStorage(ArrayList<DataStorage> dataStorage) {
-        this.dataStorage = dataStorage;
-    }
-
     public LinkedList<Drone> getDrones() {
         return drones;
     }
-
     public void setDrones(LinkedList<Drone> drones) {
         this.drones = drones;
     }
@@ -47,7 +42,6 @@ public class DataFactory extends Refresher {
     public LinkedList<DroneType> getDroneTypes() {
         return droneTypes;
     }
-
     public void setDroneTypes(LinkedList<DroneType> droneTypes) {
         this.droneTypes = droneTypes;
     }
@@ -55,11 +49,16 @@ public class DataFactory extends Refresher {
     public ArrayList<DroneDynamics> getDroneDynamics() {
         return droneDynamics;
     }
-
     public void setDroneDynamics(ArrayList<DroneDynamics> droneDynamics) {
         this.droneDynamics = droneDynamics;
     }
 
+    public ArrayList<DataStorage> getDataStorage() {
+        return dataStorage;
+    }
+    public void setDataStorage(ArrayList<DataStorage> dataStorage) {
+        this.dataStorage = dataStorage;
+    }
 
     // METHODS
     private void deleteData() {
@@ -69,7 +68,7 @@ public class DataFactory extends Refresher {
         setDataStorage(null);
     }
 
-    private void generateAll() {
+    private void createData() {
         LOGGER.log(Level.INFO,"File Drone Creation");
         setDrones(Drone.create());
 
@@ -81,16 +80,16 @@ public class DataFactory extends Refresher {
     }
 
     // METHODS FOR LINKING DATA
-    private ArrayList<DataStorage> linker () {
+    private ArrayList<DataStorage> dataLinker() {
         ArrayList<DataStorage> list = new ArrayList<>();
 
         int i = 0;
         for(Drone obj : drones) {
             DataStorage item = new DataStorage();
 
-            item.setDrone(selectDrone(i));
-            item.setDroneType(selectDroneType(i));
-            item.setDroneDynamicsList(selectDroneDynamics(i));
+            item.setDrone(linkDrone(i));
+            item.setDroneType(linkDroneType(i));
+            item.setDroneDynamicsList(linkDroneDynamics(i));
 
             list.add(item);
             i++;
@@ -99,13 +98,13 @@ public class DataFactory extends Refresher {
         return list;
     }
 
-    private Drone selectDrone(int i) {
+    private Drone linkDrone(int i) {
 
         return drones.get(i);
         //remove from list after selection
     }
 
-    private DroneType selectDroneType(int i) {
+    private DroneType linkDroneType(int i) {
         int j = 0;
         for(DroneType obj : droneTypes) {
             if(drones.get(i).getExtractedDroneTypeID() == droneTypes.get(j).getDroneTypeID()) {
@@ -118,7 +117,7 @@ public class DataFactory extends Refresher {
         return null;
     }
 
-    private ArrayList<DroneDynamics> selectDroneDynamics(int i) {
+    private ArrayList<DroneDynamics> linkDroneDynamics(int i) {
         ArrayList<DroneDynamics> list = new ArrayList<>();
         String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(i).getId() + "/";
 
@@ -141,7 +140,7 @@ public class DataFactory extends Refresher {
     public void refresh() {
         //checkForRefresh();
             deleteData();
-            generateAll();
-            setDataStorage(linker());
+            createData();
+            setDataStorage(dataLinker());
     }
 }

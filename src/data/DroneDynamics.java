@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DroneDynamics implements Initializable<ArrayList<DroneDynamics>> {
+public class DroneDynamics extends JsonFile implements Initializable<ArrayList<DroneDynamics>> {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
 
     //DRONEDYNAMICS DATA

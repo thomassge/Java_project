@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * This class holds all individual Drone data that can be retrieved from the webserver.
  */
-public class Drone implements Initializable<LinkedList<Drone>> {
+public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> {
     private static final Logger LOGGER = Logger.getLogger(Drone.class.getName());
 
     //INDIVIDUAL DRONE DATA
@@ -159,48 +159,7 @@ public class Drone implements Initializable<LinkedList<Drone>> {
     }
 
     //OTHER METHODS
-//    public static LinkedList<Drone> initialize(String jsonString) {
-//        LinkedList<Drone> drones = new LinkedList<Drone>();
-//        JSONObject wholeHtml = new JSONObject(jsonString);
-//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-//
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            JSONObject o = jsonArray.getJSONObject(i);
-//            drones.add(new Drone(
-//                    Drone.mapCarriageType(o.getString("carriage_type")),
-//                    o.getString("serialnumber"),
-//                    o.getString("created"),
-//                    o.getInt("carriage_weight"),
-//                    o.getInt("id"),
-//                    o.getString("dronetype")
-//            ));
-//        }
-//        setMemoryCount(getMemoryCount() + jsonArray.length());
-//        return drones;
-//    }
 
-    public boolean isNewDataAvailable() {
-        createFile(filename);
-
-        if(serverCount == 0) {
-            LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
-            //TODO: Own Exception
-            return false;
-        }
-        else if (localCount == serverCount) {
-            LOGGER.log(Level.INFO, "local- and serverDroneCount identical.");
-            return false;
-        }
-        else if(localCount < serverCount) {
-            LOGGER.log(Level.INFO,"Yes new data available");
-            saveAsFile(URL, serverCount, filename);
-            return true;
-        }
-        else {
-            LOGGER.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
-        }
-        return false;
-    }
 
     public void iterateThroughList(ArrayList<DroneDynamics> myList) {
         for (int i = 0; i < myList.size(); i++) {
@@ -230,6 +189,29 @@ public class Drone implements Initializable<LinkedList<Drone>> {
         this.printDrone();
         LOGGER.log(Level.INFO,"DroneTypes Information: ");
         LOGGER.log(Level.INFO,"DroneDynamics Information: ");
+    }
+
+    public boolean isNewDataAvailable() {
+        createFile(filename);
+
+        if(serverCount == 0) {
+            LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            //TODO: Own Exception
+            return false;
+        }
+        else if (localCount == serverCount) {
+            LOGGER.log(Level.INFO, "local- and serverDroneCount identical.");
+            return false;
+        }
+        else if(localCount < serverCount) {
+            LOGGER.log(Level.INFO,"Yes new data available");
+            saveAsFile(URL, serverCount, filename);
+            return true;
+        }
+        else {
+            LOGGER.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
+        }
+        return false;
     }
 
     public static LinkedList<Drone> create() {
