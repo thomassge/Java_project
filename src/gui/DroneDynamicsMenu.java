@@ -116,7 +116,7 @@ public class DroneDynamicsMenu implements ActionListener {
         googleMapsButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        openGoogleMaps();
+                            openGoogleMaps();
                     }
                 });
 
