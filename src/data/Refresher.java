@@ -25,14 +25,7 @@ public abstract class Refresher {
         boolean isDroneTypesNew = new DroneType().isNewDataAvailable();
         boolean isDroneDynamicsNew = new DroneDynamics().isNewDataAvailable();
         isRefreshNeeded = isDronesNew || isDroneTypesNew || isDroneDynamicsNew;
-        if (isRefreshNeeded){
-            //DroneMenuFrame.dispose() ansprechen, damit alter Frame geschlossen wird, wenn neuer Frame geöffnet wird
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    new DroneMenu();
-                }
-            });
-        }
+
         return isRefreshNeeded;
     }
 

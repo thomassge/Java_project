@@ -8,6 +8,7 @@ import data.*;
 import processing.*;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -92,7 +93,7 @@ public class GoogleMaps {
 //        test.pack();
 
  //   }
-    public String createPicture(double latitude, double longitude) {
+    public String createPicture(double latitude, double longitude){
         try {
             googleEndpoint = googleEndpoint + markers  + latitude + "," + longitude;
             String destinationFile = "image.jpg";
@@ -121,5 +122,7 @@ public class GoogleMaps {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
     }
 }

@@ -21,6 +21,8 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class DroneMenu implements ActionListener {
 
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
@@ -28,7 +30,7 @@ public class DroneMenu implements ActionListener {
     private ArrayList<DataStorage> data;
     private LinkedList<DroneType> droneTypes;
     private Object[][] droneMenuData;
-    private JFrame droneMenuFrame;
+    private static JFrame droneMenuFrame;
     private JMenuBar droneMenuMenuBar;
     private JTable droneMenuTable;
     private final String[] columnNames = {"Nr.", "ID", "DroneType", "Created", "Serialnr", "CarrWeight", "CarrType"};
@@ -154,7 +156,6 @@ public class DroneMenu implements ActionListener {
             //if(factory.checkForRefresh()) {}
                 droneMenuFrame.dispose();
                 new DroneMenu();
-
         } else if ("credits".equals(e.getActionCommand())){
             new CreditsMenu();
         }
@@ -170,7 +171,14 @@ public class DroneMenu implements ActionListener {
             return created;
         }
     }
-//    public void disposer(){
-//        droneMenuFrame.dispose();
-//    }
+
+    public static void restarter(){
+            showMessageDialog(null, "New Data available.\nGUI will restart now...");
+            droneMenuFrame.dispose();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    new DroneMenu();
+                }
+            });
+    }
 }

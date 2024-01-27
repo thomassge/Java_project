@@ -4,6 +4,8 @@
  */
 package data;
 
+import gui.DroneMenu;
+
 import javax.swing.*;
 import java.util.logging.Logger;
 
@@ -27,25 +29,6 @@ public class ThreadClass {
     }
 
     /**
-     * Displays a notification message in a dialog box.
-     *
-     * @param message The message to be displayed in the notification.
-     */
-    private void showNotification(String message) {
-        JOptionPane.showMessageDialog(null, message, "Notification", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    /**
-     * Restarts the GUI components. This method should contain the logic to refresh or
-     * recreate the GUI when new data is processed.
-     */
-    private void restartGUI() {
-        // Implement your logic here to restart the GUI
-        // For example: create a new instance of the GUI class and close the existing one
-        LOGGER.info("Restarting the GUI...");
-    }
-
-    /**
      * Inner class DataUpdater implements the Runnable interface and defines the task for the data update thread.
      */
     private class DataUpdater implements Runnable {
@@ -54,11 +37,7 @@ public class ThreadClass {
             try {
                 while (!Thread.interrupted()) {
                     if (factory.checkForRefresh()) {
-                        factory.refresh();
-                        //showNotification("Restart GUI");
-                        //restartGUI();
-                        //one of these two methods makes the thread stop
-
+                        DroneMenu.restarter();
                     }
 
                     // Wait for 1 minute before the next check
