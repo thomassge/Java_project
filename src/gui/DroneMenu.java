@@ -40,6 +40,7 @@ public class DroneMenu implements ActionListener {
      * @param data The ArrayList that holds all information that need to be displayed.
      */
     public DroneMenu() {
+
         factory = new DataFactory();
         this.factory = factory;
 
@@ -169,4 +170,7 @@ public class DroneMenu implements ActionListener {
             return created;
         }
     }
+//    public void disposer(){
+//        droneMenuFrame.dispose();
+//    }
 }

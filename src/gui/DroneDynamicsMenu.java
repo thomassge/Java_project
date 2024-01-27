@@ -237,6 +237,7 @@ public class DroneDynamicsMenu implements ActionListener {
                         } else {
                             selectedDroneId = (int) droneIdDropdown.getSelectedItem();
 
+
                             displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
                             LOGGER.log(Level.INFO,"selectedArrayListValue successfully incremented...");
                         }
@@ -253,11 +254,7 @@ public class DroneDynamicsMenu implements ActionListener {
                         } else {
                             selectedDroneId = (int) droneIdDropdown.getSelectedItem();
 
-                            if (selectedArrayListValue ==0) {
-                                int betterArrayListValue = selectedArrayListValue;
-                                displayDroneDynamicsInformation(data, selectedDroneId, betterArrayListValue);
-                            } else { chegger(); }
-
+                            displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
                             LOGGER.log(Level.INFO,"selectedArrayListValue successfully decremented...");
                         }
                     }
@@ -283,6 +280,10 @@ public class DroneDynamicsMenu implements ActionListener {
 
             selectedDroneId = (int) droneIdDropdown.getSelectedItem();
             LOGGER.info("Selected Drone-ID: " + selectedDroneId);
+            if (selectedArrayListValue != 0) {
+                selectedArrayListValue = 0;
+                displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
+            }
 
             displayDroneTypeInformation(data, selectedDroneId);
         }
