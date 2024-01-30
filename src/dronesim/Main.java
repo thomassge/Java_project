@@ -6,7 +6,8 @@ package dronesim;
 
 import data.*;
 import gui.DroneMenu;
-import data.ThreadClass;
+import processing.DataFactory;
+import processing.ThreadClass;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.util.logging.Logger;
 public class Main {
 
    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-
     /**
      * The main method that serves as the entry point for the program.
      * It initializes data and manages the flow of execution.

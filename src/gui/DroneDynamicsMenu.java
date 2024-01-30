@@ -12,7 +12,6 @@ import static javax.swing.JOptionPane.showMessageDialog;
 import services.GoogleMaps;
 import util.JsonCreator;
 
-
 public class DroneDynamicsMenu implements ActionListener {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamicsMenu.class.getName());
     private ArrayList<DataStorage> data;
@@ -24,12 +23,9 @@ public class DroneDynamicsMenu implements ActionListener {
     private JTextArea droneDynamicsLabel;
     private JPanel dDPanel;
     private int selectedArrayListValue = 0;
-    //private int selectedDroneGoogleMaps;
     private int selectedDroneId;
     JPanel buttonPanel;
     JPanel userPanel;
-
-
 
     public DroneDynamicsMenu(ArrayList<DataStorage> data){
         new JsonCreator();

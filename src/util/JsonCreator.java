@@ -7,7 +7,6 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 
 public class JsonCreator extends JFrame {
-
     public JsonCreator() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Test Sound Clip");

@@ -1,8 +1,9 @@
 package util;
 
-import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import java.io.*;
 
 public class Streamer {
     public String reader(String filename) {

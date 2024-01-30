@@ -6,14 +6,14 @@
 package data;
 
 import data.enums.Status;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import processing.Initializable;
 import util.Streamer;
-
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.ArrayList;
 
 public class DroneDynamics implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
@@ -155,7 +155,6 @@ public class DroneDynamics implements Initializable {
         return URL;
     }
 
-    //ENUM METHOD
     private Status mapStatus(String status) {
         return switch (status) {
             case "ON" -> Status.ON;
@@ -164,32 +163,6 @@ public class DroneDynamics implements Initializable {
             default -> throw new IllegalArgumentException("Invalid status value: " + status);
         };
     }
-
-    //OTHER METHODS
-//    public static ArrayList<DroneDynamics> initialize(String jsonString) {
-//        ArrayList<DroneDynamics> droneDynamics = new ArrayList<DroneDynamics>();
-//        JSONObject wholeHtml = new JSONObject(jsonString);
-//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-//
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            JSONObject o = jsonArray.getJSONObject(i);
-//            droneDynamics.add(new DroneDynamics(
-//                    o.getString("drone"),
-//                            o.getString("timestamp"),
-//                            o.getInt("speed"),
-//                            o.getFloat("align_roll"),
-//                            o.getFloat("align_pitch"),
-//                            o.getFloat("align_yaw"),
-//                            o.getDouble("longitude"),
-//                            o.getDouble("latitude"),
-//                            o.getInt("battery_status"),
-//                            o.getString("last_seen"),
-//                            DroneDynamics.mapStatus(o.getString("status"))
-//            ));
-//        }
-//        setMemoryCount(getMemoryCount() + jsonArray.length());
-//        return droneDynamics;
-//    }
 
     public boolean isNewDataAvailable() {
         createFile(filename);

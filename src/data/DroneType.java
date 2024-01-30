@@ -4,14 +4,14 @@
  */
 package data;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import processing.Initializable;
 import util.Streamer;
-
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.LinkedList;
 
 public class DroneType implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
@@ -132,37 +132,6 @@ public class DroneType implements Initializable {
     public static String getUrl() {
         return URL;
     }
-
-    //OTHER METHODS
-    /**
-     * Converts drone type data from JSON to DroneType objects.
-     *
-     * @param jsonString The JSON string containing drone type data.
-     * @param droneTypes The list where DroneType objects will be added.
-     */
-//    public static LinkedList<DroneType> initialize(String jsonString) {
-//        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
-//        JSONObject wholeHtml = new JSONObject(jsonString);
-//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-//
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            JSONObject o = jsonArray.getJSONObject(i);
-//            droneTypes.add(new DroneType(
-//                    o.getInt("id"),
-//                    o.getString("manufacturer"),
-//                    o.getString("typename"),
-//                    o.getInt("weight"),
-//                    o.getInt("max_speed"),
-//                    o.getInt("battery_capacity"),
-//                    o.getInt("control_range"),
-//                    o.getInt("max_carriage")
-//            ));
-//        }
-//        setMemoryCount(getMemoryCount() + jsonArray.length());
-//        return droneTypes;
-//    }
-
-
 
     //PRINT METHODS
     /**

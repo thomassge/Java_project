@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.Initializable;
 import util.Streamer;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  * This class holds all individual Drone data that can be retrieved from the webserver.
@@ -148,7 +146,6 @@ public class Drone implements Initializable {
         return URL;
     }
 
-    //ENUM METHOD
     private CarriageType mapCarriageType(String carriageType) {
         return switch (carriageType) {
             case "ACT" -> CarriageType.ACT;
@@ -157,27 +154,6 @@ public class Drone implements Initializable {
             default -> throw new IllegalArgumentException("Invalid CarriageType value: " + carriageType);
         };
     }
-
-    //OTHER METHODS
-//    public static LinkedList<Drone> initialize(String jsonString) {
-//        LinkedList<Drone> drones = new LinkedList<Drone>();
-//        JSONObject wholeHtml = new JSONObject(jsonString);
-//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-//
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            JSONObject o = jsonArray.getJSONObject(i);
-//            drones.add(new Drone(
-//                    Drone.mapCarriageType(o.getString("carriage_type")),
-//                    o.getString("serialnumber"),
-//                    o.getString("created"),
-//                    o.getInt("carriage_weight"),
-//                    o.getInt("id"),
-//                    o.getString("dronetype")
-//            ));
-//        }
-//        setMemoryCount(getMemoryCount() + jsonArray.length());
-//        return drones;
-//    }
 
     public boolean isNewDataAvailable() {
         createFile(filename);

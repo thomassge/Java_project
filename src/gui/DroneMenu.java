@@ -6,6 +6,7 @@
 package gui;
 
 import data.*;
+import processing.DataFactory;
 import util.JsonCreator;
 
 import javax.swing.*;

@@ -2,10 +2,10 @@
  * This class manages the data update and processing mechanism for the application.
  * It runs a background thread to regularly check for new drone-related data and processes it as needed.
  */
-package data;
-import gui.DroneMenu;
+package processing;
 
-import javax.swing.*;
+import gui.DroneMenu;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ThreadClass {
@@ -26,14 +26,14 @@ public class ThreadClass {
         updaterThread.start();
     }
 
-    /**
-     * Displays a notification message in a dialog box.
-     *
-     * @param message The message to be displayed in the notification.
-     */
-    private void showNotification(String message) {
-        JOptionPane.showMessageDialog(null, message, "Notification", JOptionPane.INFORMATION_MESSAGE);
-    }
+//    /**
+//     * Displays a notification message in a dialog box.
+//     *
+//     * @param message The message to be displayed in the notification.
+//     */
+//    private void showNotification(String message) {
+//        JOptionPane.showMessageDialog(null, message, "Notification", JOptionPane.INFORMATION_MESSAGE);
+//    }
 
     /**
      * Restarts the GUI components. This method should contain the logic to refresh or
@@ -49,11 +49,12 @@ public class ThreadClass {
      * Inner class DataUpdater implements the Runnable interface and defines the task for the data update thread.
      */
     private class DataUpdater implements Runnable {
+        DataFactory factory = new DataFactory();
+
         @Override
         public void run() {
             try {
                 while (!Thread.interrupted()) {
-                    DataFactory factory = new DataFactory();
                     factory.refresh();
 
                     if (Refresher.isRefreshNeeded) {

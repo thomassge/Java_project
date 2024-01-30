@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 
 public interface Initializable<T> {
-
     public T initialise();
 
     public default void saveAsFile(String url, int limit, String filename) {
@@ -45,7 +44,4 @@ public interface Initializable<T> {
             //LOGGER.log(Level.INFO, filename + " created.");
         }
     }
-
-
-
 }

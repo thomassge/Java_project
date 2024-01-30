@@ -1,20 +1,25 @@
-package data;
+package processing;
 
+import data.DataStorage;
+import data.Drone;
+import data.DroneDynamics;
+import data.DroneType;
 import gui.DroneMenu;
+import processing.Refresher;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DataFactory extends Refresher {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
 
     // FIELDS
-    private ArrayList<DataStorage> dataStorage;
     private LinkedList<Drone> drones = new LinkedList<>();
     private LinkedList<DroneType> droneTypes = new LinkedList<>();
     private ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
+    private ArrayList<DataStorage> dataStorage;
 
     // CONSTRUCTOR
     /**
@@ -33,18 +38,9 @@ public class DataFactory extends Refresher {
     }
 
     // GETTER AND SETTER
-    public ArrayList<DataStorage> getDataStorage() {
-        return dataStorage;
-    }
-
-    public void setDataStorage(ArrayList<DataStorage> dataStorage) {
-        this.dataStorage = dataStorage;
-    }
-
     public LinkedList<Drone> getDrones() {
         return drones;
     }
-
     public void setDrones(LinkedList<Drone> drones) {
         this.drones = drones;
     }
@@ -52,7 +48,6 @@ public class DataFactory extends Refresher {
     public LinkedList<DroneType> getDroneTypes() {
         return droneTypes;
     }
-
     public void setDroneTypes(LinkedList<DroneType> droneTypes) {
         this.droneTypes = droneTypes;
     }
@@ -60,11 +55,16 @@ public class DataFactory extends Refresher {
     public ArrayList<DroneDynamics> getDroneDynamics() {
         return droneDynamics;
     }
-
     public void setDroneDynamics(ArrayList<DroneDynamics> droneDynamics) {
         this.droneDynamics = droneDynamics;
     }
 
+    public ArrayList<DataStorage> getDataStorage() {
+        return dataStorage;
+    }
+    public void setDataStorage(ArrayList<DataStorage> dataStorage) {
+        this.dataStorage = dataStorage;
+    }
 
     // METHODS
     /**
@@ -73,6 +73,7 @@ public class DataFactory extends Refresher {
      * It's refreshed by deleting the old data and fetching the new one.
      * The new data is then linked.
      */
+    @Override
     public void refresh() {
         checkForRefresh();
         if(isRefreshNeeded) {
@@ -115,7 +116,6 @@ public class DataFactory extends Refresher {
             list.add(item);
             i++;
         }
-
         return list;
     }
 
@@ -134,8 +134,7 @@ public class DataFactory extends Refresher {
             }
             else j++;
         }
-
-        return null;
+        return null; // TODO: return null?
     }
 
     private ArrayList<DroneDynamics> selectDroneDynamics(int i) {
@@ -147,7 +146,6 @@ public class DataFactory extends Refresher {
                     list.add(obj);
                 }
         }
-
         return list;
     }
 }

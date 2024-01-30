@@ -14,15 +14,12 @@ import java.util.logging.Logger;
 
 public class CreditsMenu {
 
-
     private static final Logger LOGGER = Logger.getLogger(CreditsMenu.class.getName());
-
 
     /**
      * Creates and displays the credits menu. This method sets up the GUI components
      * and populates them with the credits information.
      */
-
 
     public Color[] colors = {Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA};
     private int colorIndex = 0;
@@ -60,8 +57,6 @@ public class CreditsMenu {
         droneFrame.setSize(300, 300);
         droneFrame.setLocationRelativeTo(null);
         droneFrame.setVisible(true);
-
-
 
         LOGGER.info("Credits menu created.");
     }

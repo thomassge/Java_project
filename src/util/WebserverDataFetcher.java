@@ -1,8 +1,6 @@
 package util;
 
 import gui.DroneMenu;
-import logging.LogMain;
-import java.util.logging.Level;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,13 +8,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
-
+import java.util.logging.Level;
 
 public class WebserverDataFetcher {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
     private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
-    public static String urlModifier(int limit, int offset) {
+    public String urlModifier(int limit, int offset) {
 
         String limitUrl = "limit=" + limit;
         String connector = "&";

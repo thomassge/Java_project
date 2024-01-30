@@ -1,8 +1,8 @@
 package data;
 
 import gui.DroneMenu;
-
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DataStorage {
@@ -15,16 +15,9 @@ public class DataStorage {
     public DataStorage() {
     }
 
-
-    public ArrayList<DataStorage> getData() { //useless
-        ArrayList<DataStorage> data = new ArrayList<>();
-        return data;
-    }
-
     public Drone getDrone() {
         return drone;
     }
-
     public void setDrone(Drone drone) {
         this.drone = drone;
     }
@@ -32,7 +25,6 @@ public class DataStorage {
     public DroneType getDroneType() {
         return droneType;
     }
-
     public void setDroneType(DroneType droneType) {
         this.droneType = droneType;
     }
@@ -40,10 +32,7 @@ public class DataStorage {
     public ArrayList<DroneDynamics> getDroneDynamicsList() {
         return droneDynamicsList;
     }
-
     public void setDroneDynamicsList(ArrayList<DroneDynamics> droneDynamicsList) {
         this.droneDynamicsList = droneDynamicsList;
     }
-
-
 }
