@@ -6,14 +6,15 @@
 package data;
 
 import data.enums.Status;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import processing.Initializable;
+import processing.JsonFile;
 import util.Streamer;
-
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.ArrayList;
 
 public class DroneDynamics extends JsonFile implements Initializable<ArrayList<DroneDynamics>> {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
@@ -30,16 +31,19 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     private int batteryStatus;
     private String lastSeen;
     private Status status;
+
     /**
      * The number of entries in file, on the server and in memory.
      */
     private static int localCount;
     private static int serverCount;
     private static int memoryCount;
+
     /**
      * The filename where we store downloaded data
      */
     private final static String filename = "dronedynamics.json";
+
     /**
      * DroneDynamics API Endpoint
      */
@@ -155,7 +159,6 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         return URL;
     }
 
-    //ENUM METHOD
     private Status mapStatus(String status) {
         return switch (status) {
             case "ON" -> Status.ON;
@@ -207,23 +210,6 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         else {
             return "Drone has Issues. Please check the drone.";
         }
-    }
-
-    //PRINT METHODS
-    /**
-     * Prints detailed drone dynamics information to the log.
-     */
-    public void printDroneDynamics() {
-        LOGGER.info("DronePointer: " + this.getDronePointer());
-        LOGGER.info("Timestamp: " + this.getTimestamp());
-        LOGGER.info("Speed: " + this.getSpeed());
-        LOGGER.info("Alignment Roll: " + this.getAlignmentRoll());
-        LOGGER.info("Alignment Pitch: " + this.getAlignmentPitch());
-        LOGGER.info("Alignment Yaw: " + this.getAlignmentYaw());
-        LOGGER.info("Longitude: " + this.getLongitude());
-        LOGGER.info("Latitude: " + this.getLatitude());
-        LOGGER.info("Battery Status: " + this.getBatteryStatus());
-        LOGGER.info("Last Seen: " + this.getLastSeen());
     }
 
     public static ArrayList<DroneDynamics> create() {

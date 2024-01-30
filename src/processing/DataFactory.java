@@ -1,18 +1,23 @@
-package data;
+package processing;
+
+import data.DataStorage;
+import data.Drone;
+import data.DroneDynamics;
+import data.DroneType;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DataFactory extends Refresher {
     private static final Logger LOGGER = Logger.getLogger(DataFactory.class.getName());
 
-    // FIELDS
-    private ArrayList<DataStorage> dataStorage;
     private LinkedList<Drone> drones = new LinkedList<>();
     private LinkedList<DroneType> droneTypes = new LinkedList<>();
     private ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
+    private ArrayList<DataStorage> dataStorage;
 
     // CONSTRUCTOR
     /**
@@ -99,9 +104,7 @@ public class DataFactory extends Refresher {
     }
 
     private Drone linkDrone(int i) {
-
         return drones.get(i);
-        //remove from list after selection
     }
 
     private DroneType linkDroneType(int i) {
@@ -109,7 +112,6 @@ public class DataFactory extends Refresher {
         for(DroneType obj : droneTypes) {
             if(drones.get(i).getExtractedDroneTypeID() == droneTypes.get(j).getDroneTypeID()) {
                 return droneTypes.get(j);
-                //remove from list after selection
             }
             else j++;
         }
@@ -138,7 +140,6 @@ public class DataFactory extends Refresher {
      */
     @Override
     public void refresh() {
-        //checkForRefresh();
             deleteData();
             createData();
             setDataStorage(dataLinker());

@@ -1,17 +1,21 @@
-package data;
+package processing;
 
+import data.DroneType;
 import util.Streamer;
 import util.WebserverDataFetcher;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 public abstract class JsonFile /*implements Refreshable?*/{
+    private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
     public void saveAsFile(String url, int limit, String filename) {
         String jsonString = WebserverDataFetcher.jsonCreator(url + "?limit=" + limit);
-        //LOGGER.log(Level.INFO,"Copying Drone Data from Webserver in file ...");
+        LOGGER.log(Level.INFO,"Savind  Data from Webserver in file ...");
 
         Streamer streamer = new Streamer();
         streamer.writer(jsonString, filename);

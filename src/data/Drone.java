@@ -5,19 +5,18 @@ package data;
 
 import data.enums.CarriageType;
 import data.exceptions.DroneTypeIdNotExtractableException;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import processing.Initializable;
+import processing.JsonFile;
 import util.Streamer;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  * This class holds all individual Drone data that can be retrieved from the webserver.
@@ -33,16 +32,19 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     private String droneTypePointer;
     private int extractedDroneTypeID;
     private CarriageType carriageType;
+
     /**
      * The number of entries in file, on the server and in memory.
      */
     private static int localCount;
     private static int serverCount;
     private static int memoryCount;
+
     /**
      * The filename where we store downloaded data
      */
     private final static String filename = "drones.json";
+
     /**
      * Drones API Endpoint
      */
@@ -148,7 +150,6 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         return URL;
     }
 
-    //ENUM METHOD
     private CarriageType mapCarriageType(String carriageType) {
         return switch (carriageType) {
             case "ACT" -> CarriageType.ACT;
@@ -159,36 +160,11 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     }
 
     //OTHER METHODS
-
-
-    public void iterateThroughList(ArrayList<DroneDynamics> myList) {
-        for (int i = 0; i < myList.size(); i++) {
-            myList.get(i).printDroneDynamics();
-        }
-    }
-
+    // TODO: Needed? Where do I put it?
     private static void validateExtractedDroneTypeID(boolean boo) throws DroneTypeIdNotExtractableException {
         if (!boo) {
             throw new DroneTypeIdNotExtractableException();
         }
-    }
-
-    //PRINT METHODS
-    public void printDrone() {
-        LOGGER.log(Level.INFO,"Drone id: " + this.id);
-        LOGGER.log(Level.INFO,"Serialnumber: " + this.serialnumber);
-        LOGGER.log(Level.INFO,"Created: " + this.created);
-        LOGGER.log(Level.INFO,"Carriage Type: " + this.carriageType);
-        LOGGER.log(Level.INFO,"Carriage weight: " + this.carriageWeight);
-        LOGGER.log(Level.INFO,"DroneTypePointer: " + this.droneTypePointer);
-        LOGGER.log(Level.INFO,"\n");
-    }
-
-    public void printAllDroneInformation() {
-        LOGGER.log(Level.INFO,"Individual Drone Information: ");
-        this.printDrone();
-        LOGGER.log(Level.INFO,"DroneTypes Information: ");
-        LOGGER.log(Level.INFO,"DroneDynamics Information: ");
     }
 
     public boolean isNewDataAvailable() {
