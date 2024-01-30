@@ -4,14 +4,16 @@
  */
 package data;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import processing.Initializable;
-import util.Streamer;
 
-import java.util.LinkedList;
+import processing.Initializable;
+import processing.JsonFile;
+import util.Streamer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.LinkedList;
 
 public class DroneType extends JsonFile implements Initializable<LinkedList<DroneType>> {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
@@ -25,16 +27,19 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
     private int batteryCapacity;
     private int controlRange;
     private int maximumCarriage;
+
     /**
      * The number of entries in file, on the server and in memory.
      */
     private static int localCount;
     private static int serverCount;
     private static int memoryCount;
+
     /**
      * The filename where we store downloaded data
      */
     private final static String filename = "dronetypes.json";
+
     /**
      * Dronetypes API Endpoint
      */
@@ -133,52 +138,7 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         return URL;
     }
 
-    //OTHER METHODS
-    /**
-     * Converts drone type data from JSON to DroneType objects.
-     *
-     * @param jsonString The JSON string containing drone type data.
-     * @param droneTypes The list where DroneType objects will be added.
-     */
-//    public static LinkedList<DroneType> initialize(String jsonString) {
-//        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
-//        JSONObject wholeHtml = new JSONObject(jsonString);
-//        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-//
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            JSONObject o = jsonArray.getJSONObject(i);
-//            droneTypes.add(new DroneType(
-//                    o.getInt("id"),
-//                    o.getString("manufacturer"),
-//                    o.getString("typename"),
-//                    o.getInt("weight"),
-//                    o.getInt("max_speed"),
-//                    o.getInt("battery_capacity"),
-//                    o.getInt("control_range"),
-//                    o.getInt("max_carriage")
-//            ));
-//        }
-//        setMemoryCount(getMemoryCount() + jsonArray.length());
-//        return droneTypes;
-//    }
-
-
-
-    //PRINT METHODS
-    /**
-     * Prints the drone type details to the log.
-     */
-    public void printDroneType() {
-        LOGGER.info("DroneType id: " + this.droneTypeID);
-        LOGGER.info("Manufacturer: " + this.manufacturer);
-        LOGGER.info("TypeName: " + this.typename);
-        LOGGER.info("Weight: " + this.weight);
-        LOGGER.info("Maximum Speed: " + this.maximumSpeed);
-        LOGGER.info("BatteryCapacity: " + this.batteryCapacity);
-        LOGGER.info("Control Range (int): " + this.controlRange);
-        LOGGER.info("Maximum Carriage: " + this.maximumCarriage);
-    }
-
+    // OTHER METHODS
     public static LinkedList<DroneType> create() {
         return new DroneType().initialise();
     };

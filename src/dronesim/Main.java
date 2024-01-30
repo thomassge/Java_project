@@ -4,13 +4,11 @@
  */
 package dronesim;
 
-import data.*;
-import data.ThreadClass;
+import processing.ThreadClass;
 import gui.DroneMenu;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class Main {
@@ -26,8 +24,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
-
-
+        
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new DroneMenu();

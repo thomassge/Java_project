@@ -2,23 +2,15 @@
  * This class manages the data update and processing mechanism for the application.
  * It runs a background thread to regularly check for new drone-related data and processes it as needed.
  */
-package data;
+package processing;
 
 import gui.DroneMenu;
-
-import javax.swing.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ThreadClass {
     private static final Logger LOGGER = Logger.getLogger(ThreadClass.class.getName());
     DataFactory factory = new DataFactory();
-
-    /**
-     * Constructs a new Backend instance with initial states set to indicate no new data is available.
-     */
-    public ThreadClass() {
-
-    }
 
     /**
      * Starts a separate thread to periodically check for new data updates.
@@ -39,24 +31,11 @@ public class ThreadClass {
                     if (factory.checkForRefresh()) {
                         DroneMenu.restarter();
                     }
-
-                    // Wait for 1 minute before the next check
-                    Thread.sleep(5000);
+                    Thread.sleep(60000);
                 }
             } catch (InterruptedException e) {
-                // Thread was interrupted, exit the thread
                 LOGGER.warning("DataUpdater Thread was interrupted.");
             }
         }
-    }
-
-    /**
-     * Main method to start the backend processing.
-     *
-     * @param args Command line arguments (not used in this application).
-     */
-    public static void main(String[] args) {
-        ThreadClass threadClass = new ThreadClass();
-        threadClass.startDataUpdaterThread();
     }
 }

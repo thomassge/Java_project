@@ -1,10 +1,11 @@
-package data;
+package processing;
 
-import gui.DroneMenu;
+import data.Drone;
+import data.DroneDynamics;
+import data.DroneType;
 import org.json.JSONObject;
 import util.WebserverDataFetcher;
-
-import javax.swing.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class Refresher {
@@ -15,7 +16,6 @@ public abstract class Refresher {
         LOGGER.info("Called Refresher constructor");
         checkForRefresh();
     }
-
 
     public abstract void refresh();
 

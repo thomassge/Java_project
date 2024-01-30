@@ -6,7 +6,7 @@
 package gui;
 
 import data.*;
-import dronesim.Main;
+import processing.DataFactory;
 import util.JsonCreator;
 import java.util.ArrayList;
 import java.util.LinkedList;

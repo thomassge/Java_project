@@ -14,16 +14,6 @@ public class WebserverDataFetcher {
     private static final Logger LOGGER = Logger.getLogger(WebserverDataFetcher.class.getName());
     private static final String TOKEN = "Token a3b2258a368b90330410da51a8937de91ada6f33";
 
-    public static String urlModifier(int limit, int offset) {
-
-        String limitUrl = "limit=" + limit;
-        String connector = "&";
-        String offsetUrl = "offset=" + offset;
-
-
-        return "?" + limitUrl + connector + offsetUrl;
-    }
-
     /**
      * Creates a JSON string from the provided URL.
      *
