@@ -1,25 +1,22 @@
 package data;
-/**
- * This package contains classes related to drone data management.
- */
 
 import data.enums.CarriageType;
 import data.exceptions.DroneTypeIdNotExtractableException;
 import processing.Initializable;
 import processing.JsonFile;
+
 import util.Streamer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 /**
  * This class holds logic and fields that are linked to the individual Drone information on the web server.
  * It is responsible for managing drone data.
+ * @Author: Leon Oet
  */
 public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> {
     private static final Logger LOGGER = Logger.getLogger(Drone.class.getName());

@@ -2,16 +2,15 @@ package util;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 /**
  * This class holds methods for creating a reader and writer object.
  * It uses FileInputStreamer and FileWriter
+ * @author Leon Oet
  */
 public class WebserverDataFetcher {
     private static final Logger LOGGER = Logger.getLogger(WebserverDataFetcher.class.getName());

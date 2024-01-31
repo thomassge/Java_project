@@ -1,17 +1,18 @@
-/**
- * This class provides a graphical interface to display the credits for
- * the drone project. It creates a window with a list of contributors and their details.
- */
 package gui;
 
 import util.JsonCreator;
 import java.util.logging.Logger;
-
+import java.util.logging.Level;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+/**
+ * THIS CLASS IS NOT TO BE TAKEN INTO ACCOUNT WHEN GRADING THIS PROJECT.
+ * IT IS NOT NECESSARY TO THE FUNCTIONALITY OF THE PROGRAM IN ANY WAY.
+ * NONETHELESS IT IS THE MOST IMPORTANT CLASS.
+ * @author Json Derulo & friends
+ */
 public class CreditsMenu {
     private static final Logger LOGGER = Logger.getLogger(CreditsMenu.class.getName());
     /**
@@ -79,7 +80,6 @@ public class CreditsMenu {
         Timer timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Change the color of the text to the next color in the array
                 colorIndex = (colorIndex + 1) % colors.length;
                 label.setForeground(colors[colorIndex]);
             }

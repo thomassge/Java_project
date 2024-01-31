@@ -3,15 +3,16 @@ package processing;
 import data.Drone;
 import data.DroneDynamics;
 import data.DroneType;
+
 import org.json.JSONObject;
 import util.WebserverDataFetcher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  * This class holds logic that is needed to check whether there is new data to be fetched from the
  * webserver. It does not do the refresh itself this has to be done by the class that extends it,
  * hence the abstract method.
+ * @author Leon Oet
  */
 public abstract class Refresher {
     private static final Logger LOGGER = Logger.getLogger(Refresher.class.getName());

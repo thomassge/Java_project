@@ -3,16 +3,16 @@ package data;
 import processing.Initializable;
 import processing.JsonFile;
 import util.Streamer;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.LinkedList;
-
 /**
  * This class holds logic and fields that are linked to the DroneType information on the web server.
  * It is responsible for managing DroneType data.
+ * @Author: Leon Oet
  */
 public class DroneType extends JsonFile implements Initializable<LinkedList<DroneType>> {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());

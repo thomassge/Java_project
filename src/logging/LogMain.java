@@ -1,8 +1,3 @@
-/**
- * This class provides logging functionalities for the application.
- * It sets up a logger with a console handler and incudes utility methods for formatting
- * and logging messages and exceptions.
- */
 package logging;
 
 import java.text.SimpleDateFormat;
@@ -10,7 +5,12 @@ import java.util.Date;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+/**
+ * This class provides logging functionalities for the application.
+ * It sets up a logger with a console handler and incudes utility methods for formatting
+ * and logging messages and exceptions.
+ * @author Eyüp Korkmaz
+ */
 public class LogMain {
 
     private static final Logger logger;

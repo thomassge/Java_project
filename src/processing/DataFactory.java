@@ -4,16 +4,16 @@ import data.DataStorage;
 import data.Drone;
 import data.DroneDynamics;
 import data.DroneType;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
-
 /**
  * This class holds the processing functions for the data.
  * The data is created, linked and stored here.
  * When creating a new DataFactory object, the data is refreshed.
+ * @author Leon Oet
  */
 public class DataFactory extends Refresher {
     private static final Logger LOGGER = Logger.getLogger(DataFactory.class.getName());
@@ -54,7 +54,6 @@ public class DataFactory extends Refresher {
     public void setDroneTypes(LinkedList<DroneType> droneTypes) {
         this.droneTypes = droneTypes;
     }
-
     public ArrayList<DroneDynamics> getDroneDynamics() {
         return droneDynamics;
     }
@@ -68,7 +67,6 @@ public class DataFactory extends Refresher {
     public void setDataStorage(ArrayList<DataStorage> dataStorage) {
         this.dataStorage = dataStorage;
     }
-
     //METHODS
     private void deleteData() {
         setDrones(null);

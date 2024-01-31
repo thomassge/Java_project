@@ -1,10 +1,20 @@
 package data.enums;
-
 /**
  * This enum holds the different carriage types a drone can have.
+ * @Author: Leon Oet
  */
 public enum CarriageType {
-    SEN,
-    ACT,
-    NOT;
+    SEN("Sensor"),
+    ACT("Actor"),
+    NOT("Nothing");
+
+    private final String type;
+
+    CarriageType(String type) {
+        this.type = type;
+    }
+
+    public String getType(){
+        return type;
+    }
 }
