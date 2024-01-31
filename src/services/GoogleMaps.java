@@ -11,7 +11,9 @@ import java.util.logging.Logger;
  * @author Leon Oet
  */
 public class GoogleMaps {
+
     private static final Logger LOGGER = Logger.getLogger(GoogleMaps.class.getName());
+
     private final String myKey = System.getenv("jsonDerulo");
     private final String markers = "markers=color:red%7Clabel:D%7C";
 

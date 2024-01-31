@@ -14,8 +14,10 @@ import java.util.logging.Logger;
  * @author Leon Oet
  */
 public abstract class Refresher {
+
     private static final Logger LOGGER = Logger.getLogger(Refresher.class.getName());
-    static boolean isRefreshNeeded = false;
+
+    private static boolean isRefreshNeeded = false;
 
     /**
      * The Refresher constructor checks for a refresh every time it is called.
@@ -29,6 +31,13 @@ public abstract class Refresher {
         checkForRefresh();
     }
 
+    public static boolean getIsRefreshNeeded() {
+        return isRefreshNeeded;
+    }
+    public static void setIsRefreshNeeded(boolean isRefreshNeeded) {
+        Refresher.isRefreshNeeded = isRefreshNeeded;
+    }
+
     /**
      * When an Object wants to extend the Refresher class, it has to implement the logic how to refresh
      */
@@ -39,7 +48,7 @@ public abstract class Refresher {
      * the web server. It then compares them to check if there is new data available.
      * @return true if new data has to be fetched and false otherwise
      */
-    public boolean checkForRefresh() {
+    boolean checkForRefresh() {
         updateCount();
         boolean isDronesNew = new Drone().isNewDataAvailable();
         boolean isDroneTypesNew = new DroneType().isNewDataAvailable();

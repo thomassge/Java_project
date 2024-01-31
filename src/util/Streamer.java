@@ -9,6 +9,7 @@ import java.io.*;
  * @author Leon Oet
  */
 public class Streamer {
+
     private static final Logger LOGGER = Logger.getLogger(WebserverDataFetcher.class.getName());
 
     /**
@@ -16,7 +17,7 @@ public class Streamer {
      * @param filename Takes in the path to the file as a String
      * @return The content of the file as a String
      */
-    public String reader(String filename) {
+     public String reader(String filename) {
         StringBuilder responseContent;
         try {
             String data;

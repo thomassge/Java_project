@@ -7,7 +7,9 @@ import java.util.logging.Logger;
  * @author Leon Oet
  */
 public class DroneTypeIdNotExtractableException extends Exception {
+
     private static final Logger LOGGER = Logger.getLogger(DroneTypeIdNotExtractableException.class.getName());
+
     /**
      * Logs a severe level message indicating the failure to extract the DroneType ID
      * and therefore fails to link it to the drones.

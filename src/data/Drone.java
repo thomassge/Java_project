@@ -19,19 +19,12 @@ import java.util.regex.Pattern;
  * @author Leon Oet
  */
 public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> {
+
     private static final Logger LOGGER = Logger.getLogger(Drone.class.getName());
-    /**
-     * The number of entries in file and on the server.
-     */
+
     private static int localCount;
     private static int serverCount;
-    /**
-     * The filename where we store downloaded data
-     */
     private final static String filename = "drones.json";
-    /**
-     * Drones API Endpoint
-     */
     private static final String URL = "https://dronesim.facets-labs.com/api/drones/";
 
     private int id;
@@ -40,12 +33,6 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     private String serialnumber;
     private String droneTypePointer;
     private CarriageType carriageType;
-
-
-
-
-
-
 
     /**
      * Default constructor for the Drone class.
@@ -74,76 +61,67 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         this.id = id;
         this.droneTypePointer = droneTypePointer;
     }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public String getCreated() {
-        return this.created;
-    }
-
-    public int getCarriageWeight() {
-        return this.carriageWeight;
-    }
-
-    public String getSerialnumber() {
-        return this.serialnumber;
-    }
-
-    public String getDroneTypePointer() {
-        return this.droneTypePointer;
-    }
-
-    /**
-     * Extracts the DroneTypeID from the DroneTypePointer via RegEx.
-     * This helps to link the DroneType to the Drone.
-     * @return Extracted DroneTypeID as integer
-     */
-    public int getExtractedDroneTypeID() {
-        Pattern pattern = Pattern.compile("[0-9]+", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(this.droneTypePointer);
-        try {
-            validateExtractedDroneTypeID(matcher.find());
-        } catch (DroneTypeIdNotExtractableException e) {
-            LOGGER.log(Level.WARNING, "Error extracting the DroneTypeID", e);
-        }
-        return Integer.parseInt(matcher.group(0));
-    }
-
-    public CarriageType getCarriageType(){
-        return this.carriageType;
-    }
-
     public static int getLocalCount() {
         return localCount;
     }
     public static void setLocalCount(int localCount) {
         Drone.localCount = localCount;
     }
-
     public static int getServerCount() {
         return serverCount;
     }
     public static void setServerCount(int serverCount) {
         Drone.serverCount = serverCount;
     }
-
     public static String getFilename() {
         return filename;
     }
-
     public static String getUrl() {
         return URL;
     }
 
-    private CarriageType mapCarriageType(String carriageType) {
-        return switch (carriageType) {
-            case "ACT" -> CarriageType.ACT;
-            case "SEN" -> CarriageType.SEN;
-            case "NOT" -> CarriageType.NOT;
-            default -> throw new IllegalArgumentException("Invalid CarriageType value: " + carriageType);
-        };
+    public int getId() {
+        return this.id;
+    }
+    public String getCreated() {
+        return this.created;
+    }
+    public int getCarriageWeight() {
+        return this.carriageWeight;
+    }
+    public String getSerialnumber() {
+        return this.serialnumber;
+    }
+    public String getDroneTypePointer() {
+        return this.droneTypePointer;
+    }
+    public CarriageType getCarriageType(){
+        return this.carriageType;
+    }
+
+    /**
+     * This method is being overwritten from the Initializable interface.
+     * It reads the data from the file and saves it in a LinkedList of its own datatype.
+     * @return Drone web server data as a LinkedList of its own datatype Drone.
+     */
+    @Override
+    public LinkedList<Drone> initialize() {
+        LinkedList<Drone> drones = new LinkedList<>();
+        String jsonString = new Streamer().reader(filename);
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            drones.add(new Drone(
+                    this.mapCarriageType(o.getString("carriage_type")),
+                    o.getString("serialnumber"),
+                    o.getString("created"),
+                    o.getInt("carriage_weight"),
+                    o.getInt("id"),
+                    o.getString("dronetype")
+            ));
+        }
+        return drones;
     }
 
     /**
@@ -174,34 +152,34 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         return false;
     }
 
+    /**
+     * Extracts the DroneTypeID from the DroneTypePointer via RegEx.
+     * This helps to link the DroneType to the Drone.
+     * @return Extracted DroneTypeID as integer
+     */
+    public int getExtractedDroneTypeID() {
+        Pattern pattern = Pattern.compile("[0-9]+", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(this.droneTypePointer);
+        try {
+            validateExtractedDroneTypeID(matcher.find());
+        } catch (DroneTypeIdNotExtractableException e) {
+            LOGGER.log(Level.WARNING, "Error extracting the DroneTypeID", e);
+        }
+        return Integer.parseInt(matcher.group(0));
+    }
+
     private static void validateExtractedDroneTypeID(boolean isIdLegit) throws DroneTypeIdNotExtractableException {
         if (!isIdLegit) {
             throw new DroneTypeIdNotExtractableException();
         }
     }
 
-    /**
-     * This method is being overwritten from the Initializable interface.
-     * It reads the data from the file and saves it in a LinkedList of its own datatype.
-     * @return Drone web server data as a LinkedList of its own datatype Drone.
-     */
-    @Override
-    public LinkedList<Drone> initialize() {
-        LinkedList<Drone> drones = new LinkedList<>();
-        String jsonString = new Streamer().reader(filename);
-        JSONObject wholeHtml = new JSONObject(jsonString);
-        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject o = jsonArray.getJSONObject(i);
-            drones.add(new Drone(
-                    this.mapCarriageType(o.getString("carriage_type")),
-                    o.getString("serialnumber"),
-                    o.getString("created"),
-                    o.getInt("carriage_weight"),
-                    o.getInt("id"),
-                    o.getString("dronetype")
-            ));
-        }
-        return drones;
+    private CarriageType mapCarriageType(String carriageType) {
+        return switch (carriageType) {
+            case "ACT" -> CarriageType.ACT;
+            case "SEN" -> CarriageType.SEN;
+            case "NOT" -> CarriageType.NOT;
+            default -> throw new IllegalArgumentException("Invalid CarriageType value: " + carriageType);
+        };
     }
 }

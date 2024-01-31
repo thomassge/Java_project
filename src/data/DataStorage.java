@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * @author Leon Oet
  */
 public class DataStorage {
+
     private Drone drone;
     private DroneType droneType;
     private ArrayList<DroneDynamics> droneDynamicsList = new ArrayList<>();

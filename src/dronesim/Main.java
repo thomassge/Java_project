@@ -13,7 +13,9 @@ import java.io.IOException;
  * @author Leon Oet, Thomas Levantis
  */
 public class Main {
+
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+
     /**
      * The main method that serves as the entry point for the program.
      * It initializes data and starts the GUI.

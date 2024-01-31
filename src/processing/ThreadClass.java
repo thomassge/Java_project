@@ -8,7 +8,9 @@ import java.util.logging.Logger;
  * @author Leon Oet
  */
 public class ThreadClass {
+
     private static final Logger LOGGER = Logger.getLogger(ThreadClass.class.getName());
+
     DataFactory factory = new DataFactory();
 
     /**

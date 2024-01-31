@@ -15,20 +15,8 @@ import java.io.FileReader;
  * @author Leon Oet
  */
 public abstract class JsonFile {
-    private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
-    /**
-     * This method saves the specific data in a file.
-     * @param url Takes in the url of the data that needs to be fetched and saved as a String.
-     * @param limit Takes in an integer of the limit that will be added in the URL for a specific amount of data retrieving. The limit is the fetched server count.
-     * @param filename Takes in the path to the filename, that the data should be saved to.
-     */
-    public void saveAsFile(String url, int limit, String filename) {
-        String jsonString = WebserverDataFetcher.jsonCreator(url + "?limit=" + limit);
-        LOGGER.log(Level.INFO,"Saving Data from Webserver in file ...");
-        Streamer streamer = new Streamer();
-        streamer.writer(jsonString, filename);
-    }
+    private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
     /**
      * This method checks the file count by reading the first twenty characters of our JsonFile.
@@ -53,6 +41,18 @@ public abstract class JsonFile {
             LOGGER.log(Level.INFO, "LocalCount Exception: Count is 0.");
             return 0;
         }
+    }
+
+    /**
+     * This method saves the specific data in a file.
+     * @param url Takes in the url of the data that needs to be fetched and saved as a String.
+     * @param limit Takes in an integer of the limit that will be added in the URL for a specific amount of data retrieving. The limit is the fetched server count.
+     * @param filename Takes in the path to the filename, that the data should be saved to.
+     */
+    public void saveAsFile(String url, int limit, String filename) {
+        String jsonString = WebserverDataFetcher.jsonCreator(url + "?limit=" + limit);
+        LOGGER.log(Level.INFO,"Saving Data from Webserver in file ...");
+        new Streamer().writer(jsonString, filename);
     }
 
     /**

@@ -15,7 +15,13 @@ import java.util.LinkedList;
  * @author Leon Oet
  */
 public class DroneType extends JsonFile implements Initializable<LinkedList<DroneType>> {
+
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
+
+    private static int localCount;
+    private static int serverCount;
+    private final static String filename = "dronetypes.json";
+    private static final String URL = "https://dronesim.facets-labs.com/api/dronetypes/";
 
     private int droneTypeID;
     private String manufacturer;
@@ -27,25 +33,11 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
     private int maximumCarriage;
 
     /**
-     * The number of entries in file and on the server.
-     */
-    private static int localCount;
-    private static int serverCount;
-
-    /**
-     * The file path/name where we store downloaded data
-     */
-    private final static String filename = "dronetypes.json";
-
-    /**
-     * Dronetypes API Endpoint
-     */
-    private static final String URL = "https://dronesim.facets-labs.com/api/dronetypes/";
-
-    /**
      * Default constructor for creating a DroneType instance.
      */
-    public DroneType() {LOGGER.log(Level.INFO, "DroneType Object Created from empty constructor.");}
+    public DroneType() {
+        LOGGER.log(Level.INFO, "DroneType Object Created from empty constructor.");
+    }
 
     /**
      * Parameterized constructor for creating a DroneType instance with specified attributes.
@@ -59,8 +51,8 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
      * @param controlRange       Control range of the drone.
      * @param maximumCarriage    Maximum carriage capacity of the drone.
      */
-    public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed,
-                     int batteryCapacity, int controlRange, int maximumCarriage) {
+    public DroneType(int droneTypeID, String manufacturer, String typename, int weight,
+                     int maximumSpeed, int batteryCapacity, int controlRange, int maximumCarriage) {
         LOGGER.info("DroneType Object created");
         this.droneTypeID = droneTypeID;
         this.manufacturer = manufacturer;
@@ -72,59 +64,75 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         this.maximumCarriage = maximumCarriage;
     }
 
-    public int getDroneTypeID() {
-        return this.droneTypeID;
-    }
-
-    public String getManufacturer() {
-        return this.manufacturer;
-    }
-
-    public String getTypename() {
-        return this.typename;
-    }
-
-    public int getWeight() {
-        return this.weight;
-    }
-
-    public int getMaximumSpeed() {
-        return this.maximumSpeed;
-    }
-
-    public int getBatteryCapacity() {
-        return this.batteryCapacity;
-    }
-
-    public int getControlRange() {
-        return this.controlRange;
-    }
-
-    public int getMaximumCarriage() {
-        return this.maximumCarriage;
-    }
-
-    //STATIC GETTER AND SETTER METHODS
     public static int getLocalCount() {
         return localCount;
     }
     public static void setLocalCount(int localCount) {
         DroneType.localCount = localCount;
     }
-
     public static int getServerCount() {
         return serverCount;
     }
     public static void setServerCount(int serverCount) {
         DroneType.serverCount = serverCount;
     }
-
     public static String getFilename() {
         return filename;
     }
-
     public static String getUrl() {
         return URL;
+    }
+
+    public int getDroneTypeID() {
+        return this.droneTypeID;
+    }
+    public String getManufacturer() {
+        return this.manufacturer;
+    }
+    public String getTypename() {
+        return this.typename;
+    }
+    public int getWeight() {
+        return this.weight;
+    }
+    public int getMaximumSpeed() {
+        return this.maximumSpeed;
+    }
+    public int getBatteryCapacity() {
+        return this.batteryCapacity;
+    }
+    public int getControlRange() {
+        return this.controlRange;
+    }
+    public int getMaximumCarriage() {
+        return this.maximumCarriage;
+    }
+
+    /**
+     * This method is being overwritten from the Initializable interface.
+     * It reads the data from the file and saves it in a LinkedList of its own datatype.
+     * @return DroneType web server data as a LinkedList of its own datatype DroneTypes.
+     */
+    @Override
+    public LinkedList<DroneType> initialize() {
+        LinkedList<DroneType> droneTypes = new LinkedList<>();
+        String jsonString = new Streamer().reader(filename);
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneTypes.add(new DroneType(
+                    o.getInt("id"),
+                    o.getString("manufacturer"),
+                    o.getString("typename"),
+                    o.getInt("weight"),
+                    o.getInt("max_speed"),
+                    o.getInt("battery_capacity"),
+                    o.getInt("control_range"),
+                    o.getInt("max_carriage")
+            ));
+        }
+        return droneTypes;
     }
 
     /**
@@ -156,30 +164,5 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         return false;
     }
 
-    /**
-     * This method is being overwritten from the Initializable interface.
-     * It reads the data from the file and saves it in a LinkedList of its own datatype.
-     * @return DroneType web server data as a LinkedList of its own datatype DroneTypes.
-     */
-    @Override
-    public LinkedList<DroneType> initialize() {
-        LinkedList<DroneType> droneTypes = new LinkedList<>();
-        String jsonString = new Streamer().reader(filename);
-        JSONObject wholeHtml = new JSONObject(jsonString);
-        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject o = jsonArray.getJSONObject(i);
-            droneTypes.add(new DroneType(
-                    o.getInt("id"),
-                    o.getString("manufacturer"),
-                    o.getString("typename"),
-                    o.getInt("weight"),
-                    o.getInt("max_speed"),
-                    o.getInt("battery_capacity"),
-                    o.getInt("control_range"),
-                    o.getInt("max_carriage")
-            ));
-        }
-        return droneTypes;
-    }
+
 }

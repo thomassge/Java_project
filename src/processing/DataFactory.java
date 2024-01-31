@@ -21,6 +21,7 @@ import java.util.LinkedList;
  * @author Leon Oet
  */
 public class DataFactory extends Refresher {
+
     private static final Logger LOGGER = Logger.getLogger(DataFactory.class.getName());
 
     private LinkedList<Drone> drones = new LinkedList<>();
@@ -28,7 +29,6 @@ public class DataFactory extends Refresher {
     private ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
     private ArrayList<DataStorage> dataStorage;
 
-    //CONSTRUCTOR
     /**
      * A new DataFactory object should only be created once at the start of the program and at creation of our thread class.
      * <p>
@@ -41,18 +41,16 @@ public class DataFactory extends Refresher {
      * It then links the data and stores it in the dataStorage ArrayList.
      */
     public DataFactory() {
-            LOGGER.log(Level.INFO,"Initial Fetch started");
-            refresh();
+        LOGGER.log(Level.INFO,"Initial Fetch started");
+        refresh();
     }
 
-    //GETTER AND SETTER
     public LinkedList<Drone> getDrones() {
         return drones;
     }
     public void setDrones(LinkedList<Drone> drones) {
         this.drones = drones;
     }
-
     public LinkedList<DroneType> getDroneTypes() {
         return droneTypes;
     }
@@ -65,14 +63,24 @@ public class DataFactory extends Refresher {
     public void setDroneDynamics(ArrayList<DroneDynamics> droneDynamics) {
         this.droneDynamics = droneDynamics;
     }
-
     public ArrayList<DataStorage> getDataStorage() {
         return dataStorage;
     }
     public void setDataStorage(ArrayList<DataStorage> dataStorage) {
         this.dataStorage = dataStorage;
     }
-    //METHODS
+
+    /**
+     * This method refreshes by deleting old data and re-fetching.
+     * The new data is then linked and saved in this class as a dataStorage ArrayList.
+     */
+    @Override
+    public void refresh() {
+        deleteData();
+        createData();
+        setDataStorage(dataLinker());
+    }
+
     private void deleteData() {
         setDrones(null);
         setDroneTypes(null);
@@ -89,7 +97,6 @@ public class DataFactory extends Refresher {
         setDroneDynamics(new DroneDynamics().initialize());
     }
 
-    //METHODS FOR LINKING DATA
     private ArrayList<DataStorage> dataLinker() {
         ArrayList<DataStorage> list = new ArrayList<>();
         int droneCounter = 0;
@@ -130,16 +137,5 @@ public class DataFactory extends Refresher {
                 }
         }
         return list;
-    }
-
-    /**
-     * This method refreshes by deleting old data and re-fetching.
-     * The new data is then linked and saved in this class as a dataStorage ArrayList.
-     */
-    @Override
-    public void refresh() {
-            deleteData();
-            createData();
-            setDataStorage(dataLinker());
     }
 }

@@ -16,7 +16,13 @@ import java.util.ArrayList;
  * @author Leon Oet
  */
 public class DroneDynamics extends JsonFile implements Initializable<ArrayList<DroneDynamics>> {
+
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
+
+    private static int localCount;
+    private static int serverCount;
+    private final static String filename = "dronedynamics.json";
+    private static final String URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
 
     private String dronePointer;
     private String timestamp;
@@ -31,25 +37,11 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     private Status status;
 
     /**
-     * The number of entries in file and on the server.
-     */
-    private static int localCount;
-    private static int serverCount;
-
-    /**
-     * The filename where we store downloaded data
-     */
-    private final static String filename = "dronedynamics.json";
-
-    /**
-     * DroneDynamics API Endpoint
-     */
-    private static final String URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
-
-    /**
      * Default constructor for creating an instance of DroneDynamics.
      */
-    public DroneDynamics() {LOGGER.log(Level.INFO, "DroneDynamics Object Created from empty constructor.");}
+    public DroneDynamics() {
+        LOGGER.log(Level.INFO, "DroneDynamics Object Created from empty constructor.");
+    }
 
     /**
      * Parameterized constructor for creating an instance of DroneDynamics with specified attributes.
@@ -67,8 +59,8 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
      * @param status             Current status of the drone.
      */
     public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll,
-                         float alignmentPitch, float alignmentYaw, double longitude, double latitude,
-                         int batteryStatus, String lastSeen, Status status) {
+                         float alignmentPitch, float alignmentYaw, double longitude,
+                         double latitude, int batteryStatus, String lastSeen, Status status) {
         this.dronePointer = dronePointer;
         this.timestamp = timestamp;
         this.speed = speed;
@@ -82,79 +74,87 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         this.status = status;
     }
 
-    public String getDronePointer() {
-        return this.dronePointer;
-    }
-
-    public String getTimestamp() {
-        return this.timestamp;
-    }
-
-    public int getSpeed() {
-        return this.speed;
-    }
-
-    public float getAlignmentRoll() {
-        return this.alignmentRoll;
-    }
-
-    public float getAlignmentPitch() {
-        return this.alignmentPitch;
-    }
-
-    public float getAlignmentYaw() {
-        return this.alignmentYaw;
-    }
-
-    public double getLongitude() {
-        return this.longitude;
-    }
-
-    public double getLatitude() {
-        return this.latitude;
-    }
-
-    public int getBatteryStatus() {
-        return this.batteryStatus;
-    }
-
-    public String getLastSeen() {
-        return this.lastSeen;
-    }
-
-    public Status getStatus() {
-        return this.status;
-    }
-
     public static int getLocalCount() {
         return localCount;
     }
     public static void setLocalCount(int localCount) {
         DroneDynamics.localCount = localCount;
     }
-
     public static int getServerCount() {
         return serverCount;
     }
     public static void setServerCount(int serverCount) {
         DroneDynamics.serverCount = serverCount;
     }
-
     public static String getFilename() {
         return filename;
     }
-
     public static String getUrl() {
         return URL;
     }
 
-    private Status mapStatus(String status) {
-        return switch (status) {
-            case "ON" -> Status.ON;
-            case "OF" -> Status.OF;
-            case "IS" -> Status.IS;
-            default -> throw new IllegalArgumentException("Invalid status value: " + status);
-        };
+    public String getDronePointer() {
+        return this.dronePointer;
+    }
+    public String getTimestamp() {
+        return this.timestamp;
+    }
+    public int getSpeed() {
+        return this.speed;
+    }
+    public float getAlignmentRoll() {
+        return this.alignmentRoll;
+    }
+    public float getAlignmentPitch() {
+        return this.alignmentPitch;
+    }
+    public float getAlignmentYaw() {
+        return this.alignmentYaw;
+    }
+    public double getLongitude() {
+        return this.longitude;
+    }
+    public double getLatitude() {
+        return this.latitude;
+    }
+    public int getBatteryStatus() {
+        return this.batteryStatus;
+    }
+    public String getLastSeen() {
+        return this.lastSeen;
+    }
+    public Status getStatus() {
+        return this.status;
+    }
+
+    /**
+     * This method is being overwritten from the Initializable interface.
+     * It reads the data from the file and saves it in an ArrayList of its own datatype.
+     * @return DroneDynamics web server data as an ArrayList of its own datatype DroneDynamics.
+     */
+    @Override
+    public ArrayList<DroneDynamics> initialize() {
+        ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
+        String jsonString = new Streamer().reader(filename);
+        JSONObject wholeHtml = new JSONObject(jsonString);
+        JSONArray jsonArray = wholeHtml.getJSONArray("results");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject o = jsonArray.getJSONObject(i);
+            droneDynamics.add(new DroneDynamics(
+                    o.getString("drone"),
+                    o.getString("timestamp"),
+                    o.getInt("speed"),
+                    o.getFloat("align_roll"),
+                    o.getFloat("align_pitch"),
+                    o.getFloat("align_yaw"),
+                    o.getDouble("longitude"),
+                    o.getDouble("latitude"),
+                    o.getInt("battery_status"),
+                    o.getString("last_seen"),
+                    this.mapStatus(o.getString("status"))
+            ));
+        }
+        return droneDynamics;
     }
 
     /**
@@ -217,33 +217,12 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         }
     }
 
-    /**
-     * This method is being overwritten from the Initializable interface.
-     * It reads the data from the file and saves it in an ArrayList of its own datatype.
-     * @return DroneDynamics web server data as an ArrayList of its own datatype DroneDynamics.
-     */
-    @Override
-    public ArrayList<DroneDynamics> initialize() {
-        ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
-        String jsonString = new Streamer().reader(filename);
-        JSONObject wholeHtml = new JSONObject(jsonString);
-        JSONArray jsonArray = wholeHtml.getJSONArray("results");
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject o = jsonArray.getJSONObject(i);
-            droneDynamics.add(new DroneDynamics(
-                    o.getString("drone"),
-                    o.getString("timestamp"),
-                    o.getInt("speed"),
-                    o.getFloat("align_roll"),
-                    o.getFloat("align_pitch"),
-                    o.getFloat("align_yaw"),
-                    o.getDouble("longitude"),
-                    o.getDouble("latitude"),
-                    o.getInt("battery_status"),
-                    o.getString("last_seen"),
-                    this.mapStatus(o.getString("status"))
-            ));
-        }
-        return droneDynamics;
+    private Status mapStatus(String status) {
+        return switch (status) {
+            case "ON" -> Status.ON;
+            case "OF" -> Status.OF;
+            case "IS" -> Status.IS;
+            default -> throw new IllegalArgumentException("Invalid status value: " + status);
+        };
     }
 }
