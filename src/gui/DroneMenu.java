@@ -19,13 +19,12 @@ import static javax.swing.JOptionPane.showMessageDialog;
 /**
  * This class provides a graphical user interface for displaying a list of drones along
  * with their details.
- * @Author: Thomas Levantis, Eyüp Korkmaz, Marco Difflipp
+ * @author Thomas Levantis, Eyüp Korkmaz, Marco Difflipp
  */
 public class DroneMenu implements ActionListener {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
-    private DataFactory factory;
-    private ArrayList<DataStorage> data;
-    private LinkedList<DroneType> droneTypes;
+    private final ArrayList<DataStorage> data;
+    private final LinkedList<DroneType> droneTypes;
     private Object[][] droneMenuData;
     private static JFrame droneMenuFrame;
     private JMenuBar droneMenuMenuBar;
@@ -35,12 +34,9 @@ public class DroneMenu implements ActionListener {
 
     /**
      * Constructs a new DroneMenu with the specified list of drones.
-     *
-     * @param data The ArrayList that holds all information that need to be displayed.
      */
     public DroneMenu() {
-        factory = new DataFactory();
-        this.factory = factory;
+        DataFactory factory = new DataFactory();
         data = factory.getDataStorage();
         droneTypes = factory.getDroneTypes();
         new JsonCreator();
@@ -77,9 +73,7 @@ public class DroneMenu implements ActionListener {
     }
 
     /**
-     * Creates and returns the menu bar with different menu items.
-     *
-     * @return JMenuBar for the DroneMenu
+     * Creates the menu bar with different menu items.
      */
     private void createMenuBar() {
         LOGGER.info("Creating Menu Bar...");
@@ -104,10 +98,10 @@ public class DroneMenu implements ActionListener {
         droneMenuTable = new JTable(droneMenuData, columnNames) {
             /**
              * Determines whether a cell in the table is editable. This implementation makes all
-             * cells in the tabe non-editable.
+             * cells in the table non-editable.
              *
              * @param row     The row index of the cell.
-             * @param column   The coloumn index of the cell.
+             * @param column   The column index of the cell.
              * @return false as none of the cells are editable.
              */
             @Override
@@ -161,7 +155,7 @@ public class DroneMenu implements ActionListener {
 
     /**
      * Restarts the DroneMenu GUI.
-     * Typically used to refresh the GUIwhen new data is available.
+     * Typically used to refresh the GUI when new data is available.
      */
     public static void restarter(){
         showMessageDialog(null, "New Data available.\nGUI will restart now...");

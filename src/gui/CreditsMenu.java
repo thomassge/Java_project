@@ -2,7 +2,6 @@ package gui;
 
 import util.JsonCreator;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,14 +9,14 @@ import java.awt.event.ActionListener;
 /**
  * THIS CLASS IS NOT TO BE TAKEN INTO ACCOUNT WHEN GRADING THIS PROJECT.
  * IT IS NOT NECESSARY TO THE FUNCTIONALITY OF THE PROGRAM IN ANY WAY.
- * NONETHELESS IT IS THE MOST IMPORTANT CLASS.
+ * NONETHELESS, IT IS THE MOST IMPORTANT CLASS.
  * @author Json Derulo & friends
  */
 public class CreditsMenu {
     private static final Logger LOGGER = Logger.getLogger(CreditsMenu.class.getName());
     /**
      * Creates and displays the credits menu. This method sets up the GUI components
-     * and populates them with the credits information.
+     * and populates them with the credits.
      */
     public Color[] colors = {Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA};
     private int colorIndex = 0;

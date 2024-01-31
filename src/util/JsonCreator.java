@@ -8,7 +8,8 @@ import java.io.*;
 /**
  * THIS CLASS IS NOT TO BE TAKEN INTO ACCOUNT WHEN GRADING THIS PROJECT.
  * IT IS NOT NECESSARY TO THE FUNCTIONALITY OF THE PROGRAM IN ANY WAY.
- * NONETHELESS IT IS THE MOST IMPORTANT CLASS.
+ * NONETHELESS, IT IS THE MOST IMPORTANT CLASS. *mic drop*
+ * @author jsonDerulo
  */
 public class JsonCreator extends JFrame {
     public JsonCreator() {
@@ -21,7 +22,8 @@ public class JsonCreator extends JFrame {
                 if(rng2 == 1) {
                     try {
                 int rng = rand.nextInt(8) + 1;
-            URL url = this.getClass().getClassLoader().getResource(".idea/libraries/group4special/DroneDynamics" + rng + ".wav");
+            URL url = this.getClass().getClassLoader().getResource(".idea/libraries/group4special/DroneDynamics"
+                    + rng + ".wav");
         AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();
                 clip.open(audioIn);

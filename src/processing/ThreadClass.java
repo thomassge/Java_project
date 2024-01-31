@@ -2,7 +2,6 @@ package processing;
 
 import gui.DroneMenu;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
  * This class holds logic to create a new Thread that checks for new data on the web server.

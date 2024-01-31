@@ -12,12 +12,11 @@ import java.util.LinkedList;
 /**
  * This class holds logic and fields that are linked to the DroneType information on the web server.
  * It is responsible for managing DroneType data.
- * @Author: Leon Oet
+ * @author Leon Oet
  */
 public class DroneType extends JsonFile implements Initializable<LinkedList<DroneType>> {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
-    //DRONETYPE DATA
     private int droneTypeID;
     private String manufacturer;
     private String typename;
@@ -28,14 +27,13 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
     private int maximumCarriage;
 
     /**
-     * The number of entries in file, on the server and in memory.
+     * The number of entries in file and on the server.
      */
     private static int localCount;
     private static int serverCount;
-    private static int memoryCount;
 
     /**
-     * The filename where we store downloaded data
+     * The file path/name where we store downloaded data
      */
     private final static String filename = "dronetypes.json";
 
@@ -44,7 +42,6 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
      */
     private static final String URL = "https://dronesim.facets-labs.com/api/dronetypes/";
 
-    //CONSTRUCTORS
     /**
      * Default constructor for creating a DroneType instance.
      */
@@ -62,7 +59,8 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
      * @param controlRange       Control range of the drone.
      * @param maximumCarriage    Maximum carriage capacity of the drone.
      */
-    public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed, int batteryCapacity, int controlRange, int maximumCarriage) {
+    public DroneType(int droneTypeID, String manufacturer, String typename, int weight, int maximumSpeed,
+                     int batteryCapacity, int controlRange, int maximumCarriage) {
         LOGGER.info("DroneType Object created");
         this.droneTypeID = droneTypeID;
         this.manufacturer = manufacturer;
@@ -74,7 +72,6 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         this.maximumCarriage = maximumCarriage;
     }
 
-    //GETTER METHODS
     public int getDroneTypeID() {
         return this.droneTypeID;
     }
@@ -122,13 +119,6 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         DroneType.serverCount = serverCount;
     }
 
-    public static int getMemoryCount() {
-        return memoryCount;
-    }
-    public static void setMemoryCount(int memoryCount) {
-        DroneType.memoryCount = memoryCount;
-    }
-
     public static String getFilename() {
         return filename;
     }
@@ -137,9 +127,8 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         return URL;
     }
 
-    //OTHER METHODS
     /**
-     * This method checks wheter new data is available.
+     * This method checks whether new data is available.
      * It starts off by creating a file or checking if a file with this name already exists.
      * It then compares the local and server counts to determine if a refresh is needed or not
      * In case it is needed, it overwrites the old file with the new data.
@@ -174,7 +163,7 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
      */
     @Override
     public LinkedList<DroneType> initialize() {
-        LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
+        LinkedList<DroneType> droneTypes = new LinkedList<>();
         String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
@@ -191,7 +180,6 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
                     o.getInt("max_carriage")
             ));
         }
-        setMemoryCount(getMemoryCount() + jsonArray.length());
         return droneTypes;
     }
 }

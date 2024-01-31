@@ -1,12 +1,8 @@
 package services;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -19,7 +15,8 @@ public class GoogleMaps {
     private final String myKey = System.getenv("jsonDerulo");
     private final String markers = "markers=color:red%7Clabel:D%7C";
 
-    private String googleEndpoint = "https://maps.googleapis.com/maps/api/staticmap?&size=400x400&zoom=16&scale=2&key=" + myKey + "&maptype=roadmap&";
+    private String googleEndpoint = "https://maps.googleapis.com/maps/api/staticmap?&size=400x400&zoom=16&scale=2&key="
+            + myKey + "&maptype=roadmap&";
 
     /**
      * This class uses the static maps API from Google Maps, to create a static image,

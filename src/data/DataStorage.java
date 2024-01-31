@@ -1,20 +1,15 @@
 package data;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.ArrayList;
 /**
  * This class functions as a blueprint for an object that holds all the data for a specific drone.
- * @Author: Leon Oet
+ * @author Leon Oet
  */
 public class DataStorage {
-    private static final Logger LOGGER = Logger.getLogger(DataStorage.class.getName());
-
     private Drone drone;
     private DroneType droneType;
     private ArrayList<DroneDynamics> droneDynamicsList = new ArrayList<>();
 
-    //GETTER AND SETTER
     public Drone getDrone() {
         return drone;
     }

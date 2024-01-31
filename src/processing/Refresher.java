@@ -6,7 +6,6 @@ import data.DroneType;
 
 import org.json.JSONObject;
 import util.WebserverDataFetcher;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
  * This class holds logic that is needed to check whether there is new data to be fetched from the
@@ -23,7 +22,7 @@ public abstract class Refresher {
      * It can not be instantiated so the only time it is being called is when the class
      * that extends it is called. In our case that is DataFactory.
      * Every time a DataFactory object is created (which should happen once in a program lifetime and once
-     * when our Thread iis started) the constructor gets called and it checks for a refresh.
+     * when our Thread iis started) the constructor gets called, and it checks for a refresh.
      */
     public Refresher() {
         LOGGER.info("Called Refresher constructor");
@@ -37,7 +36,7 @@ public abstract class Refresher {
 
     /**
      * This method checks whether a refresh is needed by updating the count of our local file and
-     * the web server. It then compares them to check if there is new data availabe.
+     * the web server. It then compares them to check if there is new data available.
      * @return true if new data has to be fetched and false otherwise
      */
     public boolean checkForRefresh() {

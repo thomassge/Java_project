@@ -16,38 +16,37 @@ import java.util.regex.Pattern;
 /**
  * This class holds logic and fields that are linked to the individual Drone information on the web server.
  * It is responsible for managing drone data.
- * @Author: Leon Oet
+ * @author Leon Oet
  */
 public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> {
     private static final Logger LOGGER = Logger.getLogger(Drone.class.getName());
-
-    //INDIVIDUAL DRONE DATA
-    private int id;
-    private String created;
-    private int carriageWeight;
-    private String serialnumber;
-    private String droneTypePointer;
-    private int extractedDroneTypeID;
-    private CarriageType carriageType;
-
     /**
-     * The number of entries in file, on the server and in memory.
+     * The number of entries in file and on the server.
      */
     private static int localCount;
     private static int serverCount;
-    private static int memoryCount;
-
     /**
      * The filename where we store downloaded data
      */
     private final static String filename = "drones.json";
-
     /**
      * Drones API Endpoint
      */
     private static final String URL = "https://dronesim.facets-labs.com/api/drones/";
 
-    //CONSTRUCTORS
+    private int id;
+    private String created;
+    private int carriageWeight;
+    private String serialnumber;
+    private String droneTypePointer;
+    private CarriageType carriageType;
+
+
+
+
+
+
+
     /**
      * Default constructor for the Drone class.
      */
@@ -65,7 +64,8 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
      * @param id               Index of the Drone on the webserver.
      * @param droneTypePointer Link to the DroneType information of this drone.
      */
-    public Drone(CarriageType carriageType, String serialnumber, String created, int carriageWeight, int id, String droneTypePointer) {
+    public Drone(CarriageType carriageType, String serialnumber, String created,
+                 int carriageWeight, int id, String droneTypePointer) {
         LOGGER.log(Level.INFO, "Drone Object created.");
         this.carriageType = carriageType;
         this.serialnumber = serialnumber;
@@ -75,7 +75,6 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         this.droneTypePointer = droneTypePointer;
     }
 
-    //GETTER METHODS
     public int getId() {
         return this.id;
     }
@@ -108,7 +107,6 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
             validateExtractedDroneTypeID(matcher.find());
         } catch (DroneTypeIdNotExtractableException e) {
             LOGGER.log(Level.WARNING, "Error extracting the DroneTypeID", e);
-            this.extractedDroneTypeID = 0;
         }
         return Integer.parseInt(matcher.group(0));
     }
@@ -117,7 +115,6 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         return this.carriageType;
     }
 
-   //STATIC GETTER AND SETTER METHODS
     public static int getLocalCount() {
         return localCount;
     }
@@ -130,13 +127,6 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     }
     public static void setServerCount(int serverCount) {
         Drone.serverCount = serverCount;
-    }
-
-    public static int getMemoryCount() {
-        return memoryCount;
-    }
-    public static void setMemoryCount(int memoryCount) {
-        Drone.memoryCount = memoryCount;
     }
 
     public static String getFilename() {
@@ -156,9 +146,8 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         };
     }
 
-    //OTHER METHODS
     /**
-     * This method checks wheter new data is available.
+     * This method checks whether new data is available.
      * It starts off by creating a file or checking if a file with this name already exists.
      * It then compares the local and server counts to determine if a refresh is needed or not
      * In case it is needed, it overwrites the old file with the new data.
@@ -167,8 +156,7 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     public boolean isNewDataAvailable() {
         createFile(filename);
         if(serverCount == 0) {
-            LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
-            //TODO: Own Exception
+            LOGGER.log(Level.WARNING, "ServerDroneCount is 0. Please check database");
             return false;
         }
         else if (localCount == serverCount) {
@@ -199,7 +187,7 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
      */
     @Override
     public LinkedList<Drone> initialize() {
-        LinkedList<Drone> drones = new LinkedList<Drone>();
+        LinkedList<Drone> drones = new LinkedList<>();
         String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
@@ -214,7 +202,6 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
                     o.getString("dronetype")
             ));
         }
-        setMemoryCount(getMemoryCount() + jsonArray.length());
         return drones;
     }
 }

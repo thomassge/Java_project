@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.*;
 /**
- * This class holds methods of creating a reader and writer object.
+ * This class holds methods to create reader and writer objects.
  * It uses FileInputStreamer and FileWriter
  * @author Leon Oet
  */

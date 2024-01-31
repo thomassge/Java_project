@@ -13,12 +13,11 @@ import java.util.ArrayList;
 /**
  * This class holds logic and fields that are linked to the DroneDynamics information on the web server.
  * It is responsible for managing DroneDynamics data.
- * @Author: Leon Oet
+ * @author Leon Oet
  */
 public class DroneDynamics extends JsonFile implements Initializable<ArrayList<DroneDynamics>> {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
 
-    //DRONEDYNAMICS DATA
     private String dronePointer;
     private String timestamp;
     private int speed;
@@ -32,11 +31,10 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     private Status status;
 
     /**
-     * The number of entries in file, on the server and in memory.
+     * The number of entries in file and on the server.
      */
     private static int localCount;
     private static int serverCount;
-    private static int memoryCount;
 
     /**
      * The filename where we store downloaded data
@@ -48,7 +46,6 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
      */
     private static final String URL = "https://dronesim.facets-labs.com/api/dronedynamics/";
 
-    //CONSTRUCTORS
     /**
      * Default constructor for creating an instance of DroneDynamics.
      */
@@ -69,7 +66,9 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
      * @param lastSeen           Last seen timestamp of the drone.
      * @param status             Current status of the drone.
      */
-    public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll, float alignmentPitch, float alignmentYaw, double longitude, double latitude, int batteryStatus, String lastSeen, Status status) {
+    public DroneDynamics(String dronePointer, String timestamp, int speed, float alignmentRoll,
+                         float alignmentPitch, float alignmentYaw, double longitude, double latitude,
+                         int batteryStatus, String lastSeen, Status status) {
         this.dronePointer = dronePointer;
         this.timestamp = timestamp;
         this.speed = speed;
@@ -83,7 +82,6 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         this.status = status;
     }
 
-    //GETTER METHODS
     public String getDronePointer() {
         return this.dronePointer;
     }
@@ -128,7 +126,6 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         return this.status;
     }
 
-    //STATIC GETTER AND SETTER METHODS
     public static int getLocalCount() {
         return localCount;
     }
@@ -141,13 +138,6 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     }
     public static void setServerCount(int serverCount) {
         DroneDynamics.serverCount = serverCount;
-    }
-
-    public static int getMemoryCount() {
-        return memoryCount;
-    }
-    private static void setMemoryCount(int memoryCount) {
-        DroneDynamics.memoryCount = memoryCount;
     }
 
     public static String getFilename() {
@@ -167,9 +157,8 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         };
     }
 
-    //OTHER METHODS
     /**
-     * This method checks wheter new data is available.
+     * This method checks whether new data is available.
      * It starts off by creating a file or checking if a file with this name already exists.
      * It then compares the local and server counts to determine if a refresh is needed or not
      * In case it is needed, it overwrites the old file with the new data.
@@ -197,7 +186,7 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     }
 
     /**
-     * This methods prints how long the drone can fly or rest until the battery is empty or recharged.
+     * This method prints how long the drone can fly or rest until the battery is empty or recharged.
      * It does so by checking the status of the drone and counting the minutes until the status changes.
      * @param data ArrayList of DataStorage
      * @param droneCounter Index of the drone
@@ -205,7 +194,8 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
      * @return String with the information about the battery status
      */
     public String printBatteryInformation(ArrayList<DataStorage> data, int droneCounter, int droneDynamicsEntry) {
-        if(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry) == data.get(droneCounter).getDroneDynamicsList().getLast()) {
+        if(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry) ==
+                data.get(droneCounter).getDroneDynamicsList().getLast()) {
             return "Last Entry";
         }
         int infoInMinutes = 0;
@@ -254,7 +244,6 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
                     this.mapStatus(o.getString("status"))
             ));
         }
-        setMemoryCount(getMemoryCount() + jsonArray.length());
         return droneDynamics;
     }
 }

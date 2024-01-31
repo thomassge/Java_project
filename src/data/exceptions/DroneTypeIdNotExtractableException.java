@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
  * This exception is thrown when the DroneType ID cannot be extracted from a URL string.
- * @Author: Leon Oet
+ * @author Leon Oet
  */
 public class DroneTypeIdNotExtractableException extends Exception {
     private static final Logger LOGGER = Logger.getLogger(DroneTypeIdNotExtractableException.class.getName());
@@ -14,7 +14,7 @@ public class DroneTypeIdNotExtractableException extends Exception {
      */
     public DroneTypeIdNotExtractableException() {
         super();
-        LOGGER.log(Level.WARNING, "Couldnt extract DroneType ID from URL-String");
+        LOGGER.log(Level.WARNING, "Couldn't extract DroneType ID from URL-String");
         LOGGER.log(Level.WARNING, "No RegEx Match with pattern: '[0-9]+' found.");
     }
 }

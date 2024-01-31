@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 /**
  * This class creates a JFrame with a welcome slogan and a button to open DroneMenu.
- * @Author: Robin Remires
+ * @author Robin Remires
  */
 public class WelcomeScreen extends JFrame {
     private static final Logger LOGGER = Logger.getLogger(WelcomeScreen.class.getName());
@@ -45,7 +45,7 @@ public class WelcomeScreen extends JFrame {
 
     private void addSpacer(GridBagConstraints constraints) {
         JLabel spacer = new JLabel();
-        spacer.setPreferredSize(new Dimension(0, 55)); // Höhe des Abstandshalters
+        spacer.setPreferredSize(new Dimension(0, 55));
         constraints.gridx = 0;
         constraints.gridy = 0;
         add(spacer, constraints);
@@ -90,7 +90,7 @@ public class WelcomeScreen extends JFrame {
                     LOGGER.log(Level.SEVERE,"Image could not be find.");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING,"WelcomeScreen Image could not be loaded.");
             }
         }
         @Override

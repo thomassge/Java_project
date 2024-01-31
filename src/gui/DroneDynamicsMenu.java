@@ -13,7 +13,7 @@ import java.awt.event.*;
 import static javax.swing.JOptionPane.showMessageDialog;
 /**
  * This class provides a graphical user interface for displaying a list of all available drone dynamics data
- * @Author: Thomas Levantis, Eyüp Korkmaz, Marco Difflipp
+ * @author Thomas Levantis, Eyüp Korkmaz, Marco Difflipp
  */
 public class DroneDynamicsMenu implements ActionListener {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamicsMenu.class.getName());
@@ -128,8 +128,9 @@ public class DroneDynamicsMenu implements ActionListener {
                     data.get(selectedDrone).getDroneDynamicsList().get(selectedArrayListValue).getLongitude()
             );
             JFrame droneDynamicsGoogleMapsFrame = new JFrame();
-            String imagePath = filename;
-            droneDynamicsGoogleMapsFrame.add(new JLabel(new ImageIcon((new ImageIcon(filename)).getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH))));
+            droneDynamicsGoogleMapsFrame.add(
+                    new JLabel(new ImageIcon((new ImageIcon(filename)).getImage().getScaledInstance(
+                            630, 600, java.awt.Image.SCALE_SMOOTH))));
             droneDynamicsGoogleMapsFrame.setSize(400, 400);
             droneDynamicsGoogleMapsFrame.setLocationRelativeTo(null);
             droneDynamicsGoogleMapsFrame.setVisible(true);
@@ -251,7 +252,8 @@ public class DroneDynamicsMenu implements ActionListener {
                 StringBuilder text = new StringBuilder();
                 text.append("Drone information:\n");
                 for (int stringIndex = 0; stringIndex < droneTypeAttributes.length; stringIndex++) {
-                    text.append(String.format("%s %s\n", droneTypeAttributes[stringIndex], droneTypeValues[stringIndex]));
+                    text.append(String.format("%s %s\n", droneTypeAttributes[stringIndex],
+                            droneTypeValues[stringIndex]));
                 }
                 droneTypeLabel.setText(text.toString());
                 droneTypePanel.add(droneTypeLabel);
@@ -270,7 +272,8 @@ public class DroneDynamicsMenu implements ActionListener {
      * @param selectedDroneId          The IDof the drone for which dynamics information is to be displayed.
      * @param selectedDroneTimeStamp   The timestamp index for the selected drone's dynamics data.
      */
-    private void displayDroneDynamicsInformation(ArrayList<DataStorage> data, int selectedDroneId, int selectedDroneTimeStamp){
+    private void displayDroneDynamicsInformation(ArrayList<DataStorage> data,
+                                                 int selectedDroneId, int selectedDroneTimeStamp){
         for(int selectedDrone = 0; selectedDrone< data.size(); selectedDrone++){
             if (data.get(selectedDrone).getDrone().getId() == selectedDroneId){
                 String[] droneDynamicsAttributes = {
@@ -288,23 +291,47 @@ public class DroneDynamicsMenu implements ActionListener {
                         "Battery Info:"
                 };
                 String[] droneDynamicsValues = {
-                        String.valueOf((data.get(selectedDrone).getDroneDynamicsList().toArray().length)-1),
-                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getStatus()),
-                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getBatteryStatus()),
-                        DroneMenu.formatCreatedDateTime(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getTimestamp()),
-                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getSpeed()),
-                        DroneMenu.formatCreatedDateTime(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getLastSeen()),
-                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getLongitude()),
-                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getLatitude()),
-                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getAlignmentPitch()),
-                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getAlignmentRoll()),
-                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).getAlignmentYaw()),
-                        data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp).printBatteryInformation(data, selectedDrone,  selectedDroneTimeStamp)
+                        String.valueOf((data.get(selectedDrone).getDroneDynamicsList()
+                                .toArray().length)-1),
+
+                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getStatus()),
+
+                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getBatteryStatus()),
+
+                        DroneMenu.formatCreatedDateTime(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getTimestamp()),
+
+                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getSpeed()),
+
+                        DroneMenu.formatCreatedDateTime(data.get(selectedDrone)
+                                .getDroneDynamicsList().get(selectedDroneTimeStamp).getLastSeen()),
+
+                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getLongitude()),
+
+                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getLatitude()),
+
+                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getAlignmentPitch()),
+
+                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getAlignmentRoll()),
+
+                        String.valueOf(data.get(selectedDrone).getDroneDynamicsList()
+                                .get(selectedDroneTimeStamp).getAlignmentYaw()),
+
+                        data.get(selectedDrone).getDroneDynamicsList().get(selectedDroneTimeStamp)
+                                .printBatteryInformation(data, selectedDrone,  selectedDroneTimeStamp)
                 };
                 StringBuilder text = new StringBuilder();
                 text.append("DroneDynamics information:\n");
                 for (int stringIndex = 0; stringIndex < droneDynamicsAttributes.length; stringIndex++) {
-                    text.append(String.format("%s %s\n", droneDynamicsAttributes[stringIndex], droneDynamicsValues[stringIndex]));
+                    text.append(String.format("%s %s\n", droneDynamicsAttributes[stringIndex],
+                            droneDynamicsValues[stringIndex]));
                 }
                 droneDynamicsLabel.setText(text.toString());
                 droneDynamicsPanel.add(droneDynamicsLabel);

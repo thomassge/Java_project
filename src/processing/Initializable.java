@@ -5,6 +5,7 @@ package processing;
  * which needs to be displayed and therefore initialized.
  * @param <T> Takes in the specific datatype of the object that needs to be created
  * and therefore returned later.
+ * @author Leon Oet
  */
 public interface Initializable<T>  {
     /**

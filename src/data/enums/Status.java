@@ -1,7 +1,7 @@
 package data.enums;
 /**
  * This enum holds the different status a drone can have.
- * @Author: Leon Oet
+ * @author Leon Oet
  */
 public enum Status {
     ON("Drone is ON"),

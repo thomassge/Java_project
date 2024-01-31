@@ -40,7 +40,8 @@ public class WebserverDataFetcher {
             LOGGER.log(Level.INFO, "JSON Data successfully retrieved from: " + link);
             return responseContent.toString();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error retrieving JSON data from " + link + "Please seek help from adminstrator.", e);
+            LOGGER.log(Level.SEVERE, "Error retrieving JSON data from " + link
+                    + "Please seek help from adminstrator.", e);
             throw new RuntimeException(e);
         }
     }

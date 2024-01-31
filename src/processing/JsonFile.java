@@ -25,7 +25,7 @@ public abstract class JsonFile {
      */
     public void saveAsFile(String url, int limit, String filename) {
         String jsonString = WebserverDataFetcher.jsonCreator(url + "?limit=" + limit);
-        LOGGER.log(Level.INFO,"Savind  Data from Webserver in file ...");
+        LOGGER.log(Level.INFO,"Saving Data from Webserver in file ...");
         Streamer streamer = new Streamer();
         streamer.writer(jsonString, filename);
     }

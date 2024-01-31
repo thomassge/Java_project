@@ -4,14 +4,13 @@ import data.DroneType;
 
 import java.util.LinkedList;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 import util.JsonCreator;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 /**
  * This class provides a graphical user interface for displaying a list of all drone types
- * @Author: Thomas Levantis, Eyüp Korkmaz, Marco Difflipp
+ * @author Thomas Levantis, Eyüp Korkmaz, Marco Difflipp
  */
 public class DroneTypeMenu {
     private static final Logger LOGGER = Logger.getLogger(DroneTypeMenu.class.getName());
@@ -19,13 +18,14 @@ public class DroneTypeMenu {
     private JFrame droneTypeFrame;
     private JMenuBar droneTypeMenuBar;
     private JTable droneTypeTable;
-    private final String[] columnNames = {"ID", "Manufacturer", "Typename", "Weight (g)", "Maximum Speed", "Battery Capacity", "Control Range", "Maximum Carriage"};
+    private final String[] columnNames = {"ID", "Manufacturer", "Typename", "Weight (g)", "Maximum Speed",
+            "Battery Capacity", "Control Range", "Maximum Carriage"};
     private final int[] columnWidth = {-70, 0, 25, -40,  -20, -20, -20, 0};
 
     /**
      * Constructs a new DroneTypeMenu with the specified list of drone types.
      *
-     * @param droneTypes A LinkedList of DroneType objects to be displayed.
+     * @param data A LinkedList of DroneType objects to be displayed.
      */
     public DroneTypeMenu(LinkedList<DroneType> data) {
         new JsonCreator();
@@ -80,10 +80,10 @@ public class DroneTypeMenu {
         droneTypeTable = new JTable(droneTypeMenuData, columnNames) {
             /**
              * Determines whether a cell in the table is editable. This implementation makes all
-             * cells in the tabe non-editable.
+             * cells in the table non-editable.
              *
              * @param row     The row index of the cell.
-             * @param column   The coloumn index of the cell.
+             * @param column   The column index of the cell.
              * @return false as none of the cells are editable.
              */
             @Override

@@ -1,3 +1,8 @@
+/**
+ * This package is responsible for processing data related to drones.
+ * It includes classes for handling drone data, drone types, and drone dynamics.
+ * The main class in this package is DataFactory, which manages the creation, deletion, and linking of data.
+ **/
 package processing;
 
 import data.DataStorage;
@@ -88,7 +93,7 @@ public class DataFactory extends Refresher {
     private ArrayList<DataStorage> dataLinker() {
         ArrayList<DataStorage> list = new ArrayList<>();
         int droneCounter = 0;
-        for(Drone obj : drones) {
+        for(Drone _ : drones) {
             DataStorage item = new DataStorage();
             item.setDrone(linkDrone(droneCounter));
             item.setDroneType(linkDroneType(droneCounter));
@@ -105,8 +110,9 @@ public class DataFactory extends Refresher {
 
     private DroneType linkDroneType(int droneCounter) {
         int droneTypeCounter = 0;
-        for(DroneType obj : droneTypes) {
-            if(drones.get(droneCounter).getExtractedDroneTypeID() == droneTypes.get(droneTypeCounter).getDroneTypeID()) {
+        for(DroneType _ : droneTypes) {
+            if(drones.get(droneCounter).getExtractedDroneTypeID() ==
+                    droneTypes.get(droneTypeCounter).getDroneTypeID()) {
                 return droneTypes.get(droneTypeCounter);
             }
             else droneTypeCounter++;
@@ -116,7 +122,8 @@ public class DataFactory extends Refresher {
 
     private ArrayList<DroneDynamics> linkDroneDynamics(int droneCounter) {
         ArrayList<DroneDynamics> list = new ArrayList<>();
-        String dronePointerToCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(droneCounter).getId() + "/";
+        String dronePointerToCheck = "http://dronesim.facets-labs.com/api/drones/"
+                + drones.get(droneCounter).getId() + "/";
         for (DroneDynamics droneDynamicsObject : droneDynamics) {
                 if (droneDynamicsObject.getDronePointer().equals(dronePointerToCheck)) {
                     list.add(droneDynamicsObject);
@@ -127,7 +134,7 @@ public class DataFactory extends Refresher {
 
     /**
      * This method refreshes by deleting old data and re-fetching.
-     * The new data is then linked and saved in this classes dataStorage ArrayList.
+     * The new data is then linked and saved in this class as a dataStorage ArrayList.
      */
     @Override
     public void refresh() {
