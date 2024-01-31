@@ -2,12 +2,11 @@ package util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import java.io.*;
-
 /**
  * This class holds methods of creating a reader and writer object.
  * It uses FileInputStreamer and FileWriter
+ * @author Leon Oet
  */
 public class Streamer {
     private static final Logger LOGGER = Logger.getLogger(WebserverDataFetcher.class.getName());

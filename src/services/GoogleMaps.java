@@ -1,7 +1,3 @@
-/**
- * This class is responsible for generating a visual representation of drone locations using Google Maps.
- * It fetches drone data, including their dynamics and displays their positions on a map.
- */
 package services;
 
 import java.io.*;
@@ -11,19 +7,18 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  * This class is responsible for our GoogleMaps API functionality.
- * It holds the method that creates a static picture of
+ * It holds the method that creates a static picture of the location of a drone
+ * @author Leon Oet
  */
 public class GoogleMaps {
     private static final Logger LOGGER = Logger.getLogger(GoogleMaps.class.getName());
-
     private final String myKey = System.getenv("jsonDerulo");
     private final String markers = "markers=color:red%7Clabel:D%7C";
+
     private String googleEndpoint = "https://maps.googleapis.com/maps/api/staticmap?&size=400x400&zoom=16&scale=2&key=" + myKey + "&maptype=roadmap&";
 
     /**

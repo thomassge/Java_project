@@ -1,19 +1,16 @@
-/**
- * This class manages the data update and processing mechanism for the application.
- * It runs a background thread to regularly check for new drone-related data and processes it as needed.
- */
 package processing;
 
 import gui.DroneMenu;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  * This class holds logic to create a new Thread that checks for new data on the web server.
+ * @author Leon Oet
  */
 public class ThreadClass {
     private static final Logger LOGGER = Logger.getLogger(ThreadClass.class.getName());
-    DataFactory factory;
+    DataFactory factory = new DataFactory();
 
     /**
      * Starts a separate thread to periodically check for new data updates.

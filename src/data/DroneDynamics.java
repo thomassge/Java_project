@@ -1,8 +1,3 @@
-/**
- * This class represents the dynamics of a drone, including several metrics such as
- * speed, alignment, location and battery status. It is capable of checking for new data updates,
- * saving data to a file and maintaining a count of drone dynamics data from both local and server sources.
- */
 package data;
 
 import data.enums.Status;
@@ -15,10 +10,10 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
-
 /**
  * This class holds logic and fields that are linked to the DroneDynamics information on the web server.
  * It is responsible for managing DroneDynamics data.
+ * @Author: Leon Oet
  */
 public class DroneDynamics extends JsonFile implements Initializable<ArrayList<DroneDynamics>> {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());

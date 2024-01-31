@@ -1,18 +1,18 @@
 package processing;
 
 import data.DroneType;
+
 import util.Streamer;
 import util.WebserverDataFetcher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-
 /**
  * This abstract class contains logic that a JsonFile needs. A JsonFile holds the data that we
  * fetch from the webserver.
+ * @author Leon Oet
  */
 public abstract class JsonFile {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
