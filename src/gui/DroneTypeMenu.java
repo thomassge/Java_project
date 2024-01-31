@@ -1,24 +1,18 @@
-/**
- * This class creates a GUI for displaying and interacting with a list of DroneTypes.
- * It includes features such as sorting, searching and detailed view of drone types.
- */
 package gui;
 
-import data.DataStorage;
 import data.DroneType;
-import util.JsonCreator;
-
-import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.logging.Logger;
-
-import java.util.ArrayList;
+import java.util.logging.Level;
+import util.JsonCreator;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
+/**
+ * This class provides a graphical user interface for displaying a list of all drone types
+ * @Author: Thomas Levantis, Eyüp Korkmaz, Marco Difflipp
+ */
 public class DroneTypeMenu {
-
     private static final Logger LOGGER = Logger.getLogger(DroneTypeMenu.class.getName());
     private Object[][] droneTypeMenuData;
     private JFrame droneTypeFrame;
@@ -26,7 +20,6 @@ public class DroneTypeMenu {
     private JTable droneTypeTable;
     private final String[] columnNames = {"ID", "Manufacturer", "Typename", "Weight (g)", "Maximum Speed", "Battery Capacity", "Control Range", "Maximum Carriage"};
     private final int[] columnWidth = {-70, 0, 25, -40,  -20, -20, -20, 0};
-
     /**
      * Constructs a new DroneTypeMenu with the specified list of drone types.
      *
@@ -35,53 +28,41 @@ public class DroneTypeMenu {
     public DroneTypeMenu(LinkedList<DroneType> data) {
         new JsonCreator();
         LOGGER.info("Initializing DroneTypeMenu...");
-
-        initializeGuiData(data);
-
+        initializeDroneTypeMenuData(data);
         createFrame();
         createMenuBar();
         createTable();
-
         JScrollPane droneTypeMenuScrollPane = new JScrollPane(droneTypeTable);
         droneTypeFrame.setJMenuBar(droneTypeMenuBar);
         droneTypeFrame.add(droneTypeMenuScrollPane);
-
         LOGGER.info("DroneTypeMenu initialized.");
     }
-
-    private void initializeGuiData(LinkedList<DroneType> data){
+    private void initializeDroneTypeMenuData(LinkedList<DroneType> data){
         droneTypeMenuData = new Object[data.size()][columnNames.length];
-
-        for (int i = 0; i < data.size(); i++) {
-                droneTypeMenuData[i][0] = data.get(i).getDroneTypeID();
-                droneTypeMenuData[i][1] = data.get(i).getManufacturer();
-                droneTypeMenuData[i][2] = data.get(i).getTypename();
-                droneTypeMenuData[i][3] = data.get(i).getWeight();
-                droneTypeMenuData[i][4] = data.get(i).getMaximumSpeed();
-                droneTypeMenuData[i][5] = data.get(i).getBatteryCapacity();
-                droneTypeMenuData[i][6] = data.get(i).getControlRange();
-                droneTypeMenuData[i][7] = data.get(i).getMaximumCarriage();
+        for (int selectedDrone = 0; selectedDrone < data.size(); selectedDrone++) {
+                droneTypeMenuData[selectedDrone][0] = data.get(selectedDrone).getDroneTypeID();
+                droneTypeMenuData[selectedDrone][1] = data.get(selectedDrone).getManufacturer();
+                droneTypeMenuData[selectedDrone][2] = data.get(selectedDrone).getTypename();
+                droneTypeMenuData[selectedDrone][3] = data.get(selectedDrone).getWeight();
+                droneTypeMenuData[selectedDrone][4] = data.get(selectedDrone).getMaximumSpeed();
+                droneTypeMenuData[selectedDrone][5] = data.get(selectedDrone).getBatteryCapacity();
+                droneTypeMenuData[selectedDrone][6] = data.get(selectedDrone).getControlRange();
+                droneTypeMenuData[selectedDrone][7] = data.get(selectedDrone).getMaximumCarriage();
         }
     }
-
     private void createFrame(){
         droneTypeFrame = new JFrame("Drone Types");
-
         droneTypeFrame.setSize(800, 550);
         droneTypeFrame.setLocationRelativeTo(null);
         droneTypeFrame.setVisible(true);
     }
-
     private void createMenuBar() {
         LOGGER.info("Creating Menu Bar...");
-
         droneTypeMenuBar = new JMenuBar();
         JMenu menu = new JMenu("Menu");
         JMenuItem droneTypeExit = new JMenuItem("Back");
-
         droneTypeMenuBar.add(menu);
         menu.add(droneTypeExit);
-
         droneTypeExit.addActionListener(e -> {
             if (droneTypeFrame != null) {
                 droneTypeFrame.dispose();
@@ -89,7 +70,6 @@ public class DroneTypeMenu {
         });
         LOGGER.info("Menu Bar created.");
     }
-
     private void createTable(){
         droneTypeTable = new JTable(droneTypeMenuData, columnNames) {
             /**
@@ -106,10 +86,9 @@ public class DroneTypeMenu {
             }
         };
         TableColumnModel columnModel = droneTypeTable.getColumnModel();
-
-        for(int i=0; i<columnWidth.length; i++){
-            TableColumn column = columnModel.getColumn(i);
-            column.setPreferredWidth((column.getPreferredWidth() + columnWidth[i]));
+        for(int selectedColumn=0; selectedColumn<columnWidth.length; selectedColumn++){
+            TableColumn column = columnModel.getColumn(selectedColumn);
+            column.setPreferredWidth((column.getPreferredWidth() + columnWidth[selectedColumn]));
         }
     }
 }

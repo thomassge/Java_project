@@ -1,8 +1,3 @@
-/**
- * This class represents the dynamics of a drone, including several metrics such as
- * speed, alignment, location and battery status. It is capable of checking for new data updates,
- * saving data to a file and maintaining a count of drone dynamics data from both local and server sources.
- */
 package data;
 
 import data.enums.Status;
@@ -15,7 +10,11 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
-
+/**
+ * This class represents the dynamics of a drone, including several metrics such as
+ * speed, alignment, location and battery status. It is capable of checking for new data updates,
+ * saving data to a file and maintaining a count of drone dynamics data from both local and server sources.
+ */
 public class DroneDynamics extends JsonFile implements Initializable<ArrayList<DroneDynamics>> {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
 
@@ -169,6 +168,12 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     }
 
     //OTHER METHODS
+
+    /**
+     * Checks if new data is available by comparing local data count with server data count.
+     * This method determines whether a new drone dynamics data needs to be fetched from the server.
+     * @return true if new data is available, false otherwise.
+     */
     public boolean isNewDataAvailable() {
         createFile(filename);
         if(serverCount == 0) {
@@ -190,6 +195,15 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         return false;
     }
 
+    /**
+     * Provides a summary of the drone's battery status over a period.
+     * This method calculates the duration for which the drone remains in a specific status
+     * (e.g. ON, OFF) based on the drone dynamics entries.
+     * @param data                  The list of DataStorage objects containing drone dynamics information.
+     * @param droneCounter          The index of the drone in the data list.
+     * @param droneDynamicsEntry    The initial index for the drone dynamics entry to start the calculation.
+     * @return                      A string message summarizing the drone's battery status over time.
+     */
     public String printBatteryInformation(ArrayList<DataStorage> data, int droneCounter, int droneDynamicsEntry) {
         if(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry) == data.get(droneCounter).getDroneDynamicsList().getLast()) {
             return "Last Entry";
@@ -213,10 +227,19 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         }
     }
 
+    /**
+     * Creates and initializes a list of DroneDynamics objects.
+     * @return An ArrayList of initialized DroneDynamics objects.
+     */
     public static ArrayList<DroneDynamics> create() {
         return new DroneDynamics().initialise();
     }
 
+    /**
+     * Initializes the list of DroneDynamics objects from a JSON file.
+     * The method reads data from a JSON file, parses it and creates DroneDynamics objects based on the parsed data.
+     * @return An ArrayList of DroneDynamics objects initialized with the data from the JSON file.
+     */
     @Override
     public ArrayList<DroneDynamics> initialise() {
         ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();

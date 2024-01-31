@@ -1,7 +1,4 @@
 package data;
-/**
- * This package contains classes related to drone data management.
- */
 
 import data.enums.CarriageType;
 import data.exceptions.DroneTypeIdNotExtractableException;
@@ -159,6 +156,10 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     }
 
     //OTHER METHODS
+    /**
+     * Checks if new data is available on the server compared to the local data count.
+     * @return true if new data is available, false otherwise.
+     */
     public boolean isNewDataAvailable() {
         createFile(filename);
         if(serverCount == 0) {
@@ -187,10 +188,20 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         }
     }
 
+    /**
+     * Creates a list of Drone instances initialized from a JSON file.
+     * @return A LinkedList of initialized Drone objects.
+     */
     public static LinkedList<Drone> create() {
         return new Drone().initialise();
     }
 
+    /**
+     * Initializes and populates a list of Drone objects based on JSON data.
+     * The method reads JSON data from a file, parses it into individual drone records
+     * and creates a list of Drone objects with this data.
+     * @return A LinkedList of Drone objects populated with data from the JSON file.
+     */
     @Override
     public LinkedList<Drone> initialise() {
         LinkedList<Drone> drones = new LinkedList<Drone>();

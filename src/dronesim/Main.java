@@ -1,20 +1,18 @@
 /**
- * This is our main class and entry poiint of the program. This class is responsible for initializing
+ * This is our main class and entry point of the program. This class is responsible for initializing
  * the program, fetching data and managing the overall flow of the application.
  */
 package dronesim;
 
 import processing.ThreadClass;
-import gui.DroneMenu;
+import gui.WelcomeScreen;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.*;
 import java.io.IOException;
 
 public class Main {
    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-
     /**
      * The main method that serves as the entry point for the program.
      * It initializes data and manages the flow of execution.
@@ -24,17 +22,13 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
-
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new DroneMenu();
+                new WelcomeScreen();
             }
         });
-
         ThreadClass threadClass = new ThreadClass();
         threadClass.startDataUpdaterThread();
-
         LOGGER.info("Program execution completed.");
-
     }
 }

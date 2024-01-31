@@ -1,7 +1,3 @@
-/**
- * This class represents the type of a drone, including its invariable specifications and attributes.
- * It is responsible for managing drone type data, checking for updates and saving the data to a file.
- */
 package data;
 
 import processing.Initializable;
@@ -13,7 +9,10 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.LinkedList;
-
+/**
+ * This class represents the type of a drone, including its invariable specifications and attributes.
+ * It is responsible for managing drone type data, checking for updates and saving the data to a file.
+ */
 public class DroneType extends JsonFile implements Initializable<LinkedList<DroneType>> {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
@@ -138,6 +137,11 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
     }
 
     // OTHER METHODS
+    /**
+     * Checks if new drone type data is available by comparing local data count with server data count.
+     * The method determines if new data needs to be fetched from the server.
+     * @return true if new data is available, false otherwise.
+     */
     public boolean isNewDataAvailable() {
         createFile(filename);
         if(serverCount == 0) {
@@ -159,10 +163,20 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         }
         return false;
     }
+
+    /**
+     * Creates and initializes a list of DroneType objects.
+     * @return An ArrayList of initialized DroneType objects.
+     */
     public static LinkedList<DroneType> create() {
         return new DroneType().initialise();
     };
 
+    /**
+     * Initializes the list of DroneType objects from a JSON file.
+     * The method reads data from a JSONfile, parses it and creates DroneType objects based on the parsed data.
+     * @return
+     */
     @Override
     public LinkedList<DroneType> initialise() {
         LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();

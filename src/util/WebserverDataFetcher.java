@@ -1,3 +1,6 @@
+/**
+ * Abstract class that provides functionalities for managing JSON files.
+ */
 package util;
 
 import java.util.logging.Logger;

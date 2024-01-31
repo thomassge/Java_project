@@ -2,6 +2,7 @@
  * This class provides logging functionalities for the application.
  * It sets up a logger with a console handler and incudes utility methods for formatting
  * and logging messages and exceptions.
+ * @Author Eyüp Korkmaz
  */
 package logging;
 
@@ -12,9 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LogMain {
-
     private static final Logger logger;
-
     static {
         logger = Logger.getLogger("LogUtil");
         ConsoleHandler consoleHandler = new ConsoleHandler();
@@ -22,7 +21,6 @@ public class LogMain {
         logger.addHandler(consoleHandler);
         logger.setLevel(Level.ALL);
     }
-
     /**
      * Gets the singleton instance of Logger configured for the application.
      *
@@ -31,7 +29,6 @@ public class LogMain {
     public static Logger getLogger() {
         return logger;
     }
-
     /**
      * Formats a log message with the current timestamp.
      *
@@ -43,7 +40,6 @@ public class LogMain {
         String formattedDate = dateFormat.format(new Date());
         return "[" + formattedDate + "] " + message;
     }
-
     /**
      * Logs an exception using the severe log level and prints the stack trace.
      *

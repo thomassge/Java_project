@@ -29,7 +29,12 @@ public abstract class JsonFile {
         Streamer streamer = new Streamer();
         streamer.writer(jsonString, filename);
     }
-
+    /**
+     *  Checks the number of data entries in a specified JSON file.
+     *  The method reads a limited number of characters from the file and extracts the count.
+     * @param filename The file path of the JSON file to check.
+     * @return The count of entries in the file or 0 if an error occurs.
+     */
     public static int checkFileCount(String filename) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -48,7 +53,10 @@ public abstract class JsonFile {
             return 0;
         }
     }
-
+    /**
+     * Creates a new file if it does not already exist.
+     * @param filename The file path of the file to be created.
+     */
     public void createFile(String filename) {
         if (!(new File(filename).exists())) {
             new File(filename);

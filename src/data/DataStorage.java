@@ -4,7 +4,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import java.util.ArrayList;
-
+/**
+ * This class serves as a container for storing various types of drone data.
+ * It encapsulates information about a drone, its type and its dynamics.
+ */
 public class DataStorage {
     private static final Logger LOGGER = Logger.getLogger(DataStorage.class.getName());
 
