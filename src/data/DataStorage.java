@@ -5,6 +5,9 @@ import java.util.logging.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * This class functions as a blueprint for an object that holds all the data for a specific drone.
+ */
 public class DataStorage {
     private static final Logger LOGGER = Logger.getLogger(DataStorage.class.getName());
 
@@ -12,7 +15,7 @@ public class DataStorage {
     private DroneType droneType;
     private ArrayList<DroneDynamics> droneDynamicsList = new ArrayList<>();
 
-    // GETTER AND SETTER
+    //GETTER AND SETTER
     public Drone getDrone() {
         return drone;
     }

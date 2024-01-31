@@ -1,5 +1,8 @@
 package data.enums;
 
+/**
+ * This enum holds the different status a drone can have.
+ */
 public enum Status {
     ON("Drone is ON"),
     OF("Drone is OFF"),

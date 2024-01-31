@@ -1,7 +1,3 @@
-/**
- * This class represents the type of a drone, including its invariable specifications and attributes.
- * It is responsible for managing drone type data, checking for updates and saving the data to a file.
- */
 package data;
 
 import processing.Initializable;
@@ -14,6 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.LinkedList;
 
+/**
+ * This class holds logic and fields that are linked to the DroneType information on the web server.
+ * It is responsible for managing DroneType data.
+ */
 public class DroneType extends JsonFile implements Initializable<LinkedList<DroneType>> {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
@@ -137,7 +137,14 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         return URL;
     }
 
-    // OTHER METHODS
+    //OTHER METHODS
+    /**
+     * This method checks wheter new data is available.
+     * It starts off by creating a file or checking if a file with this name already exists.
+     * It then compares the local and server counts to determine if a refresh is needed or not
+     * In case it is needed, it overwrites the old file with the new data.
+     * @return true if new data is available and false otherwise
+     */
     public boolean isNewDataAvailable() {
         createFile(filename);
         if(serverCount == 0) {
@@ -159,12 +166,14 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         }
         return false;
     }
-    public static LinkedList<DroneType> create() {
-        return new DroneType().initialise();
-    };
 
+    /**
+     * This method is being overwritten from the Initializable interface.
+     * It reads the data from the file and saves it in a LinkedList of its own datatype.
+     * @return DroneType web server data as a LinkedList of its own datatype DroneTypes.
+     */
     @Override
-    public LinkedList<DroneType> initialise() {
+    public LinkedList<DroneType> initialize() {
         LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
         String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);

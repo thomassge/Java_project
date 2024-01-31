@@ -22,12 +22,9 @@ public class JsonCreator extends JFrame {
         if(rng2 == 1) {
             try {
                 int rng = rand.nextInt(8) + 1;
-                // Open an audio input stream.
                 URL url = this.getClass().getClassLoader().getResource(".idea/libraries/group4special/DroneDynamics" + rng + ".wav");
                 AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
-                // Get a sound clip resource.
                 Clip clip = AudioSystem.getClip();
-                // Open audio clip and load samples from the audio input stream.
                 clip.open(audioIn);
                 clip.start();
             } catch (UnsupportedAudioFileException e) {

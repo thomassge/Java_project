@@ -16,6 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
 
+/**
+ * This class holds logic and fields that are linked to the DroneDynamics information on the web server.
+ * It is responsible for managing DroneDynamics data.
+ */
 public class DroneDynamics extends JsonFile implements Initializable<ArrayList<DroneDynamics>> {
     private static final Logger LOGGER = Logger.getLogger(DroneDynamics.class.getName());
 
@@ -169,6 +173,13 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     }
 
     //OTHER METHODS
+    /**
+     * This method checks wheter new data is available.
+     * It starts off by creating a file or checking if a file with this name already exists.
+     * It then compares the local and server counts to determine if a refresh is needed or not
+     * In case it is needed, it overwrites the old file with the new data.
+     * @return true if new data is available and false otherwise
+     */
     public boolean isNewDataAvailable() {
         createFile(filename);
         if(serverCount == 0) {
@@ -190,6 +201,14 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         return false;
     }
 
+    /**
+     * This methods prints how long the drone can fly or rest until the battery is empty or recharged.
+     * It does so by checking the status of the drone and counting the minutes until the status changes.
+     * @param data ArrayList of DataStorage
+     * @param droneCounter Index of the drone
+     * @param droneDynamicsEntry Index of the droneDynamicsEntry
+     * @return String with the information about the battery status
+     */
     public String printBatteryInformation(ArrayList<DataStorage> data, int droneCounter, int droneDynamicsEntry) {
         if(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry) == data.get(droneCounter).getDroneDynamicsList().getLast()) {
             return "Last Entry";
@@ -213,12 +232,13 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
         }
     }
 
-    public static ArrayList<DroneDynamics> create() {
-        return new DroneDynamics().initialise();
-    }
-
+    /**
+     * This method is being overwritten from the Initializable interface.
+     * It reads the data from the file and saves it in an ArrayList of its own datatype.
+     * @return DroneDynamics web server data as an ArrayList of its own datatype DroneDynamics.
+     */
     @Override
-    public ArrayList<DroneDynamics> initialise() {
+    public ArrayList<DroneDynamics> initialize() {
         ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
         String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);

@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CreditsMenu {
-
     private static final Logger LOGGER = Logger.getLogger(CreditsMenu.class.getName());
     /**
      * Creates and displays the credits menu. This method sets up the GUI components
@@ -31,10 +30,8 @@ public class CreditsMenu {
 
         ImageIcon imageIcon = new ImageIcon(".idea/libraries/group4special/img.png");
 
-        // Create a label and set the image as its icon
         JLabel backgroundLabel = new JLabel(imageIcon);
 
-        // Set the label's bounds to cover the entire frame
         backgroundLabel.setBounds(0, 0, 1365, 905);
 
         backgroundLabel.setLayout(new GridBagLayout());
@@ -87,9 +84,7 @@ public class CreditsMenu {
                 label.setForeground(colors[colorIndex]);
             }
         });
-        // Start the timer
         timer.start();
-
         LOGGER.info("Label added successfully.");
     }
 

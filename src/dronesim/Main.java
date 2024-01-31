@@ -12,6 +12,9 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import java.io.IOException;
 
+/**
+ * This is the entry point of our program
+ */
 public class Main {
    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
@@ -24,17 +27,13 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
-
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new DroneMenu();
             }
         });
-
         ThreadClass threadClass = new ThreadClass();
         threadClass.startDataUpdaterThread();
-
         LOGGER.info("Program execution completed.");
-
     }
 }

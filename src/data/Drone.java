@@ -18,7 +18,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class holds all individual Drone data that can be retrieved from the webserver.
+ * This class holds logic and fields that are linked to the individual Drone information on the web server.
+ * It is responsible for managing drone data.
  */
 public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> {
     private static final Logger LOGGER = Logger.getLogger(Drone.class.getName());
@@ -159,6 +160,13 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     }
 
     //OTHER METHODS
+    /**
+     * This method checks wheter new data is available.
+     * It starts off by creating a file or checking if a file with this name already exists.
+     * It then compares the local and server counts to determine if a refresh is needed or not
+     * In case it is needed, it overwrites the old file with the new data.
+     * @return true if new data is available and false otherwise
+     */
     public boolean isNewDataAvailable() {
         createFile(filename);
         if(serverCount == 0) {
@@ -187,12 +195,13 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         }
     }
 
-    public static LinkedList<Drone> create() {
-        return new Drone().initialise();
-    }
-
+    /**
+     * This method is being overwritten from the Initializable interface.
+     * It reads the data from the file and saves it in a LinkedList of its own datatype.
+     * @return Drone web server data as a LinkedList of its own datatype Drone.
+     */
     @Override
-    public LinkedList<Drone> initialise() {
+    public LinkedList<Drone> initialize() {
         LinkedList<Drone> drones = new LinkedList<Drone>();
         String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);

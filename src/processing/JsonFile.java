@@ -20,7 +20,7 @@ public abstract class JsonFile {
     /**
      * This method saves the specific data in a file.
      * @param url Takes in the url of the data that needs to be fetched and saved as a String.
-     * @param limit Takes in an integer of the limit that wants to be set in the URL for data retrieving.
+     * @param limit Takes in an integer of the limit that will be added in the URL for a specific amount of data retrieving. The limit is the fetched server count.
      * @param filename Takes in the path to the filename, that the data should be saved to.
      */
     public void saveAsFile(String url, int limit, String filename) {
@@ -30,6 +30,12 @@ public abstract class JsonFile {
         streamer.writer(jsonString, filename);
     }
 
+    /**
+     * This method checks the file count by reading the first twenty characters of our JsonFile.
+     * It is expected that the count information is in this sequence of characters.
+     * @param filename Takes in the path to the file that needs to be searched for the count number
+     * @return The count as an integer
+     */
     public static int checkFileCount(String filename) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -49,6 +55,10 @@ public abstract class JsonFile {
         }
     }
 
+    /**
+     * This method checks whether a file exists and creates it if not.
+     * @param filename The path to the file that needs to be created/checked.
+     */
     public void createFile(String filename) {
         if (!(new File(filename).exists())) {
             new File(filename);

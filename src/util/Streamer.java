@@ -10,6 +10,8 @@ import java.io.*;
  * It uses FileInputStreamer and FileWriter
  */
 public class Streamer {
+    private static final Logger LOGGER = Logger.getLogger(WebserverDataFetcher.class.getName());
+
     /**
      * This method creates a BufferedReader that uses a FileInputStream.
      * @param filename Takes in the path to the file as a String
@@ -26,10 +28,10 @@ public class Streamer {
             }
             reader.close();
         } catch (FileNotFoundException e) {
-            Logger.getLogger(Level.INFO + "In reader: " + e);
+            LOGGER.log(Level.WARNING,"File not Found: " + e);
             throw new RuntimeException(e);
         } catch (IOException e) {
-            Logger.getLogger(Level.INFO + "In reader: " + e);
+            LOGGER.log(Level.INFO,"IO Exception: " + e);
             throw new RuntimeException(e);
         }
         return responseContent.toString();
@@ -46,7 +48,7 @@ public class Streamer {
             writer.write(data);
             writer.close();
         } catch (IOException e) {
-            Logger.getLogger(Level.INFO + "In writer: " + e);
+            LOGGER.log(Level.INFO,"IO Exception: " + e);
             throw new RuntimeException(e);
         }
     }
