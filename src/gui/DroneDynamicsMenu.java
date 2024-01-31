@@ -334,7 +334,7 @@ public class DroneDynamicsMenu implements ActionListener {
             if (data.get(i).getDrone().getId() == selectedDroneId){
 
                 String[] droneDynamicsAttributes = {
-                        "Dronedynamic No. " + (selectedDroneTimeStamp+1) + " of",
+                        "Dronedynamic No. " + selectedDroneTimeStamp + " of",
                         "Drone Status:",
                         "Battery Status:",
                         "Time Stamp:",
@@ -349,7 +349,7 @@ public class DroneDynamicsMenu implements ActionListener {
                 };
 
                 String[] droneDynamicsValues = {
-                        String.valueOf(data.get(i).getDroneDynamicsList().toArray().length+1),
+                        String.valueOf((data.get(i).getDroneDynamicsList().toArray().length)-1),
                         String.valueOf(data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).getStatus()),
                         String.valueOf(data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).getBatteryStatus()),
                         DroneMenu.formatCreatedDateTime(data.get(i).getDroneDynamicsList().get(selectedDroneTimeStamp).getTimestamp()),

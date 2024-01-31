@@ -4,7 +4,6 @@
  */
 package data;
 
-
 import processing.Initializable;
 import processing.JsonFile;
 import util.Streamer;
@@ -139,6 +138,27 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
     }
 
     // OTHER METHODS
+    public boolean isNewDataAvailable() {
+        createFile(filename);
+        if(serverCount == 0) {
+            LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
+            //TODO: Own Exception
+            return false;
+        }
+        else if (localCount == serverCount) {
+            LOGGER.log(Level.INFO, "local- and serverDroneCount identical.");
+            return false;
+        }
+        else if(localCount < serverCount) {
+            LOGGER.log(Level.INFO,"Yes new data available");
+            saveAsFile(URL, serverCount, filename);
+            return true;
+        }
+        else {
+            LOGGER.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
+        }
+        return false;
+    }
     public static LinkedList<DroneType> create() {
         return new DroneType().initialise();
     };
@@ -146,11 +166,9 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
     @Override
     public LinkedList<DroneType> initialise() {
         LinkedList<DroneType> droneTypes = new LinkedList<DroneType>();
-
         String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
-
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject o = jsonArray.getJSONObject(i);
             droneTypes.add(new DroneType(
@@ -166,29 +184,5 @@ public class DroneType extends JsonFile implements Initializable<LinkedList<Dron
         }
         setMemoryCount(getMemoryCount() + jsonArray.length());
         return droneTypes;
-    }
-
-    public boolean isNewDataAvailable() {
-        this.createFile(filename);
-
-        if(serverCount == 0) {
-            //logger.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
-            //TODO: Own Exception
-            return false;
-        }
-        else if (localCount == serverCount) {
-            //logger.log(Level.INFO, "local- and serverDroneCount identical.");
-            return false;
-        }
-        else if(localCount < serverCount) {
-            LOGGER.info("Yes new data available");
-            this.saveAsFile(URL, serverCount, filename);
-
-            return true;
-        }
-        else {
-            LOGGER.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
-        }
-        return false;
     }
 }

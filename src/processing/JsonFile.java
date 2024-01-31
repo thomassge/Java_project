@@ -10,25 +10,33 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-public abstract class JsonFile /*implements Refreshable?*/{
+/**
+ * This abstract class contains logic that a JsonFile needs. A JsonFile holds the data that we
+ * fetch from the webserver.
+ */
+public abstract class JsonFile {
     private static final Logger LOGGER = Logger.getLogger(DroneType.class.getName());
 
+    /**
+     * This method saves the specific data in a file.
+     * @param url Takes in the url of the data that needs to be fetched and saved as a String.
+     * @param limit Takes in an integer of the limit that wants to be set in the URL for data retrieving.
+     * @param filename Takes in the path to the filename, that the data should be saved to.
+     */
     public void saveAsFile(String url, int limit, String filename) {
         String jsonString = WebserverDataFetcher.jsonCreator(url + "?limit=" + limit);
         LOGGER.log(Level.INFO,"Savind  Data from Webserver in file ...");
-
         Streamer streamer = new Streamer();
         streamer.writer(jsonString, filename);
     }
 
-    public int checkFileCount(String filename) {
+    public static int checkFileCount(String filename) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             StringBuilder jsonContent = new StringBuilder();
             int limit = 20;
             int readChars = 0;
             int currentChar = 0;
-
             while ((currentChar = reader.read()) != -1 && readChars < limit) {
                 jsonContent.append((char) currentChar);
                 readChars++;
@@ -36,7 +44,7 @@ public abstract class JsonFile /*implements Refreshable?*/{
             reader.close();
             return Integer.parseInt(jsonContent.toString().replaceAll("[^0-9]", ""));
         } catch (Exception e) {
-            //LOGGER.log(Level.INFO, "LocalCount Exception: Count is 0.");
+            LOGGER.log(Level.INFO, "LocalCount Exception: Count is 0.");
             return 0;
         }
     }
@@ -44,7 +52,7 @@ public abstract class JsonFile /*implements Refreshable?*/{
     public void createFile(String filename) {
         if (!(new File(filename).exists())) {
             new File(filename);
-            //LOGGER.log(Level.INFO, filename + " created.");
+            LOGGER.log(Level.INFO, filename + " created.");
         }
     }
 }
