@@ -4,7 +4,6 @@ import data.DataStorage;
 import data.Drone;
 import data.DroneDynamics;
 import data.DroneType;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,47 +87,41 @@ public class DataFactory extends Refresher {
     private ArrayList<DataStorage> dataLinker() {
         ArrayList<DataStorage> list = new ArrayList<>();
 
-        int i = 0;
+        int droneCounter = 0;
         for(Drone obj : drones) {
             DataStorage item = new DataStorage();
-
-            item.setDrone(linkDrone(i));
-            item.setDroneType(linkDroneType(i));
-            item.setDroneDynamicsList(linkDroneDynamics(i));
-
+            item.setDrone(linkDrone(droneCounter));
+            item.setDroneType(linkDroneType(droneCounter));
+            item.setDroneDynamicsList(linkDroneDynamics(droneCounter));
             list.add(item);
-            i++;
+            droneCounter++;
         }
-
         return list;
     }
 
-    private Drone linkDrone(int i) {
-        return drones.get(i);
+    private Drone linkDrone(int droneCounter) {
+        return drones.get(droneCounter);
     }
 
-    private DroneType linkDroneType(int i) {
-        int j = 0;
+    private DroneType linkDroneType(int droneCounter) {
+        int droneTypeCounter = 0;
         for(DroneType obj : droneTypes) {
-            if(drones.get(i).getExtractedDroneTypeID() == droneTypes.get(j).getDroneTypeID()) {
-                return droneTypes.get(j);
+            if(drones.get(droneCounter).getExtractedDroneTypeID() == droneTypes.get(droneTypeCounter).getDroneTypeID()) {
+                return droneTypes.get(droneTypeCounter);
             }
-            else j++;
+            else droneTypeCounter++;
         }
-
         return null;
     }
 
-    private ArrayList<DroneDynamics> linkDroneDynamics(int i) {
+    private ArrayList<DroneDynamics> linkDroneDynamics(int droneCounter) {
         ArrayList<DroneDynamics> list = new ArrayList<>();
-        String toCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(i).getId() + "/";
-
-        for (DroneDynamics obj : droneDynamics) {
-                if (obj.getDronePointer().equals(toCheck)) {
-                    list.add(obj);
+        String dronePointerToCheck = "http://dronesim.facets-labs.com/api/drones/" + drones.get(droneCounter).getId() + "/";
+        for (DroneDynamics droneDynamicsObject : droneDynamics) {
+                if (droneDynamicsObject.getDronePointer().equals(dronePointerToCheck)) {
+                    list.add(droneDynamicsObject);
                 }
         }
-
         return list;
     }
 

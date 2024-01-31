@@ -171,10 +171,8 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     //OTHER METHODS
     public boolean isNewDataAvailable() {
         createFile(filename);
-
         if(serverCount == 0) {
             LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
-            //TODO: Own Exception
             return false;
         }
         else if (localCount == serverCount) {
@@ -182,30 +180,33 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
             return false;
         }
         else if(localCount < serverCount) {
-            LOGGER.info("Yes new data available");
+            LOGGER.log(Level.INFO,"Yes new data available");
             saveAsFile(URL, serverCount, filename);
             return true;
         }
         else {
-            LOGGER.log(Level.WARNING, "localCount is greater than serverCount. Please check database");
+            LOGGER.log(Level.WARNING, "localDroneCount is greater than serverDroneCount. Please check database");
         }
         return false;
     }
 
-    public String printBatteryInformation(ArrayList<DataStorage> data, int drone, int counter) {
-        int i =0;
+    public String printBatteryInformation(ArrayList<DataStorage> data, int droneCounter, int droneDynamicsEntry) {
+        if(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry) == data.get(droneCounter).getDroneDynamicsList().getLast()) {
+            return "Last Entry";
+        }
+        int infoInMinutes = 0;
         if(this.getStatus() == Status.OF){
-            while(data.get(drone).getDroneDynamicsList().get(counter).getStatus() == Status.OF) {
-                counter++;
-                i++;
+            while(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry).getStatus() == Status.OF) {
+                droneDynamicsEntry++;
+                infoInMinutes++;
             }
-            return "Drone rests " + i + "more minutes until battery is recharged.";
+            return "Drone rests " + infoInMinutes + "more minutes until battery is recharged.";
         } else if (this.getStatus() == Status.ON){
-            while(data.get(drone).getDroneDynamicsList().get(counter).getStatus() == Status.ON) {
-                counter++;
-                i++;
+            while(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry).getStatus() == Status.ON) {
+                droneDynamicsEntry++;
+                infoInMinutes++;
             }
-            return "Drone flies " + i + " more minutes until battery is empty.";
+            return "Drone flies " + infoInMinutes + " more minutes until battery is empty.";
         }
         else {
             return "Drone has Issues. Please check the drone.";
@@ -219,11 +220,9 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
     @Override
     public ArrayList<DroneDynamics> initialise() {
         ArrayList<DroneDynamics> droneDynamics = new ArrayList<>();
-
         String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
-
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject o = jsonArray.getJSONObject(i);
             droneDynamics.add(new DroneDynamics(

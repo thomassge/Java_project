@@ -6,13 +6,13 @@ package dronesim;
 
 import processing.ThreadClass;
 import gui.DroneMenu;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class Main {
-
    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     /**
@@ -24,7 +24,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         LOGGER.info("Starting the program...");
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new DroneMenu();
@@ -35,5 +35,6 @@ public class Main {
         threadClass.startDataUpdaterThread();
 
         LOGGER.info("Program execution completed.");
+
     }
 }

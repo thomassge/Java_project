@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -160,16 +159,8 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     }
 
     //OTHER METHODS
-    // TODO: Needed? Where do I put it?
-    private static void validateExtractedDroneTypeID(boolean boo) throws DroneTypeIdNotExtractableException {
-        if (!boo) {
-            throw new DroneTypeIdNotExtractableException();
-        }
-    }
-
     public boolean isNewDataAvailable() {
         createFile(filename);
-
         if(serverCount == 0) {
             LOGGER.log(Level.SEVERE, "ServerDroneCount is 0. Please check database");
             //TODO: Own Exception
@@ -190,6 +181,12 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
         return false;
     }
 
+    private static void validateExtractedDroneTypeID(boolean isIdLegit) throws DroneTypeIdNotExtractableException {
+        if (!isIdLegit) {
+            throw new DroneTypeIdNotExtractableException();
+        }
+    }
+
     public static LinkedList<Drone> create() {
         return new Drone().initialise();
     }
@@ -197,11 +194,9 @@ public class Drone extends JsonFile implements Initializable<LinkedList<Drone>> 
     @Override
     public LinkedList<Drone> initialise() {
         LinkedList<Drone> drones = new LinkedList<Drone>();
-
         String jsonString = new Streamer().reader(filename);
         JSONObject wholeHtml = new JSONObject(jsonString);
         JSONArray jsonArray = wholeHtml.getJSONArray("results");
-
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject o = jsonArray.getJSONObject(i);
             drones.add(new Drone(
