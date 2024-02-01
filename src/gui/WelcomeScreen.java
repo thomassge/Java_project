@@ -1,14 +1,22 @@
 package gui;
 
+import data.DataStorage;
+import data.DroneType;
+import processing.DataFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * This class creates a JFrame with a welcome slogan and a button to open DroneMenu.
@@ -16,12 +24,17 @@ import javax.imageio.ImageIO;
  */
 public class WelcomeScreen extends JFrame {
     private static final Logger LOGGER = Logger.getLogger(WelcomeScreen.class.getName());
-
+    private final ArrayList<DataStorage> data;
+    private final LinkedList<DroneType> droneTypes;
     /**
      * Constructor for WelcomeScreen.
      * Initializes the GUI window with all components.
      */
     public WelcomeScreen() {
+
+        DataFactory factory = new DataFactory();
+        data = factory.getDataStorage();
+        droneTypes = factory.getDroneTypes();
         setTitle("Welcome to the Drone Simulator!");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setupBackground();
@@ -31,7 +44,19 @@ public class WelcomeScreen extends JFrame {
         setVisible(true);
         LOGGER.log(Level.INFO,"Welcome Screen opened...");
     }
-
+    /**
+     * Restarts the DroneMenu GUI.
+     * Typically used to refresh the GUI when new data is available.
+     */
+    public static void restarter(){
+        showMessageDialog(null, "New Data available.\nGUI will restart now...");
+        DroneMenu.droneMenuFrame.dispose();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new WelcomeScreen();
+            }
+        });
+    }
     private void setupBackground() {
         setContentPane(new BackgroundPanel());
     }
@@ -65,7 +90,7 @@ public class WelcomeScreen extends JFrame {
     private void addDroneMenuButton(GridBagConstraints constraints) {
         JButton droneMenuButton = new JButton("Drone Menu");
         droneMenuButton.addActionListener((ActionEvent e) -> {
-            new DroneMenu();
+            new DroneMenu(data, droneTypes);
             dispose();
         });
         constraints.gridy = 2;

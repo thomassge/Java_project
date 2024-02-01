@@ -32,6 +32,10 @@ public class DroneDynamicsMenu implements ActionListener {
     private JPanel droneDynamicsButtonPanel;
     private JPanel droneDynamicsUserPanel;
 
+    /**
+     * Constructs Drone Dynamics Menu
+     * @param data A Arraylist of drone, drone type and drone dynamics objects to be displayed.
+     */
     public DroneDynamicsMenu(ArrayList<DataStorage> data){
         new JsonCreator();
         this.data = data;
@@ -45,6 +49,23 @@ public class DroneDynamicsMenu implements ActionListener {
             droneIdDropdown.setSelectedIndex(0);
         }
         LOGGER.info("DroneDynamicsMenu initialized.");
+    }
+
+    /**
+     * Method is invoked when an action is performed on elements like dropdowns and buttons.
+     * @param e the event to be processed
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == droneIdDropdown) {
+            selectedDroneId = (int) droneIdDropdown.getSelectedItem();
+            LOGGER.info("Selected Drone-ID: " + selectedDroneId);
+            if (selectedArrayListValue != 0) {
+                selectedArrayListValue = 0;
+                displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
+            }
+            displayDroneTypeInformation(data, selectedDroneId);
+        }
     }
 
     private void createFrame(){
@@ -210,30 +231,7 @@ public class DroneDynamicsMenu implements ActionListener {
         LOGGER.log(Level.SEVERE,"selectedArrayListValue out of Bound!");
     }
 
-    /**
-     * Method is invoked when an action is performed on elements like dropdowns and buttons.
-     * @param e the event to be processed
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == droneIdDropdown) {
-            selectedDroneId = (int) droneIdDropdown.getSelectedItem();
-            LOGGER.info("Selected Drone-ID: " + selectedDroneId);
-            if (selectedArrayListValue != 0) {
-                selectedArrayListValue = 0;
-                displayDroneDynamicsInformation(data, selectedDroneId, selectedArrayListValue);
-            }
-            displayDroneTypeInformation(data, selectedDroneId);
-        }
-    }
-
-    /**
-     * Displays information about the selected drone's type in the UI.
-     * Updates the droneTypeLabel with relevant data based on the selected drone ID.
-     * @param data             The list of DataStorage objects containing drone information.
-     * @param selectedDroneId  The ID of the drone for which type information is to be displayed.
-     */
-    public void displayDroneTypeInformation(ArrayList<DataStorage> data, int selectedDroneId){
+    private void displayDroneTypeInformation(ArrayList<DataStorage> data, int selectedDroneId){
         for (int selectedDrone = 0; selectedDrone< data.size(); selectedDrone++) {
             if (data.get(selectedDrone).getDrone().getId() == selectedDroneId) {
                 String[] droneTypeAttributes = {
@@ -266,13 +264,6 @@ public class DroneDynamicsMenu implements ActionListener {
         }
     }
 
-    /**
-     * Displays information about the selected drone's dynamics in the UI.
-     * Updates the droneDynamicsLabel with relevant data based on the selected drone ID and timestamp index.
-     * @param data                     The list of DataStorage objects containing drone dynamics information.
-     * @param selectedDroneId          The IDof the drone for which dynamics information is to be displayed.
-     * @param selectedDroneTimeStamp   The timestamp index for the selected drone's dynamics data.
-     */
     private void displayDroneDynamicsInformation(ArrayList<DataStorage> data,
                                                  int selectedDroneId, int selectedDroneTimeStamp){
         for(int selectedDrone = 0; selectedDrone< data.size(); selectedDrone++){
