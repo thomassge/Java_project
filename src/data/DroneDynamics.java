@@ -205,7 +205,7 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
                 droneDynamicsEntry++;
                 infoInMinutes++;
             }
-            return "Drone rests " + infoInMinutes + "more minutes until battery is recharged.";
+            return "Drone rests " + infoInMinutes + " more minutes until battery is recharged.";
         } else if (this.getStatus() == Status.ON){
             while(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry).getStatus() == Status.ON) {
                 droneDynamicsEntry++;

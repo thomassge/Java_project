@@ -15,23 +15,22 @@ import javax.swing.table.TableColumnModel;
  */
 public class DroneTypeMenu {
     private static final Logger LOGGER = Logger.getLogger(DroneTypeMenu.class.getName());
+    private final String[] columnNames = {"ID", "Manufacturer", "Typename", "Weight (g)", "Maximum Speed",
+            "Battery Capacity", "Control Range", "Maximum Carriage"};
+    private final int[] columnWidth = {-70, 0, 25, -40,  -20, -20, -20, 0};
     private Object[][] droneTypeMenuData;
     private JFrame droneTypeFrame;
     private JMenuBar droneTypeMenuBar;
     private JTable droneTypeTable;
-    private final String[] columnNames = {"ID", "Manufacturer", "Typename", "Weight (g)", "Maximum Speed",
-            "Battery Capacity", "Control Range", "Maximum Carriage"};
-    private final int[] columnWidth = {-70, 0, 25, -40,  -20, -20, -20, 0};
 
     /**
      * Constructs a new DroneTypeMenu with the specified list of drone types.
-     *
-     * @param data A LinkedList of DroneType objects to be displayed.
+     * @param droneTypes A LinkedList of DroneType objects to be displayed.
      */
-    public DroneTypeMenu(LinkedList<DroneType> data) {
+    public DroneTypeMenu(LinkedList<DroneType> droneTypes) {
         new JsonCreator();
         LOGGER.info("Initializing DroneTypeMenu...");
-        initializeDroneTypeMenuData(data);
+        initializeDroneTypeMenuData(droneTypes);
         createFrame();
         createMenuBar();
         createTable();
@@ -41,17 +40,17 @@ public class DroneTypeMenu {
         LOGGER.info("DroneTypeMenu initialized.");
     }
 
-    private void initializeDroneTypeMenuData(LinkedList<DroneType> data){
-        droneTypeMenuData = new Object[data.size()][columnNames.length];
-        for (int selectedDrone = 0; selectedDrone < data.size(); selectedDrone++) {
-            droneTypeMenuData[selectedDrone][0] = data.get(selectedDrone).getDroneTypeID();
-            droneTypeMenuData[selectedDrone][1] = data.get(selectedDrone).getManufacturer();
-            droneTypeMenuData[selectedDrone][2] = data.get(selectedDrone).getTypename();
-            droneTypeMenuData[selectedDrone][3] = data.get(selectedDrone).getWeight();
-            droneTypeMenuData[selectedDrone][4] = data.get(selectedDrone).getMaximumSpeed();
-            droneTypeMenuData[selectedDrone][5] = data.get(selectedDrone).getBatteryCapacity();
-            droneTypeMenuData[selectedDrone][6] = data.get(selectedDrone).getControlRange();
-            droneTypeMenuData[selectedDrone][7] = data.get(selectedDrone).getMaximumCarriage();
+    private void initializeDroneTypeMenuData(LinkedList<DroneType> droneTypes){
+        droneTypeMenuData = new Object[droneTypes.size()][columnNames.length];
+        for (int selectedDrone = 0; selectedDrone < droneTypes.size(); selectedDrone++) {
+            droneTypeMenuData[selectedDrone][0] = droneTypes.get(selectedDrone).getDroneTypeID();
+            droneTypeMenuData[selectedDrone][1] = droneTypes.get(selectedDrone).getManufacturer();
+            droneTypeMenuData[selectedDrone][2] = droneTypes.get(selectedDrone).getTypename();
+            droneTypeMenuData[selectedDrone][3] = droneTypes.get(selectedDrone).getWeight();
+            droneTypeMenuData[selectedDrone][4] = droneTypes.get(selectedDrone).getMaximumSpeed();
+            droneTypeMenuData[selectedDrone][5] = droneTypes.get(selectedDrone).getBatteryCapacity();
+            droneTypeMenuData[selectedDrone][6] = droneTypes.get(selectedDrone).getControlRange();
+            droneTypeMenuData[selectedDrone][7] = droneTypes.get(selectedDrone).getMaximumCarriage();
         }
     }
 

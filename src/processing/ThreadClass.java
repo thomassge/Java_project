@@ -1,6 +1,7 @@
 package processing;
 
 import gui.DroneMenu;
+import gui.WelcomeScreen;
 
 import java.util.logging.Logger;
 
@@ -37,7 +38,7 @@ public class ThreadClass {
             try {
                 while (!Thread.interrupted()) {
                     if (factory.checkForRefresh()) {
-                        DroneMenu.restarter();
+                        WelcomeScreen.restarter();
                     }
                     Thread.sleep(60000);
                 }

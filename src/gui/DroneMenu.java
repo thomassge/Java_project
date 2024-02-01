@@ -24,22 +24,23 @@ import static javax.swing.JOptionPane.showMessageDialog;
  */
 public class DroneMenu implements ActionListener {
     private static final Logger LOGGER = Logger.getLogger(DroneMenu.class.getName());
-    private final ArrayList<DataStorage> data;
-    private final LinkedList<DroneType> droneTypes;
-    private Object[][] droneMenuData;
-    private static JFrame droneMenuFrame;
-    private JMenuBar droneMenuMenuBar;
-    private JTable droneMenuTable;
+    public static JFrame droneMenuFrame;
     private final String[] columnNames = {"Nr.", "ID", "DroneType", "Created", "Serialnr", "CarrWeight", "CarrType"};
     private final int[] columnWidth = {-55, -55, 0, 0, 0, -55, -55};
+    private  ArrayList<DataStorage> data;
+    private  LinkedList<DroneType> droneTypes;
+    private Object[][] droneMenuData;
+    private JMenuBar droneMenuMenuBar;
+    private JTable droneMenuTable;
 
     /**
      * Constructs a new DroneMenu with the specified list of drones.
+     * @param data A Arraylist of drone, drone type and drone dynamics objects to be displayed.
+     *  @param droneTypes A LinkedList of DroneType objects to be displayed.
      */
-    public DroneMenu() {
-        DataFactory factory = new DataFactory();
-        data = factory.getDataStorage();
-        droneTypes = factory.getDroneTypes();
+    public DroneMenu(ArrayList <DataStorage> data, LinkedList <DroneType> droneTypes) {
+        this.data=data;
+        this.droneTypes=droneTypes;
         new JsonCreator();
         LOGGER.info("Initializing DroneMenu...");
         initializeDroneMenuData(data);
@@ -50,6 +51,43 @@ public class DroneMenu implements ActionListener {
         droneMenuFrame.setJMenuBar(droneMenuMenuBar);
         droneMenuFrame.add(droneMenuScrollPane);
         LOGGER.info("DroneMenu initialized.");
+    }
+
+    /**
+     * Formats a datetime string to a more readable format.
+     * @param created The original datetime string.
+     * @return A formatted string.
+     */
+    public static String formatCreatedDateTime(String created){
+        try {
+            OffsetDateTime dateTime = OffsetDateTime.parse(created);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            return dateTime.format(formatter);
+        } catch (Exception e){
+            LOGGER.log(Level.INFO, "Wrong Format:",e);
+            return created;
+        }
+    }
+
+    /**
+     * Handles actions performed by the user, such as selecting menu items.
+     *
+     * @param e The ActionEvent object representing the user's action.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        LOGGER.info("Action Performed: " + e.getActionCommand());
+        if ("DroneTypes".equals(e.getActionCommand())) {
+            new DroneTypeMenu(droneTypes);
+        } else if ("DroneDynamics".equals(e.getActionCommand())) {
+            new DroneDynamicsMenu(data);
+        } else if ("Refresh".equals(e.getActionCommand())) {
+            LOGGER.log(Level.INFO,"Refresh Button activated");
+            droneMenuFrame.dispose();
+            new DroneMenu(data, droneTypes);
+        } else if ("Credits".equals(e.getActionCommand())){
+            new CreditsMenu();
+        }
     }
 
     private void initializeDroneMenuData(ArrayList<DataStorage> data){
@@ -73,9 +111,6 @@ public class DroneMenu implements ActionListener {
         droneMenuFrame.setVisible(true);
     }
 
-    /**
-     * Creates the menu bar with different menu items.
-     */
     private void createMenuBar() {
         LOGGER.info("Creating Menu Bar...");
         droneMenuMenuBar = new JMenuBar();
@@ -115,56 +150,5 @@ public class DroneMenu implements ActionListener {
             TableColumn column = columnModel.getColumn(selectedColumn);
             column.setPreferredWidth((column.getPreferredWidth() + columnWidth[selectedColumn]));
         }
-    }
-
-    /**
-     * Handles actions performed by the user, such as selecting menu items.
-     *
-     * @param e The ActionEvent object representing the user's action.
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        LOGGER.info("Action Performed: " + e.getActionCommand());
-        if ("DroneTypes".equals(e.getActionCommand())) {
-            new DroneTypeMenu(droneTypes);
-        } else if ("DroneDynamics".equals(e.getActionCommand())) {
-            new DroneDynamicsMenu(data);
-        } else if ("Refresh".equals(e.getActionCommand())) {
-            LOGGER.log(Level.INFO,"Refresh Button activated");
-            droneMenuFrame.dispose();
-            new DroneMenu();
-        } else if ("Credits".equals(e.getActionCommand())){
-            new CreditsMenu();
-        }
-    }
-
-    /**
-     * Formats a datetime string to a more readable format.
-     * @param created The original datetime string.
-     * @return A formatted string.
-     */
-    public static String formatCreatedDateTime(String created){
-        try {
-            OffsetDateTime dateTime = OffsetDateTime.parse(created);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            return dateTime.format(formatter);
-        } catch (Exception e){
-            LOGGER.log(Level.INFO, "Wrong Format:",e);
-            return created;
-        }
-    }
-
-    /**
-     * Restarts the DroneMenu GUI.
-     * Typically used to refresh the GUI when new data is available.
-     */
-    public static void restarter(){
-        showMessageDialog(null, "New Data available.\nGUI will restart now...");
-        droneMenuFrame.dispose();
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new DroneMenu();
-            }
-        });
     }
 }
