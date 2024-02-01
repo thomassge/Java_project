@@ -5,11 +5,12 @@ import java.io.*;
         import java.util.Random;
             import javax.sound.sampled.*;
                 import javax.swing.*;
+
 /**
  * THIS CLASS IS NOT TO BE TAKEN INTO ACCOUNT WHEN GRADING THIS PROJECT.
  * IT IS NOT NECESSARY TO THE FUNCTIONALITY OF THE PROGRAM IN ANY WAY.
  * NONETHELESS, IT IS THE MOST IMPORTANT CLASS. *mic drop*
- * @author jsonDerulo
+ * @author Jason
  */
 public class JsonCreator extends JFrame {
     public JsonCreator() {

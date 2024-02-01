@@ -1,6 +1,7 @@
 package data;
 
 import java.util.ArrayList;
+
 /**
  * This class functions as a blueprint for an object that holds all the data for a specific drone.
  * @author Leon Oet

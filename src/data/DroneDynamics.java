@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
+
 /**
  * This class holds logic and fields that are linked to the DroneDynamics information on the web server.
  * It is responsible for managing DroneDynamics data.

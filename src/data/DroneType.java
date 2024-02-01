@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.LinkedList;
+
 /**
  * This class holds logic and fields that are linked to the DroneType information on the web server.
  * It is responsible for managing DroneType data.

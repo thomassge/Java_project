@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
 /**
  * This class holds the processing functions for the data.
  * The data is created, linked and stored here.

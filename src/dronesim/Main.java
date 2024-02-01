@@ -7,6 +7,7 @@ import gui.WelcomeScreen;
 import java.util.logging.Logger;
 import javax.swing.*;
 import java.io.IOException;
+
 /**
  * This is our main class and entry point of the program. This class is responsible for initializing
  * the program.

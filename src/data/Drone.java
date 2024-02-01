@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 /**
  * This class holds logic and fields that are linked to the individual Drone information on the web server.
  * It is responsible for managing drone data.

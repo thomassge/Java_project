@@ -8,6 +8,7 @@ import util.JsonCreator;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+
 /**
  * This class provides a graphical user interface for displaying a list of all drone types
  * @author Thomas Levantis, Eyüp Korkmaz, Marco Difflipp

@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  * This class is responsible for our GoogleMaps API functionality.
  * It holds the method that creates a static picture of the location of a drone

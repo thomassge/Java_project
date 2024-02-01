@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  * This class provides logging functionalities for the application.
  * It sets up a logger with a console handler and includes utility methods for formatting

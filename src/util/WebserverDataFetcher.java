@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 /**
  * This class holds methods for creating a reader and writer object.
  * It uses FileInputStreamer and FileWriter

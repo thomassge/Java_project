@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+
 /**
  * This class creates a JFrame with a welcome slogan and a button to open DroneMenu.
  * @author Robin Remires

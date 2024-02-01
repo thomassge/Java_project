@@ -7,6 +7,7 @@ import data.DroneType;
 import org.json.JSONObject;
 import util.WebserverDataFetcher;
 import java.util.logging.Logger;
+
 /**
  * This class holds logic that is needed to check whether there is new data to be fetched from the
  * webserver. It does not do the refresh itself this has to be done by the class that extends it,

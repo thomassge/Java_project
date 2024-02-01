@@ -1,4 +1,5 @@
 package data.enums;
+
 /**
  * This enum holds the different carriage types a drone can have.
  * @author Leon Oet
