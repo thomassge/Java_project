@@ -39,6 +39,7 @@ public class WebserverDataFetcher {
                 responseContent.append(line);
             }
             LOGGER.log(Level.INFO, "JSON Data successfully retrieved from: " + link);
+            System.out.println(responseContent.toString());
             return responseContent.toString();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error retrieving JSON data from " + link
