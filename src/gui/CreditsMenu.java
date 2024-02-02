@@ -1,7 +1,13 @@
 package gui;
 
 import util.JsonCreator;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +19,7 @@ import java.awt.event.ActionListener;
  * NONETHELESS, IT IS THE MOST IMPORTANT CLASS.
  * @author Json Derulo & friends
  */
-public class CreditsMenu {
+public class CreditsMenu extends JPanel {
     private static final Logger LOGGER = Logger.getLogger(CreditsMenu.class.getName());
     /**
      * Creates and displays the credits menu. This method sets up the GUI components
@@ -21,6 +27,7 @@ public class CreditsMenu {
      */
     public Color[] colors = {Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA};
     private int colorIndex = 0;
+    private Image backgroundImage;
 
     public CreditsMenu() {
         new JsonCreator(".idea/libraries/group4special/09.wav");
@@ -29,9 +36,9 @@ public class CreditsMenu {
 
         JFrame droneFrame = new JFrame("Credits");
 
-        ImageIcon imageIcon = new ImageIcon("src/img.png");
+        loadImage();
 
-        JLabel backgroundLabel = new JLabel(imageIcon);
+        JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundImage));
 
         backgroundLabel.setBounds(0, 0, 1365, 905);
 
@@ -54,6 +61,24 @@ public class CreditsMenu {
         LOGGER.info("Credits menu created.");
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
+        }
+    }
+    private void loadImage() {
+        try {
+            URL imageUrl = getClass().getClassLoader().getResource("img.jpg");
+            if (imageUrl != null) {
+                BufferedImage img = ImageIO.read(imageUrl);
+                backgroundImage = img.getScaledInstance(-1, -1, Image.SCALE_SMOOTH);
+            } else {
+                LOGGER.log(Level.SEVERE,"Image could not be find.");
+            }
+        } catch (IOException e) {}
+    }
     /**
      * Adds a label with specified text to a given panel at the specified grid position.
      *
