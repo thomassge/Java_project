@@ -29,7 +29,7 @@ public class CreditsMenu {
 
         JFrame droneFrame = new JFrame("Credits");
 
-        ImageIcon imageIcon = new ImageIcon(".idea/libraries/group4special/img.png");
+        ImageIcon imageIcon = new ImageIcon("img.png");
 
         JLabel backgroundLabel = new JLabel(imageIcon);
 
