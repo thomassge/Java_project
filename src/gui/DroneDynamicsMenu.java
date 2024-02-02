@@ -197,7 +197,7 @@ public class DroneDynamicsMenu implements ActionListener {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     selectedArrayListValue += valuePlus;
-                    if (selectedArrayListValue >= data.getFirst().getDroneDynamicsList().toArray().length){
+                    if (selectedArrayListValue >= data.get(0).getDroneDynamicsList().toArray().length){
                         outOfBoundCheck();
                     } else {
                         selectedDroneId = (int) droneIdDropdown.getSelectedItem();

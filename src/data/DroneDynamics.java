@@ -195,8 +195,9 @@ public class DroneDynamics extends JsonFile implements Initializable<ArrayList<D
      * @return String with the information about the battery status
      */
     public String printBatteryInformation(ArrayList<DataStorage> data, int droneCounter, int droneDynamicsEntry) {
+        int maxDroneDynamicsEntries = data.get(droneCounter).getDroneDynamicsList().size();
         if(data.get(droneCounter).getDroneDynamicsList().get(droneDynamicsEntry) ==
-                data.get(droneCounter).getDroneDynamicsList().getLast()) {
+                data.get(droneCounter).getDroneDynamicsList().get(maxDroneDynamicsEntries - 1)) {
             return "Last Entry";
         }
         int infoInMinutes = 0;

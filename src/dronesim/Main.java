@@ -1,6 +1,5 @@
 package dronesim;
 
-import gui.DroneMenu;
 import processing.ThreadClass;
 import gui.WelcomeScreen;
 

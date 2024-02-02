@@ -101,7 +101,7 @@ public class DataFactory extends Refresher {
     private ArrayList<DataStorage> dataLinker() {
         ArrayList<DataStorage> list = new ArrayList<>();
         int droneCounter = 0;
-        for(Drone _ : drones) {
+        for(Drone droneObject : drones) {
             DataStorage item = new DataStorage();
             item.setDrone(linkDrone(droneCounter));
             item.setDroneType(linkDroneType(droneCounter));
@@ -118,7 +118,7 @@ public class DataFactory extends Refresher {
 
     private DroneType linkDroneType(int droneCounter) {
         int droneTypeCounter = 0;
-        for(DroneType _ : droneTypes) {
+        for(DroneType droneTypeObject : droneTypes) {
             if(drones.get(droneCounter).getExtractedDroneTypeID() ==
                     droneTypes.get(droneTypeCounter).getDroneTypeID()) {
                 return droneTypes.get(droneTypeCounter);
